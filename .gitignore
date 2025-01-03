@@ -1,3 +1,4 @@
 .docker-data/
 data/
 dist/
+.DS_Store
