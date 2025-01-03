@@ -21,6 +21,9 @@ export function Header(): JSX.Element {
             <Link to={RoutePath.CALENDAR} className={style.Link}>
               Calendar
             </Link>
+            <Link to={RoutePath.STATS} className={style.Link}>
+              Stats
+            </Link>
           </Flex>
         </Flex>
         <UploadForm />
