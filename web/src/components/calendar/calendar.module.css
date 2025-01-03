@@ -1,0 +1,36 @@
+.Calendar {
+  width: 100%;
+  margin: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.CalendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #f4f4f4;
+  border-bottom: 1px solid #ddd;
+}
+
+.CalendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.CalendarDate {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #f1f1f1;
+}
+
+.CalendarDateToday {
+  background-color: #eaf6ff;
+  font-weight: bold;
+  border: 1px solid #3498db;
+}
+
+.CalendarDateDisabled {
+  color: #ccc;
+}

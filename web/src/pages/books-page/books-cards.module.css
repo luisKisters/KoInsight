@@ -1,0 +1,15 @@
+.CardGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--mantine-spacing-lg) var(--mantine-spacing-lg);
+}
+
+.Card {
+  cursor: pointer;
+  transition: background-color 200ms ease;
+  border-radius: 10px;
+
+  &:hover {
+    background-color: var(--mantine-color-gray-0);
+  }
+}

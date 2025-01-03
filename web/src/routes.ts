@@ -1,0 +1,13 @@
+import { generatePath } from 'react-router';
+
+export enum RoutePath {
+  BOOKS = '/',
+  BOOK = '/books/:id',
+  CALENDAR = '/calendar/',
+
+  HOME = BOOKS,
+}
+
+export function getBookPath(bookId: number | string): string {
+  return generatePath(RoutePath.BOOK, { id: bookId.toString() });
+}

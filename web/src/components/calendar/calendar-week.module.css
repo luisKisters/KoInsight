@@ -1,0 +1,9 @@
+.CalendarWeek {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+  padding: 10px 0;
+  font-weight: bold;
+}
