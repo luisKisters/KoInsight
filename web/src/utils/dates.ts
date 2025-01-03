@@ -13,7 +13,7 @@ export function formatSecondsToHumanReadable(seconds: number, hideSeconds = true
     return '-';
   }
 
-  if (!duration.minutes || duration.minutes === 0) {
+  if (duration?.minutes === 0) {
     return 'Less than a minute';
   }
 
