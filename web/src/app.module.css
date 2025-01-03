@@ -1,4 +1,4 @@
 .Main {
-  padding-inline: 48px;
+  padding-inline: var(--mantine-spacing-xl);
   height: calc(100vh - 96px);
 }
