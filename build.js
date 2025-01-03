@@ -6,6 +6,8 @@ const fs = require('fs');
 
 const BE_FOLDER = path.resolve(__dirname, 'server');
 const FE_FOLDER = path.resolve(__dirname, 'web');
+const DIST = path.resolve(__dirname, 'dist');
+const DATA = path.resolve(__dirname, 'data');
 
 function buildBackend() {
   console.log('Building backend...');
@@ -33,20 +35,19 @@ function packageFrontendIntoBackend() {
 }
 
 function extractBuild() {
-  fs.mkdirSync(path.resolve(__dirname, 'data'), { recursive: true });
+  // Create Data folder if missing
+  fs.mkdirSync(DATA, { recursive: true });
 
-  if (fs.existsSync(path.resolve(__dirname, 'dist'))) {
-    fs.rmSync(path.resolve(__dirname, 'dist'), { recursive: true });
+  // Remove old build if present
+  if (fs.existsSync(DIST)) {
+    fs.rmSync(DIST, { recursive: true });
   }
-  fs.cpSync(path.resolve(BE_FOLDER, 'dist'), path.resolve(__dirname, 'dist'), { recursive: true });
 
-  fs.cpSync(
-    path.resolve(BE_FOLDER, 'node_modules'),
-    path.resolve(__dirname, 'dist', 'node_modules'),
-    {
-      recursive: true,
-    }
-  );
+  // Copy build to DIST
+  fs.cpSync(path.resolve(BE_FOLDER, 'dist'), DIST, { recursive: true });
+  fs.cpSync(path.resolve(BE_FOLDER, 'node_modules'), path.resolve(DIST, 'node_modules'), {
+    recursive: true,
+  });
 
   console.log('Build extracted successfully!');
 }
