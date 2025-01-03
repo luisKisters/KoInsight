@@ -1,6 +1,7 @@
 FROM node:20-alpine AS runtime
 
 ENV HOST "0.0.0.0"
+ENV VITE_API_URL ""
 
 WORKDIR /app
 
