@@ -9,11 +9,11 @@ export function formatSecondsToHumanReadable(seconds: number, hideSeconds = true
     return formatDuration(duration);
   }
 
-  if (!duration.seconds) {
-    return '-';
+  if (!duration.minutes && !duration.hours && !duration.seconds) {
+    return 'N/A';
   }
 
-  if (duration?.minutes === 0) {
+  if (!duration.minutes && !duration.hours && duration.seconds && duration.seconds > 0) {
     return 'Less than a minute';
   }
 
