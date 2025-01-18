@@ -2,6 +2,8 @@ import Database from 'better-sqlite3';
 import { NextFunction, Request, Response, Router } from 'express';
 import path from 'path';
 import { COVERS_PATH, DB_PATH } from '../const';
+import { PageStat } from '../types';
+import { startOfDay } from 'date-fns/startOfDay';
 
 const router = Router();
 
@@ -42,8 +44,18 @@ router.get('/books/:id', dbMiddleware(), (req: Request, res: Response, next: Nex
 
   const stats = req.db
     ?.prepare('SELECT * FROM page_stat_data WHERE id_book = ?')
-    .all(req.params.id);
-  res.json({ ...book, stats });
+    .all(req.params.id) as PageStat[];
+
+  const started_reading = stats.reduce((acc, stat) => Math.min(acc, stat.start_time), Infinity);
+
+  const read_per_day = stats.reduce((acc, stat) => {
+    const day = startOfDay(stat.start_time * 1000).getTime();
+    acc[day] = (acc[day] || 0) + stat.duration;
+
+    return acc;
+  }, {} as Record<string, number>);
+
+  res.json({ ...book, stats, started_reading, read_per_day });
 });
 
 router.delete('/books/:id', dbMiddleware(), (req: Request, res: Response) => {

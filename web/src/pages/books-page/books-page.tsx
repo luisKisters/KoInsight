@@ -1,4 +1,4 @@
-import { Button, Flex, Loader, TextInput, Tooltip } from '@mantine/core';
+import { Button, Flex, Loader, TextInput, Title, Tooltip } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { IconCards, IconTable, IconX } from '@tabler/icons-react';
 import { JSX, useState } from 'react';
@@ -43,6 +43,9 @@ export function BooksPage(): JSX.Element {
 
   return (
     <>
+      <Title order={3} mb="xs">
+        Books
+      </Title>
       <Flex justify="space-between">
         <TextInput
           placeholder="Search books..."

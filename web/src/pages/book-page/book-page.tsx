@@ -13,12 +13,17 @@ import { notifications } from '@mantine/notifications';
 import { mutate } from 'swr';
 import { RoutePath } from '../../routes';
 import { modals } from '@mantine/modals';
+import { Statistics } from '../../components/statistics/statistics';
+import { formatSecondsToHumanReadable } from '../../utils/dates';
+import { sum } from 'ramda';
 
 export function BookPage(): JSX.Element {
   const { id } = useParams() as { id: string };
   const navigate = useNavigate();
   const [deleteLoading, setDeleteLoading] = useState(false);
   const { data: book, isLoading } = useBookWithStats(Number(id));
+
+  const avgPerDay = book ? book.total_read_time / Object.keys(book.read_per_day).length : 0;
 
   const openDeleteConfirm = () =>
     modals.openConfirmModal({
@@ -78,6 +83,17 @@ export function BookPage(): JSX.Element {
           Delete
         </Button>
       </Flex>
+      <Statistics
+        data={[
+          { label: 'Total read time', value: formatSecondsToHumanReadable(book.total_read_time) },
+          { label: 'Average time per day', value: formatSecondsToHumanReadable(avgPerDay) },
+          { label: 'Days reading', value: Object.keys(book.read_per_day).length },
+          {
+            label: 'Average time per page',
+            value: `${Math.round(sum(book.stats.map((p) => p.duration)) / book.stats.length)}s`,
+          },
+        ]}
+      />
 
       <Tabs defaultValue="calendar">
         <Tabs.List>

@@ -1,5 +1,6 @@
 import { Group, Image, Text, Tooltip } from '@mantine/core';
 import {
+  IconArrowRight,
   IconBooks,
   IconCalendar,
   IconClock,
@@ -10,11 +11,11 @@ import {
 } from '@tabler/icons-react';
 import { JSX } from 'react';
 import { API_URL } from '../../api/api';
-import { Book } from '../../api/use-books';
+import { BookWithStats } from '../../api/use-book-with-stats';
 import { formatRelativeDate, formatSecondsToHumanReadable } from '../../utils/dates';
 
 type BookCardProps = {
-  book: Book;
+  book: BookWithStats;
 };
 
 export function BookCard({ book }: BookCardProps): JSX.Element {

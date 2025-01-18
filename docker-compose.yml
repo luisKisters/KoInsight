@@ -1,11 +1,12 @@
-version: "3.7"
-
 services:
   kobuddy:
     build: .
     container_name: kobuddy
     ports:
-      - "3001:3001"
+      - "3005:3001"
     volumes:
-      - .docker-data:/app/data
+      - kobuddy-data:/app/data
     restart: unless-stopped
+
+volumes:
+  kobuddy-data:
