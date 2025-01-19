@@ -12,7 +12,24 @@ import { RoutePath } from './routes';
 
 import style from './app.module.css';
 
-const theme = createTheme({});
+const theme = createTheme({
+  primaryColor: 'kobuddy',
+  primaryShade: 7,
+  colors: {
+    kobuddy: [
+      '#e2fefc',
+      '#d3f8f5',
+      '#acede8',
+      '#81e3dc',
+      '#5edad1',
+      '#46d5ca',
+      '#36d2c7',
+      '#23baaf',
+      '#0aa69c',
+      '#009087',
+    ],
+  },
+});
 
 export function App(): JSX.Element {
   return (

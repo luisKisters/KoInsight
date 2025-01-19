@@ -42,10 +42,10 @@ export function DotTrail({ percentPerDay }: DotTrailProps): JSX.Element {
               className={style.dot}
               style={{
                 outlineColor: percentPerDay[day]
-                  ? darken(`rgb(35, 139, 230, ${percentPerDay[day].percent / 100})`, 0.4)
+                  ? darken(`rgba(35, 186, 175, ${percentPerDay[day].percent / 100})`, 0.4)
                   : 'rgba(0, 0, 0, 0.05)',
                 backgroundColor: percentPerDay[day]
-                  ? `rgb(35, 139, 230, ${percentPerDay[day].percent / 100})`
+                  ? `rgba(35, 186, 175, ${percentPerDay[day].percent / 100})`
                   : 'rgba(255, 255, 255)',
               }}
             />
