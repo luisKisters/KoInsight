@@ -1,9 +1,9 @@
+import { Book } from '@/common/types/book';
 import { Box, Group, Image, Text, Tooltip } from '@mantine/core';
 import { IconBooks, IconProgress, IconUser } from '@tabler/icons-react';
 import { JSX } from 'react';
 import { useNavigate } from 'react-router';
 import { API_URL } from '../../api/api';
-import { Book } from '../../api/use-books';
 import { getBookPath } from '../../routes';
 
 import style from './books-cards.module.css';
@@ -28,14 +28,13 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
           <Image
             src={`${API_URL}/books/${book.id}/cover`}
             style={{ aspectRatio: '1/1.5' }}
-            w="120px"
+            w="200px"
             alt={book.title}
             radius="md"
             fallbackSrc="/book-placeholder-small.png"
-            mb="sm"
           />
-          <Box px="lg" pb="lg">
-            <Text fz="md" fw={600}>
+          <Box px="lg" className={style.CardDetails}>
+            <Text fz="md" fw={600} style={{ wordBreak: 'break-word', whiteSpace: 'wrap' }}>
               {book.title}
             </Text>
             <Group wrap="nowrap" gap={8}>

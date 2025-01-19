@@ -1,15 +1,29 @@
 .CardGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
   gap: var(--mantine-spacing-lg) var(--mantine-spacing-lg);
 }
 
 .Card {
+  position: relative;
   cursor: pointer;
-  transition: background-color 200ms ease;
   border-radius: 10px;
+  width: 200px;
+  overflow: hidden;
 
-  &:hover {
-    background-color: var(--mantine-color-gray-0);
+  .CardDetails {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    position: absolute;
+    bottom: -100px;
+    opacity: 0;
+    padding-block: var(--mantine-spacing-lg);
+
+    transition: opacity 300ms ease, bottom 300ms ease;
+  }
+
+  &:hover .CardDetails {
+    opacity: 1;
+    bottom: 0;
   }
 }
