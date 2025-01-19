@@ -27,7 +27,8 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
         >
           <Image
             src={`${API_URL}/books/${book.id}/cover`}
-            h="150px"
+            style={{ aspectRatio: '1/1.5' }}
+            w="120px"
             alt={book.title}
             radius="md"
             fallbackSrc="/book-placeholder-small.png"

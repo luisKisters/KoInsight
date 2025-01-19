@@ -1,7 +1,7 @@
+import { Book } from '@/common/types/book';
 import useSWR from 'swr';
 import { fetchFromAPI } from './api';
 import { PageStat } from './use-page-stats';
-import { Book } from './use-books';
 
 export type BookWithStats = Book & {
   stats: PageStat[];

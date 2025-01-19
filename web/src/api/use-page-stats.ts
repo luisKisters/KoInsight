@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { fetchFromAPI } from './api';
 
 export type PageStat = {
-  id_book: number;
+  book_id: number;
   page: number;
   start_time: number;
   duration: number;

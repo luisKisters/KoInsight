@@ -5,38 +5,21 @@ const path = require('path');
 const fs = require('fs');
 
 const BE_FOLDER = path.resolve(__dirname, 'server');
-const FE_FOLDER = path.resolve(__dirname, 'web');
 const DIST = path.resolve(__dirname, 'dist');
-const DATA = path.resolve(__dirname, 'data');
 
 function buildBackend() {
   console.log('Building backend...');
-  execSync('npm run build', { cwd: BE_FOLDER, stdio: 'inherit' });
+  execSync('npm --prefix server run build', { stdio: 'inherit' });
 }
 
 function buildFrontend() {
   console.log('Building frontend...');
-  execSync('npm run build', { cwd: FE_FOLDER, stdio: 'inherit' });
-}
-
-function packageFrontendIntoBackend() {
-  const frontendBuildPath = path.resolve(FE_FOLDER, 'dist');
-  const backendFEPath = path.resolve(BE_FOLDER, 'dist', 'public');
-
-  console.log('Packaging frontend into backend...');
-  if (fs.existsSync(backendFEPath)) {
-    fs.rmSync(backendFEPath, { recursive: true });
-  }
-
-  fs.mkdirSync(backendFEPath, { recursive: true });
-  fs.cpSync(frontendBuildPath, backendFEPath, { recursive: true });
-
-  console.log('Frontend packaged into backend successfully!');
+  execSync('npm --prefix web run build', { stdio: 'inherit' });
 }
 
 function extractBuild() {
   // Create Data folder if missing
-  fs.mkdirSync(DATA, { recursive: true });
+  // fs.mkdirSync(DATA, { recursive: true });
 
   // Remove old build if present
   if (fs.existsSync(DIST)) {
@@ -55,7 +38,6 @@ function extractBuild() {
 function main() {
   buildBackend();
   buildFrontend();
-  packageFrontendIntoBackend();
   extractBuild();
 }
 

@@ -1,17 +1,20 @@
 import { BarChart } from '@mantine/charts';
-import { Box, Flex, Loader, Title } from '@mantine/core';
+import { Box, Flex, Loader, SegmentedControl, Title } from '@mantine/core';
 import { format, isSameDay, startOfDay, subDays } from 'date-fns';
-import { JSX, useMemo } from 'react';
+import { range, sum, uniqBy } from 'ramda';
+import { JSX, useMemo, useState } from 'react';
 import { useBooks } from '../api/use-books';
 import { PageStat, usePageStats } from '../api/use-page-stats';
 import { ReadingCalendar } from '../components/statistics/reading-calendar';
 import { Statistics } from '../components/statistics/statistics';
 import { formatSecondsToHumanReadable } from '../utils/dates';
-import { range, sum, uniqBy } from 'ramda';
+import { IconArrowsVertical, IconClock, IconMaximize, IconPageBreak } from '@tabler/icons-react';
 
 export function StatsPage(): JSX.Element {
   const { data: books, isLoading } = useBooks();
   const { data: stats, isLoading: statsLoading } = usePageStats();
+
+  const [segmentedValue, setSegmentedValue] = useState<'week' | 'month'>('week');
 
   const lastWeek = useMemo(() => {
     const now = subDays(new Date(), 7);
@@ -74,10 +77,7 @@ export function StatsPage(): JSX.Element {
     return maxTime;
   }, [stats]);
 
-  const totalTime = useMemo(
-    () => (stats ?? []).reduce((acc, stat) => acc + stat.duration, 0),
-    [stats]
-  );
+  const totalTime = useMemo(() => sum((stats ?? []).map((s) => s.duration)), [stats]);
 
   if (isLoading || statsLoading || !books || !stats) {
     return (
@@ -93,77 +93,91 @@ export function StatsPage(): JSX.Element {
         <ReadingCalendar />
       </Box>
       <Box mb="xl">
-        <Title order={3} mb="lg">
-          Overall Statistics
-        </Title>
         <Statistics
           data={[
             {
               label: 'Total read time',
               value: formatSecondsToHumanReadable(totalTime),
+              icon: IconClock,
             },
             {
               label: 'Total pages read',
               value: books.reduce((acc, book) => acc + book.total_read_pages, 0),
+              icon: IconPageBreak,
             },
             {
               label: 'Longest time reading in a day',
               value: formatSecondsToHumanReadable(longestDay),
+              icon: IconMaximize,
             },
             {
               label: 'Most pages in a day',
               value: mostPagesInADay,
+              icon: IconMaximize,
             },
           ]}
         />
       </Box>
-      <Title order={3} mb="lg">
-        Last 7 days statistics
-      </Title>
-      <Statistics
+      <SegmentedControl
+        value={segmentedValue}
+        onChange={(v) => setSegmentedValue(v as 'week' | 'month')}
         data={[
-          {
-            label: 'Total read time',
-            value: formatSecondsToHumanReadable(sum(lastWeek?.map((stat) => stat.duration) ?? [])),
-          },
-          {
-            label: 'Total pages read',
-            value: uniqBy((stat: PageStat) => stat.page)(lastWeek ?? []).length,
-          },
-          {
-            label: 'Average pages per day',
-            value: Math.round(uniqBy((stat: PageStat) => stat.page)(lastWeek ?? []).length / 7),
-          },
-          {
-            label: 'Average time per day',
-            value: formatSecondsToHumanReadable(
-              Math.round(sum(lastWeek?.map((stat) => stat.duration) ?? []))
-            ),
-          },
+          { label: 'Last 7 days', value: 'week' },
+          { label: 'Monthly', value: 'month' },
         ]}
       />
-      <BarChart
-        h={300}
-        mt="xl"
-        w="50vw"
-        data={perDay}
-        dataKey="day"
-        valueFormatter={(value) => formatSecondsToHumanReadable(value)}
-        series={[{ name: 'duration' }]}
-        tickLine="y"
-      />
-      <Title order={3} my="lg">
-        Time read per month
-      </Title>
-      <BarChart
-        h={300}
-        w="50vw"
-        data={perMonth}
-        dataKey="month"
-        valueFormatter={(value) => formatSecondsToHumanReadable(value)}
-        series={[{ name: 'duration' }]}
-        tickLine="y"
-      />
+      {segmentedValue === 'week' && (
+        <Box mt="md">
+          <Statistics
+            data={[
+              {
+                label: 'Read time',
+                value: formatSecondsToHumanReadable(
+                  sum(lastWeek?.map((stat) => stat.duration) ?? [])
+                ),
+                icon: IconClock,
+              },
+              {
+                label: 'Pages read',
+                value: uniqBy((stat: PageStat) => stat.page)(lastWeek ?? []).length,
+                icon: IconPageBreak,
+              },
+              {
+                label: 'Average pages per day',
+                value: Math.round(uniqBy((stat: PageStat) => stat.page)(lastWeek ?? []).length / 7),
+                icon: IconArrowsVertical,
+              },
+              {
+                label: 'Average time per day',
+                value: formatSecondsToHumanReadable(
+                  Math.round(sum(lastWeek?.map((stat) => stat.duration) ?? []) / 7)
+                ),
+                icon: IconClock,
+              },
+            ]}
+          />
+          <BarChart
+            h={300}
+            mt="xl"
+            data={perDay}
+            dataKey="day"
+            valueFormatter={(value) => formatSecondsToHumanReadable(value)}
+            series={[{ name: 'duration' }]}
+            tickLine="y"
+          />
+        </Box>
+      )}
+      {segmentedValue === 'month' && (
+        <BarChart
+          mt="xl"
+          h={300}
+          data={perMonth}
+          dataKey="month"
+          valueFormatter={(value) => formatSecondsToHumanReadable(value)}
+          series={[{ name: 'duration' }]}
+          tickLine="y"
+        />
+      )}
     </div>
   );
 }

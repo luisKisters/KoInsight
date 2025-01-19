@@ -1,6 +1,8 @@
+import { Group } from '@mantine/core';
 import { JSX } from 'react';
 import { Statistic, StatisticProps } from './statistic';
-import { Flex } from '@mantine/core';
+
+import style from './statistics.module.css';
 
 type StatisticsProps = {
   data: StatisticProps[];
@@ -8,10 +10,10 @@ type StatisticsProps = {
 
 export function Statistics({ data }: StatisticsProps): JSX.Element {
   return (
-    <Flex gap="md" w="100%">
+    <Group gap="md" w="100%" className={style.statistics}>
       {data.map((stat) => (
-        <Statistic key={stat.label} label={stat.label} value={stat.value} />
+        <Statistic key={stat.label} label={stat.label} value={stat.value} icon={stat.icon} />
       ))}
-    </Flex>
+    </Group>
   );
 }

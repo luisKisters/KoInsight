@@ -1,8 +1,11 @@
+import { Book } from '@/common/types/book';
+import { PageStat } from '@/common/types/page-stat';
 import Database from 'better-sqlite3';
 import { Router } from 'express';
 import { unlinkSync } from 'fs';
 import multer from 'multer';
 import { DATA_PATH, DB_FILENAME } from '../const';
+import knex from '../knex';
 
 const storage = multer.diskStorage({
   destination: (_req, _res, cb) => {
@@ -27,9 +30,18 @@ const upload = multer({
 
 const router = Router();
 
-router.post('/upload', upload.single('file'), (req, res, next) => {
+router.post('/import', (req, res) => {
+  console.log('Importing database', req.file);
   const uploadedFilePath = req.file?.path;
-  console.log('Uploading file', req.file);
+
+  if (!uploadedFilePath) {
+    res.status(400).json({ error: 'No file uploaded' });
+    return;
+  }
+});
+
+router.post('/upload', upload.single('file'), async (req, res, next) => {
+  const uploadedFilePath = req.file?.path;
 
   if (!uploadedFilePath) {
     res.status(400).json({ error: 'No file uploaded' });
@@ -37,21 +49,46 @@ router.post('/upload', upload.single('file'), (req, res, next) => {
     return;
   }
 
+  let db;
   try {
-    const db = new Database(uploadedFilePath, { readonly: true });
+    db = new Database(uploadedFilePath, { readonly: true });
     const bookIds = db.prepare('SELECT id FROM book').all();
 
     if (!bookIds.length) {
       throw new Error('No books found in the uploaded file');
     }
-
-    db.close();
-
-    res.json({ message: 'File uploaded and validated successfully' });
   } catch (err) {
     unlinkSync(uploadedFilePath); // Clean up the uploaded file
     console.error(err);
     res.status(500).json({ error: 'Invalid SQLite file or unable to read the file' });
+    return;
+  }
+
+  try {
+    const newBooks = db.prepare('SELECT * FROM book').all() as Book[];
+    const newPageStats: PageStat[] = (
+      db.prepare('SELECT * FROM page_stat').all() as Array<
+        Omit<PageStat, 'book_id'> & { id_book: number }
+      >
+    ).map(({ id_book, ...pageStat }) => ({ ...pageStat, book_id: id_book }));
+
+    await knex.transaction(async (trx) => {
+      await Promise.all(newBooks.map((book) => trx('book').insert(book).onConflict().ignore()));
+      await Promise.all(
+        newPageStats.map((pageStat) => trx('page_stat').insert(pageStat).onConflict().ignore())
+      );
+
+      await trx.commit();
+    });
+
+    res.json({ message: 'Database imported successfully' });
+  } catch (err) {
+    console.error(err);
+    db.close();
+    res.status(500).json({ error: 'Failed to import database' });
+  } finally {
+    db.close();
+    unlinkSync(uploadedFilePath);
   }
 });
 

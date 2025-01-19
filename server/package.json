@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "KoBuddy back-end server",
   "scripts": {
-    "start": "node dist/index.js",
+    "prebuild": "cd ../common && tsc",
+    "start": "node dist/app.js",
     "build": "tsc",
-    "dev": "NODE_ENV=development nodemon src/index.ts"
+    "dev": "NODE_ENV=development nodemon src/app.ts",
+    "knex": "knex --knexfile ./src/knexfile.ts"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +17,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "16.4.7",
     "express": "4.21.2",
+    "knex": "^3.1.0",
     "multer": "1.4.5-lts.1",
     "sqlite3": "5.1.7"
   },
@@ -22,10 +25,11 @@
     "@types/better-sqlite3": "7.6.12",
     "@types/cors": "2.8.17",
     "@types/express": "5.0.0",
+    "@types/knex": "^0.16.1",
     "@types/multer": "1.4.12",
     "@types/node": "22.10.3",
     "nodemon": "3.1.9",
-    "ts-node": "10.9.2",
+    "ts-node": "^10.9.2",
     "typescript": "5.7.2"
   }
 }

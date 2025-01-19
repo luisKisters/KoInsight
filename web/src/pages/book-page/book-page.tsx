@@ -1,21 +1,29 @@
 import { Box, Button, Flex, Loader, Tabs, Text } from '@mantine/core';
-import { IconApi, IconCalendar, IconPageBreak, IconTable, IconTrash } from '@tabler/icons-react';
+import { modals } from '@mantine/modals';
+import { notifications } from '@mantine/notifications';
+import {
+  IconAlarmAverage,
+  IconApi,
+  IconCalendar,
+  IconClock,
+  IconPageBreak,
+  IconTable,
+  IconTrash,
+} from '@tabler/icons-react';
+import { sum } from 'ramda';
 import { JSX, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import { mutate } from 'swr';
 import { useBookWithStats } from '../../api/use-book-with-stats';
+import { deleteBook } from '../../api/use-books';
+import { Statistics } from '../../components/statistics/statistics';
+import { RoutePath } from '../../routes';
+import { formatSecondsToHumanReadable } from '../../utils/dates';
 import { BookCard } from './book-card';
 import { BookPageCalendar } from './book-page-calendar';
+import { BookPageOpenApi } from './book-page-open-api';
 import { BookPageRaw } from './book-page-raw';
 import { BookPageSelector } from './book-page-selector';
-import { BookPageOpenApi } from './book-page-open-api';
-import { deleteBook } from '../../api/use-books';
-import { notifications } from '@mantine/notifications';
-import { mutate } from 'swr';
-import { RoutePath } from '../../routes';
-import { modals } from '@mantine/modals';
-import { Statistics } from '../../components/statistics/statistics';
-import { formatSecondsToHumanReadable } from '../../utils/dates';
-import { sum } from 'ramda';
 
 export function BookPage(): JSX.Element {
   const { id } = useParams() as { id: string };
@@ -85,12 +93,25 @@ export function BookPage(): JSX.Element {
       </Flex>
       <Statistics
         data={[
-          { label: 'Total read time', value: formatSecondsToHumanReadable(book.total_read_time) },
-          { label: 'Average time per day', value: formatSecondsToHumanReadable(avgPerDay) },
-          { label: 'Days reading', value: Object.keys(book.read_per_day).length },
+          {
+            label: 'Total read time',
+            value: formatSecondsToHumanReadable(book.total_read_time),
+            icon: IconClock,
+          },
+          {
+            label: 'Average time per day',
+            value: formatSecondsToHumanReadable(avgPerDay),
+            icon: IconClock,
+          },
+          {
+            label: 'Days reading',
+            value: Object.keys(book.read_per_day).length,
+            icon: IconCalendar,
+          },
           {
             label: 'Average time per page',
             value: `${Math.round(sum(book.stats.map((p) => p.duration)) / book.stats.length)}s`,
+            icon: IconAlarmAverage,
           },
         ]}
       />

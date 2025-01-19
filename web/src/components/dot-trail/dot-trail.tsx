@@ -1,4 +1,4 @@
-import { darken, Tooltip } from '@mantine/core';
+import { darken, rgba, Tooltip } from '@mantine/core';
 import { startOfDay, startOfMonth, subMonths } from 'date-fns';
 import { JSX, ReactNode, useMemo } from 'react';
 
@@ -42,13 +42,13 @@ export function DotTrail({ percentPerDay }: DotTrailProps): JSX.Element {
               className={style.dot}
               style={{
                 outlineColor: percentPerDay[day]
-                  ? darken(`rgb(92, 154, 140, ${percentPerDay[day].percent / 100})`, 0.4)
+                  ? darken(`rgb(35, 139, 230, ${percentPerDay[day].percent / 100})`, 0.4)
                   : 'rgba(0, 0, 0, 0.05)',
                 backgroundColor: percentPerDay[day]
-                  ? `rgb(92, 154, 140, ${percentPerDay[day].percent / 100})`
+                  ? `rgb(35, 139, 230, ${percentPerDay[day].percent / 100})`
                   : 'rgba(255, 255, 255)',
               }}
-            ></div>
+            />
           </Tooltip>
         </div>
       ))}

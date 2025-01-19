@@ -1,4 +1,4 @@
-import { Title } from '@mantine/core';
+import { Flex, Title } from '@mantine/core';
 import { formatDate, startOfDay } from 'date-fns';
 import { JSX, useMemo } from 'react';
 import { usePageStats } from '../../api/use-page-stats';
@@ -36,7 +36,9 @@ export function ReadingCalendar(): JSX.Element {
       <Title order={3} mb="lg">
         Reading history
       </Title>
-      <DotTrail percentPerDay={percentPerDay} />
+      <Flex align="center" justify="center">
+        <DotTrail percentPerDay={percentPerDay} />
+      </Flex>
     </>
   );
 }

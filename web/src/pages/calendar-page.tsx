@@ -44,7 +44,7 @@ export function CalendarPage(): JSX.Element {
 
   const getBookNames = useCallback(
     (data: DayData) => {
-      const uniqueBookIds = uniq(data.events.map(({ id_book }) => id_book));
+      const uniqueBookIds = uniq(data.events.map(({ book_id }) => book_id));
       const eventBooks = uniqueBookIds.map((id) => getBookById(id)).filter(Boolean) as Book[];
 
       return eventBooks.map((book) => (
@@ -57,7 +57,7 @@ export function CalendarPage(): JSX.Element {
           {formatSecondsToHumanReadable(
             sum(
               data.events
-                .filter((event) => event.id_book === book.id)
+                .filter((event) => event.book_id === book.id)
                 .map((event) => event.duration)
             )
           )}

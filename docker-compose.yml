@@ -5,8 +5,8 @@ services:
     ports:
       - "3005:3001"
     volumes:
-      - kobuddy-data:/app/data
+      - data:/app/data
     restart: unless-stopped
 
 volumes:
-  kobuddy-data:
+  data:

@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import path from 'path';
 import { COVERS_PATH, OPEN_LIBRARY_COVERS_API } from '../const';
 
 const router = Router();

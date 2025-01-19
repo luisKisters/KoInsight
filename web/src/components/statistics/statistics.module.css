@@ -1,0 +1,5 @@
+.statistics {
+  > * {
+    flex-grow: 1;
+  }
+}
