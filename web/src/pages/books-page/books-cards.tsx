@@ -31,7 +31,12 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
             alt={book.title}
             fallbackSrc="/book-placeholder-small.png"
           />
-          <Progress radius={0} h={5} value={(book.total_read_pages / book.pages) * 100} />
+          <Progress
+            radius={0}
+            h={5}
+            value={(book.total_read_pages / book.pages) * 100}
+            color="kobuddy.4"
+          />
           <Box px="lg" className={style.CardDetails}>
             <Text fz="md" fw={600} style={{ wordBreak: 'break-word', whiteSpace: 'wrap' }}>
               {book.title}
