@@ -1,23 +1,9 @@
-import { Box, Button, Flex, Loader, Tabs, Text } from '@mantine/core';
-import { modals } from '@mantine/modals';
-import { notifications } from '@mantine/notifications';
-import {
-  IconAlarmAverage,
-  IconApi,
-  IconCalendar,
-  IconClock,
-  IconPageBreak,
-  IconTable,
-  IconTrash,
-} from '@tabler/icons-react';
+import { Box, Flex, Group, Loader, Paper, RingProgress, Stack, Tabs, Text } from '@mantine/core';
+import { IconApi, IconCalendar, IconPageBreak, IconTable } from '@tabler/icons-react';
 import { sum } from 'ramda';
-import { JSX, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
-import { mutate } from 'swr';
+import { JSX } from 'react';
+import { useParams } from 'react-router';
 import { useBookWithStats } from '../../api/use-book-with-stats';
-import { deleteBook } from '../../api/use-books';
-import { Statistics } from '../../components/statistics/statistics';
-import { RoutePath } from '../../routes';
 import { formatSecondsToHumanReadable } from '../../utils/dates';
 import { BookCard } from './book-card';
 import { BookPageCalendar } from './book-page-calendar';
@@ -27,48 +13,9 @@ import { BookPageSelector } from './book-page-selector';
 
 export function BookPage(): JSX.Element {
   const { id } = useParams() as { id: string };
-  const navigate = useNavigate();
-  const [deleteLoading, setDeleteLoading] = useState(false);
   const { data: book, isLoading } = useBookWithStats(Number(id));
 
   const avgPerDay = book ? book.total_read_time / Object.keys(book.read_per_day).length : 0;
-
-  const openDeleteConfirm = () =>
-    modals.openConfirmModal({
-      title: 'Delete Book?',
-      centered: true,
-      children: (
-        <Text size="sm">
-          Are you sure you want to delete {book ? `"${book?.title}"` : 'this book'}? This action is
-          destructive and cannot be reverted.
-        </Text>
-      ),
-      labels: { confirm: 'Delete', cancel: "No, don't delete it" },
-      confirmProps: { color: 'red' },
-      onConfirm: handleDelete,
-    });
-
-  const handleDelete = async () => {
-    try {
-      setDeleteLoading(true);
-      await deleteBook(id);
-      await mutate('books');
-      navigate(RoutePath.HOME);
-      notifications.show({
-        title: 'Book deleted',
-        message: `${book ? `"${book?.title}"` : 'Book'} deleted successfully.`,
-        color: 'green',
-        position: 'top-center',
-      });
-    } catch (error) {
-      notifications.show({
-        title: 'Failed to delete the book',
-        message: 'Failed to delete the book.',
-        color: 'red',
-        position: 'top-center',
-      });
-    }
-  };
 
   if (isLoading || !book) {
     return (
@@ -79,42 +26,42 @@ export function BookPage(): JSX.Element {
   }
 
   return (
-    <Flex direction="column" gap={20}>
-      <Flex justify="space-between" align="start">
+    <Stack gap="md">
+      <Group justify="space-between" gap="md">
         <BookCard book={book} />
-        <Button
-          loading={deleteLoading}
-          leftSection={<IconTrash size={16} />}
-          variant="danger"
-          onClick={openDeleteConfirm}
-        >
-          Delete
-        </Button>
-      </Flex>
-      <Statistics
-        data={[
-          {
-            label: 'Total read time',
-            value: formatSecondsToHumanReadable(book.total_read_time),
-            icon: IconClock,
-          },
-          {
-            label: 'Average time per day',
-            value: formatSecondsToHumanReadable(avgPerDay),
-            icon: IconClock,
-          },
-          {
-            label: 'Days reading',
-            value: Object.keys(book.read_per_day).length,
-            icon: IconCalendar,
-          },
-          {
-            label: 'Average time per page',
-            value: `${Math.round(sum(book.stats.map((p) => p.duration)) / book.stats.length)}s`,
-            icon: IconAlarmAverage,
-          },
-        ]}
-      />
+        <Paper withBorder p="md" radius="md">
+          <Text size="xs" c="dimmed" tt="uppercase">
+            Reading progress
+          </Text>
+          <Group align="center" justify="center" h="100%">
+            <div>
+              <RingProgress
+                label={
+                  <Text size="xs" ta="center">
+                    {book.total_read_pages} / {book.pages}
+                  </Text>
+                }
+                sections={[
+                  {
+                    value: (book.total_read_pages / book.pages) * 100,
+                    color: 'kobuddy',
+                  },
+                ]}
+                w="100%"
+              />
+            </div>
+            <Stack align="flex-start" gap={5}>
+              <Text>Total read time: {formatSecondsToHumanReadable(book.total_read_time)}</Text>
+              <Text>Average time per day: {formatSecondsToHumanReadable(avgPerDay)}</Text>
+              <Text>Days reading: {Object.keys(book.read_per_day).length}</Text>
+              <Text>
+                Average time per page:{' '}
+                {Math.round(sum(book.stats.map((p) => p.duration)) / book.stats.length)}s
+              </Text>
+            </Stack>
+          </Group>
+        </Paper>
+      </Group>
 
       <Tabs defaultValue="calendar">
         <Tabs.List>
@@ -156,6 +103,6 @@ export function BookPage(): JSX.Element {
           </Box>
         </Tabs.Panel>
       </Tabs>
-    </Flex>
+    </Stack>
   );
 }

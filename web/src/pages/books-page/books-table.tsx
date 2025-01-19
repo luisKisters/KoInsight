@@ -1,7 +1,7 @@
+import { Book } from '@/common/types/book';
 import { Anchor, Progress, Table } from '@mantine/core';
 import { JSX } from 'react';
 import { Link } from 'react-router';
-import { Book } from '../../api/use-books';
 import { getBookPath } from '../../routes';
 import { formatRelativeDate, formatSecondsToHumanReadable } from '../../utils/dates';
 

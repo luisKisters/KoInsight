@@ -7,7 +7,7 @@
     "start": "node dist/app.js",
     "build": "tsc",
     "dev": "NODE_ENV=development nodemon src/app.ts",
-    "knex": "knex --knexfile ./src/knexfile.ts"
+    "knex": "DATA_PATH=../../data knex --knexfile ./src/knexfile.ts"
   },
   "author": "",
   "license": "ISC",

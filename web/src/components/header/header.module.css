@@ -8,6 +8,11 @@
 .Logo {
   color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
   text-decoration: none;
+  transition: color 200ms ease;
+
+  &:hover {
+    color: var(--mantine-primary-color-7);
+  }
 }
 
 .Link {
@@ -20,6 +25,7 @@
   color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
   font-weight: 500;
   font-size: var(--mantine-font-size-sm);
+  transition: background-color 200ms ease;
 
   &:hover {
     background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));

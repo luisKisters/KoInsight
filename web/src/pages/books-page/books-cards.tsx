@@ -1,5 +1,5 @@
 import { Book } from '@/common/types/book';
-import { Box, Group, Image, Text, Tooltip } from '@mantine/core';
+import { Box, Group, Image, Progress, Text, Tooltip } from '@mantine/core';
 import { IconBooks, IconProgress, IconUser } from '@tabler/icons-react';
 import { JSX } from 'react';
 import { useNavigate } from 'react-router';
@@ -21,7 +21,6 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
         <Box
           key={book.id}
           className={style.Card}
-          bd="1px solid gray.4"
           role="button"
           onClick={() => navigate(getBookPath(book.id))}
         >
@@ -30,9 +29,9 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
             style={{ aspectRatio: '1/1.5' }}
             w="200px"
             alt={book.title}
-            radius="md"
             fallbackSrc="/book-placeholder-small.png"
           />
+          <Progress radius={0} h={5} value={(book.total_read_pages / book.pages) * 100} />
           <Box px="lg" className={style.CardDetails}>
             <Text fz="md" fw={600} style={{ wordBreak: 'break-word', whiteSpace: 'wrap' }}>
               {book.title}
