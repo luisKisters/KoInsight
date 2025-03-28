@@ -17,7 +17,7 @@ export function formatSecondsToHumanReadable(seconds: number, hideSeconds = true
     return 'Less than a minute';
   }
 
-  return formatDuration(duration, { format: ['hours', 'minutes'] });
+  return formatDuration(duration, { format: ['months', 'days', 'hours', 'minutes'] });
 }
 
 export function formatRelativeDate(date: number): string {

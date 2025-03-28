@@ -1,5 +1,6 @@
 import { BarChart } from '@mantine/charts';
-import { Box, Flex, Loader, SegmentedControl, Title } from '@mantine/core';
+import { Box, Flex, Loader, SegmentedControl } from '@mantine/core';
+import { IconArrowsVertical, IconClock, IconMaximize, IconPageBreak } from '@tabler/icons-react';
 import { format, isSameDay, startOfDay, subDays } from 'date-fns';
 import { range, sum, uniqBy } from 'ramda';
 import { JSX, useMemo, useState } from 'react';
@@ -8,7 +9,6 @@ import { PageStat, usePageStats } from '../api/use-page-stats';
 import { ReadingCalendar } from '../components/statistics/reading-calendar';
 import { Statistics } from '../components/statistics/statistics';
 import { formatSecondsToHumanReadable } from '../utils/dates';
-import { IconArrowsVertical, IconClock, IconMaximize, IconPageBreak } from '@tabler/icons-react';
 
 export function StatsPage(): JSX.Element {
   const { data: books, isLoading } = useBooks();
@@ -41,7 +41,6 @@ export function StatsPage(): JSX.Element {
     const today = startOfDay(new Date());
     return range(0, 7)
       .reduce<{ day: string; duration: number }[]>((acc, day) => {
-        console.log(day);
         const date = startOfDay(subDays(today, day));
         const dayStats = stats?.filter((stat) => isSameDay(stat.start_time * 1000, date)) ?? [];
 
