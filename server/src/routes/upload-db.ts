@@ -73,7 +73,14 @@ router.post('/upload', upload.single('file'), async (req, res, next) => {
     ).map(({ id_book, ...pageStat }) => ({ ...pageStat, book_id: id_book }));
 
     await knex.transaction(async (trx) => {
-      await Promise.all(newBooks.map((book) => trx('book').insert(book).onConflict().ignore()));
+      await Promise.all(
+        newBooks.map((book) =>
+          trx('book')
+            .insert(book)
+            .onConflict('id')
+            .merge(['pages', 'last_open', 'total_read_time', 'total_read_pages'])
+        )
+      );
       await Promise.all(
         newPageStats.map((pageStat) => trx('page_stat').insert(pageStat).onConflict().ignore())
       );
