@@ -78,7 +78,14 @@ router.post('/upload', upload.single('file'), async (req, res, next) => {
           trx('book')
             .insert(book)
             .onConflict('id')
-            .merge(['pages', 'last_open', 'total_read_time', 'total_read_pages'])
+            .merge([
+              'pages',
+              'last_open',
+              'total_read_time',
+              'total_read_pages',
+              'notes',
+              'highlights',
+            ])
         )
       );
       await Promise.all(
