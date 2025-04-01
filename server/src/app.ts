@@ -1,12 +1,14 @@
 import cors from 'cors';
 import express, { Request, Response } from 'express';
 import { Server } from 'http';
+import morgan from 'morgan';
 import path from 'path';
 import { BASE_PATH } from './const';
-import { booksRouter } from './routes/books';
-import { openLibraryRouter } from './routes/open-library';
-import { statsRouter } from './routes/stats';
-import { uploadRouter } from './routes/upload-db';
+import { booksRouter } from './routes/books-router';
+import { kosyncRouter } from './routes/kosync-router';
+import { openLibraryRouter } from './routes/open-library-router';
+import { statsRouter } from './routes/stats-router';
+import { uploadRouter } from './routes/upload-router';
 
 require('dotenv').config();
 
@@ -19,6 +21,7 @@ const BUILD_PATH = path.join(BASE_PATH, '/dist/public');
 async function setupServer() {
   const app = express();
   app.use(express.json());
+  app.use(morgan('tiny'));
 
   if (ENV === 'development') {
     // Allow requests from dev build
@@ -26,6 +29,7 @@ async function setupServer() {
   }
 
   // Setup controllers
+  app.use('/', kosyncRouter);
   app.use('/api', booksRouter);
   app.use('/api', statsRouter);
   app.use('/api', uploadRouter);

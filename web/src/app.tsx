@@ -11,6 +11,7 @@ import { StatsPage } from './pages/stats-page';
 import { RoutePath } from './routes';
 
 import style from './app.module.css';
+import { SyncsPage } from './pages/syncs-page';
 
 const theme = createTheme({
   primaryColor: 'kobuddy',
@@ -43,6 +44,7 @@ export function App(): JSX.Element {
             <Route path={RoutePath.BOOK} element={<BookPage />} />
             <Route path={RoutePath.CALENDAR} element={<CalendarPage />} />
             <Route path={RoutePath.STATS} element={<StatsPage />} />
+            <Route path={RoutePath.SYNCS} element={<SyncsPage />} />
           </Routes>
         </main>
       </ModalsProvider>
