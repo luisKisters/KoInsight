@@ -9,9 +9,9 @@ export function getDuration(seconds: number): Duration {
 
 export function shortDuration(duration: Duration): string {
   const hours = String(duration.hours ?? 0).padStart(2, '0');
-  const minutes = String(duration.minutes).padStart(2, '0')
+  const minutes = String(duration.minutes ?? 0).padStart(2, '0');
 
-  return `${hours}:${minutes}`
+  return `${hours}:${minutes}`;
 }
 
 export function formatSecondsToHumanReadable(seconds: number, hideSeconds = true): string {
