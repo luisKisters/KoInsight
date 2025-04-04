@@ -13,8 +13,11 @@
   overflow: hidden;
 
   .CardDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
     width: 100%;
-    background: rgba(255, 255, 255, 0.85);
+    background: light-dark(rgba(255, 255, 255, 0.85), rgba(0, 0, 0, 0.8));
     backdrop-filter: blur(10px);
     position: absolute;
     bottom: -100px;
@@ -30,4 +33,9 @@
     opacity: 1;
     bottom: 0;
   }
+}
+
+.Attribute {
+  font-size: var(--mantine-font-size-xs);
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-6));
 }

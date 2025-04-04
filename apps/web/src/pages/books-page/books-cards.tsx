@@ -41,31 +41,27 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
             <Text fz="md" fw={600} style={{ wordBreak: 'break-word', whiteSpace: 'wrap' }}>
               {book.title}
             </Text>
-            <Group wrap="nowrap" gap={8}>
+            <Group wrap="nowrap" gap={8} mt="xs">
               <Tooltip label="Author" position="top" withArrow>
                 <IconUser stroke={1.5} size={16} />
               </Tooltip>
-              <Text fz="sm" c="gray.7">
-                {book.authors ?? 'N/A'}
-              </Text>
+              <span className={style.Attribute}>{book.authors ?? 'N/A'}</span>
             </Group>
             <Group wrap="nowrap" gap={8}>
               <Tooltip label="Series" position="top" withArrow>
                 <IconBooks stroke={1.5} size={16} />
               </Tooltip>
-              <Text fz="xs" c="gray.7">
-                {book.series}
-              </Text>
+              <span className={style.Attribute}>{book.series}</span>
             </Group>
             <Group wrap="nowrap" gap={8}>
               <Tooltip label="Pages read" position="top" withArrow>
                 <IconProgress stroke={1.5} size={16} />
               </Tooltip>
-              <Text fz="xs" c="gray.7">
+              <span className={style.Attribute}>
                 {book.total_read_pages}
                 &nbsp;/&nbsp;
                 {book.pages} pages read
-              </Text>
+              </span>
             </Group>
           </Box>
         </Box>
