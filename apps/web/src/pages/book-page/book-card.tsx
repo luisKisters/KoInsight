@@ -13,17 +13,20 @@ import { BookWithStats } from '../../api/use-book-with-stats';
 import { formatRelativeDate } from '../../utils/dates';
 
 import style from './book-card.module.css';
+import { useMediaQuery } from '@mantine/hooks';
 
 type BookCardProps = {
   book: BookWithStats;
 };
 
 export function BookCard({ book }: BookCardProps): JSX.Element {
+  const media = useMediaQuery(`(max-width: 62em)`);
+
   return (
     <Flex align="center" gap="xs">
       <Image
         src={`${API_URL}/books/${book.id}/cover`}
-        h={250}
+        h={media ? 150 : 250}
         alt={book.title}
         radius="md"
         fallbackSrc="/book-placeholder-small.png"
