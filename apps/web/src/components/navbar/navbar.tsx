@@ -1,18 +1,12 @@
-import { Anchor, Avatar, Box, Flex } from '@mantine/core';
-import {
-  IconBook,
-  IconBook2,
-  IconBooks,
-  IconCalendar,
-  IconChartBar,
-  IconReload,
-} from '@tabler/icons-react';
-import { useState } from 'react';
+import { Box } from '@mantine/core';
+import { IconBooks, IconCalendar, IconChartBar, IconReload } from '@tabler/icons-react';
+import { JSX, useState } from 'react';
 
 import { NavLink, useLocation } from 'react-router';
 import { RoutePath } from '../../routes';
 import { UploadForm } from '../header/upload-form';
 
+import { Logo } from '../logo/logo';
 import style from './navbar.module.css';
 
 const tabs = [
@@ -22,11 +16,16 @@ const tabs = [
   { link: RoutePath.SYNCS, label: 'Progress Syncs', icon: IconReload },
 ];
 
-export function Navbar() {
+export function Navbar({ onNavigate }: { onNavigate?: () => void }): JSX.Element {
   const { pathname } = useLocation();
   const [active, setActive] = useState(
     () => tabs.find((item) => item.link === pathname)?.link ?? RoutePath.HOME
   );
+
+  const onClick = (link: RoutePath) => {
+    setActive(link);
+    onNavigate?.();
+  };
 
   const links = tabs.map((item) => (
     <NavLink
@@ -34,7 +33,7 @@ export function Navbar() {
       data-active={item.link === active || undefined}
       to={item.link}
       key={item.label}
-      onClick={() => setActive(item.link)}
+      onClick={() => onClick(item.link)}
     >
       <item.icon className={style.LinkIcon} stroke={1.5} />
       <span>{item.label}</span>
@@ -42,19 +41,18 @@ export function Navbar() {
   ));
 
   return (
-    <nav className={style.Navbar}>
-      <NavLink to={RoutePath.HOME} onClick={() => setActive(RoutePath.HOME)} className={style.Logo}>
-        <IconBook className={style.LogoIcon} size={24} />
-        <strong>KoBuddy</strong>
-      </NavLink>
+    <Box className={style.Navbar} component="nav">
+      <Logo
+        onClick={() => {
+          setActive(RoutePath.HOME);
+          onNavigate?.();
+        }}
+        className={style.Logo}
+      />
       <div>{links}</div>
       <div className={style.Footer}>
-        {/* <Flex gap="sm" align="center">
-          <Avatar name="User 1" color="initials" ml="sm" radius="lg" />
-          <strong>User 1</strong>
-        </Flex> */}
         <UploadForm />
       </div>
-    </nav>
+    </Box>
   );
 }

@@ -1,4 +1,4 @@
-import { createTheme, MantineProvider } from '@mantine/core';
+import { Box, Burger, createTheme, Drawer, Group, MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import { JSX } from 'react';
@@ -12,6 +12,8 @@ import { SyncsPage } from './pages/syncs-page';
 import { RoutePath } from './routes';
 
 import style from './app.module.css';
+import { Logo } from './components/logo/logo';
+import { useDisclosure } from '@mantine/hooks';
 
 const theme = createTheme({
   fontFamily: 'Noto Serif, serif',
@@ -34,12 +36,22 @@ const theme = createTheme({
 });
 
 export function App(): JSX.Element {
+  const [drawerOpened, { open: openDrawer, close: closeDrawer }] = useDisclosure(false);
   return (
     <MantineProvider theme={theme}>
       <ModalsProvider>
         <Notifications />
         <div className={style.App}>
-          <Navbar />
+          <Group hiddenFrom="sm" align="center" gap="sm" mb="lg" ml="md">
+            <Burger size="sm" onClick={() => openDrawer()} />
+            <Logo onClick={() => {}} />
+          </Group>
+          <Drawer opened={drawerOpened} onClose={closeDrawer}>
+            <Navbar onNavigate={closeDrawer} />
+          </Drawer>
+          <Box visibleFrom="sm">
+            <Navbar />
+          </Box>
           <main className={style.Main}>
             <Routes>
               <Route index element={<Navigate to={RoutePath.BOOKS} />} />

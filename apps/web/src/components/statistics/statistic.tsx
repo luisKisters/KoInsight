@@ -14,14 +14,14 @@ export function Statistic({ label, value, icon: Icon }: StatisticProps): JSX.Ele
   return (
     <Paper withBorder p="md" radius="md" key={label}>
       <Group justify="space-between">
-        <Text size="xs" c="dimmed" fw={700} className={style.title}>
+        <Text size="xs" c="dimmed" fw={700} className={style.Title}>
           {label}
         </Text>
-        <Icon className={style.icon} size={22} stroke={1.5} />
+        <Icon className={style.Icon} size={22} stroke={1.5} />
       </Group>
 
       <Group align="flex-end" gap="xs" mt={25}>
-        <p className={style.value}>{value}</p>
+        <p className={style.Value}>{value}</p>
         {/* <Text c={stat.diff > 0 ? 'teal' : 'red'} fz="sm" fw={500} className={style.diff}>
           <span>{stat.diff}%</span>
           <DiffIcon size={16} stroke={1.5} />

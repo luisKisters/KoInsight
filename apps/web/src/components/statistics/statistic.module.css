@@ -1,4 +1,4 @@
-.statistic {
+.Statistic {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,24 +10,24 @@
   border-radius: var(--mantine-radius-sm);
 }
 
-.value {
+.Value {
   font-size: var(--mantine-font-size-xl);
   font-weight: 600;
   line-height: 1;
   margin: 0;
 }
 
-.diff {
+.Diff {
   line-height: 1;
   display: flex;
   align-items: center;
 }
 
-.icon {
+.Icon {
   color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-3));
 }
 
-.title {
+.Title {
   font-weight: 900;
   text-transform: uppercase;
 }
