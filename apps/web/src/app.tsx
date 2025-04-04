@@ -44,7 +44,7 @@ export function App(): JSX.Element {
         <div className={style.App}>
           <Group hiddenFrom="md" align="center" gap="sm" mb="lg" ml="md">
             <Burger size="sm" onClick={() => openDrawer()} />
-            <Logo onClick={() => {}} />
+            <Logo />
           </Group>
           <Drawer opened={drawerOpened} onClose={closeDrawer}>
             <Navbar onNavigate={closeDrawer} />
