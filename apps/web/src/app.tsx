@@ -42,14 +42,14 @@ export function App(): JSX.Element {
       <ModalsProvider>
         <Notifications />
         <div className={style.App}>
-          <Group hiddenFrom="sm" align="center" gap="sm" mb="lg" ml="md">
+          <Group hiddenFrom="md" align="center" gap="sm" mb="lg" ml="md">
             <Burger size="sm" onClick={() => openDrawer()} />
             <Logo onClick={() => {}} />
           </Group>
           <Drawer opened={drawerOpened} onClose={closeDrawer}>
             <Navbar onNavigate={closeDrawer} />
           </Drawer>
-          <Box visibleFrom="sm">
+          <Box visibleFrom="md">
             <Navbar />
           </Box>
           <main className={style.Main}>

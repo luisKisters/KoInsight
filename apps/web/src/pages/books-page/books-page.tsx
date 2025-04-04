@@ -14,6 +14,8 @@ import { useBooks } from '../../api/use-books';
 import { BooksCards } from './books-cards';
 import { BooksTable } from './books-table';
 
+import style from './books-page.module.css';
+
 export function BooksPage(): JSX.Element {
   const [mode, setMode] = useLocalStorage<'table' | 'cards'>({
     key: 'kobuddy-books-search',
@@ -83,7 +85,7 @@ export function BooksPage(): JSX.Element {
   return (
     <>
       <Title mb="xl">Books</Title>
-      <Flex justify="space-between" mb="xl">
+      <div className={style.Controls}>
         <TextInput
           placeholder="Search books..."
           w={300}
@@ -95,7 +97,7 @@ export function BooksPage(): JSX.Element {
             ) : null
           }
         />
-        <Group justify="center" align="center">
+        <Group align="center">
           <Button
             variant="outline"
             onClick={() =>
@@ -147,7 +149,7 @@ export function BooksPage(): JSX.Element {
             </Tooltip>
           </Button.Group>
         </Group>
-      </Flex>
+      </div>
       {mode === 'table' ? <BooksTable books={sortedBooks} /> : <BooksCards books={sortedBooks} />}
     </>
   );

@@ -1,0 +1,12 @@
+.Controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-bottom: var(--mantine-spacing-xl);
+}
+
+@media (max-width: $mantine-breakpoint-md) {
+  .Controls {
+    flex-direction: column;
+  }
+}
