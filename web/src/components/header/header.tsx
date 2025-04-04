@@ -24,9 +24,11 @@ export function Header(): JSX.Element {
             <Link to={RoutePath.STATS} className={style.Link}>
               Stats
             </Link>
+            <Link to={RoutePath.SYNCS} className={style.Link}>
+              Syncs
+            </Link>
           </Flex>
         </Flex>
-        <UploadForm />
       </Flex>
     </header>
   );

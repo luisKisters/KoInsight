@@ -32,14 +32,19 @@ export type CalendarProps<T> = {
 export function Calendar<T>({ events, dayRenderer }: CalendarProps<T>): JSX.Element {
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const startDate = startOfWeek(startOfMonth(currentDate));
-  const endDate = endOfWeek(endOfMonth(currentDate));
+  const startDate = startOfWeek(startOfMonth(currentDate), {
+    locale: { options: { weekStartsOn: 1 } },
+  });
+  const endDate = endOfWeek(endOfMonth(currentDate), { locale: { options: { weekStartsOn: 1 } } });
   const dates = [];
 
   let day = startDate;
   while (day <= endDate) {
     const isCurrentMonth = isSameMonth(day, currentDate);
     const isCurrentDay = isToday(day);
+    const key = day.toISOString();
+    const event = events[key];
+    const dayNum = format(day, 'd');
 
     dates.push(
       <div
@@ -48,15 +53,14 @@ export function Calendar<T>({ events, dayRenderer }: CalendarProps<T>): JSX.Elem
           !isCurrentMonth && style.CalendarDateDisabled,
           isCurrentDay && style.CalendarDateToday
         )}
-        key={day.toISOString()}
+        key={key}
       >
-        {events[day.toISOString()] ? <strong>{format(day, 'd')}</strong> : format(day, 'd')}
-        <br />
-        {events[day.toISOString()] && (
+        <div className={style.CalendarDay}>{event ? <strong>{dayNum}</strong> : dayNum}</div>
+        {event && (
           <>
             <div className={style.CalendarEvent}>
-              {events[day.toISOString()].title}
-              {events[day.toISOString()]?.data && dayRenderer?.(events[day.toISOString()].data!)}
+              {event.title}
+              {event?.data && dayRenderer?.(event.data!)}
             </div>
           </>
         )}
@@ -88,22 +92,25 @@ export function Calendar<T>({ events, dayRenderer }: CalendarProps<T>): JSX.Elem
   return (
     <div className={style.Calendar}>
       <div className={style.CalendarHeader}>
-        <Button
-          size="xs"
-          variant="outline"
-          onClick={() => setCurrentDate(subMonths(currentDate, 1))}
-        >
-          <IconArrowLeft size={16} />
-        </Button>
-        <Flex gap={8}>
-          <Button size="xs" onClick={() => setCurrentDate(new Date())}>
+        <Flex gap="xs">
+          <Button
+            size="xs"
+            variant="light"
+            color="violet"
+            onClick={() => setCurrentDate(subMonths(currentDate, 1))}
+          >
+            <IconArrowLeft size={16} />
+          </Button>
+
+          <Button size="xs" variant="outline" onClick={() => setCurrentDate(new Date())}>
             Today
           </Button>
           <MonthPickerInput size="xs" value={currentDate} onChange={(e) => setCurrentDate(e!)} />
         </Flex>
         <Button
           size="xs"
-          variant="outline"
+          color="violet"
+          variant="light"
           onClick={() => setCurrentDate(addMonths(currentDate, 1))}
         >
           <IconArrowRight size={16} />

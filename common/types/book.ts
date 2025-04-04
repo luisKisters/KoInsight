@@ -1,3 +1,5 @@
+import { Genre } from './genre';
+
 type KoReaderBook = {
   id: number;
   title: string;
@@ -15,4 +17,8 @@ type KoReaderBook = {
 
 export type Book = KoReaderBook & {
   soft_deleted: boolean;
+};
+
+export type BookWithGenres = Book & {
+  genres: Genre[];
 };

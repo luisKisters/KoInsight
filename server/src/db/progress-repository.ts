@@ -59,7 +59,18 @@ export class ProgressRepository {
   }
 
   static async getAll(): Promise<Progress[]> {
-    const result = await knex<Progress>('progress').select('*');
+    const result = await knex<Progress>('progress')
+      .select(
+        'progress.document',
+        'progress.progress',
+        'progress.percentage',
+        'progress.device',
+        'progress.device_id',
+        'progress.created_at',
+        'progress.updated_at',
+        'user.username'
+      )
+      .innerJoin('user', 'user.id', 'progress.user_id');
     return result;
   }
 }

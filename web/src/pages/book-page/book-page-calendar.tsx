@@ -8,7 +8,7 @@ import { BookWithStats } from '../../api/use-book-with-stats';
 import { PageStat } from '../../api/use-page-stats';
 import { Calendar, CalendarEvent } from '../../components/calendar/calendar';
 import { getBookPath } from '../../routes';
-import { formatSecondsToHumanReadable } from '../../utils/dates';
+import { getDuration, shortDuration } from '../../utils/dates';
 
 type BookPageCalendarProps = {
   book: BookWithStats;
@@ -35,12 +35,8 @@ export function BookPageCalendar({ book }: BookPageCalendarProps): JSX.Element {
       events={calendarEvents}
       dayRenderer={(data) => (
         <>
-          <Anchor key={book.id} component={Link} to={getBookPath(book.id)}>
-            {book.title}
-          </Anchor>
-          <br />
           <IconClock size={14} />{' '}
-          {formatSecondsToHumanReadable(sum(data.events.map((event) => event.duration)))}
+          {shortDuration(getDuration(sum(data.events.map((event) => event.duration))))}
         </>
       )}
     />

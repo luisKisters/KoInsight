@@ -35,7 +35,7 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
             radius={0}
             h={5}
             value={(book.total_read_pages / book.pages) * 100}
-            color="kobuddy.4"
+            color="kobuddy"
           />
           <Box px="lg" className={style.CardDetails}>
             <Text fz="md" fw={600} style={{ wordBreak: 'break-word', whiteSpace: 'wrap' }}>
@@ -45,7 +45,7 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
               <Tooltip label="Author" position="top" withArrow>
                 <IconUser stroke={1.5} size={16} />
               </Tooltip>
-              <Text fz="sm" c="dimmed">
+              <Text fz="sm" c="gray.7">
                 {book.authors ?? 'N/A'}
               </Text>
             </Group>
@@ -53,7 +53,7 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
               <Tooltip label="Series" position="top" withArrow>
                 <IconBooks stroke={1.5} size={16} />
               </Tooltip>
-              <Text fz="xs" c="dimmed">
+              <Text fz="xs" c="gray.7">
                 {book.series}
               </Text>
             </Group>
@@ -61,7 +61,7 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
               <Tooltip label="Pages read" position="top" withArrow>
                 <IconProgress stroke={1.5} size={16} />
               </Tooltip>
-              <Text fz="xs" c="dimmed">
+              <Text fz="xs" c="gray.7">
                 {book.total_read_pages}
                 &nbsp;/&nbsp;
                 {book.pages} pages read

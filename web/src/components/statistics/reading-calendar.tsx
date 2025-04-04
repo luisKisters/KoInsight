@@ -32,13 +32,8 @@ export function ReadingCalendar(): JSX.Element {
   }, [stats]);
 
   return (
-    <>
-      <Title order={3} mb="lg">
-        Reading history
-      </Title>
-      <Flex align="center" justify="center">
-        <DotTrail percentPerDay={percentPerDay} />
-      </Flex>
-    </>
+    <Flex style={{ width: '100%' }} justify="center" align="center">
+      <DotTrail percentPerDay={percentPerDay} />
+    </Flex>
   );
 }

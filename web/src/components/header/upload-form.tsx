@@ -1,4 +1,4 @@
-import { Button, FileInput, Flex, Modal, Text } from '@mantine/core';
+import { Button, FileInput, Flex, Modal, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconUpload } from '@tabler/icons-react';
@@ -46,12 +46,22 @@ export function UploadForm(): JSX.Element {
 
   return (
     <>
+      <Button leftSection={<IconUpload size={16} />} onClick={open} variant="light" size="sm">
+        Upload Statistics DB
+      </Button>
       <Modal
-        title={<Text fw="600">Upload Koreader Database</Text>}
+        title={
+          <Title order={4} px="lg">
+            Upload Koreader Statistics Database
+          </Title>
+        }
         opened={modalOpened}
+        size="lg"
         onClose={close}
+        radius="lg"
+        centered
       >
-        <Flex direction="column" gap="sm">
+        <Flex direction="column" gap="sm" p="lg">
           <form onSubmit={handleSubmit} encType="multipart/form-data">
             <FileInput
               label="Choose Database file"
@@ -65,9 +75,6 @@ export function UploadForm(): JSX.Element {
           {message && <p>{message}</p>}
         </Flex>
       </Modal>
-      <Button leftSection={<IconUpload size={16} />} onClick={open} variant="light" size="xs">
-        Upload DB
-      </Button>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { Flex, Table } from '@mantine/core';
+import { Flex, NumberInput, Table } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { endOfDay, formatDate, startOfDay } from 'date-fns';
 import { apply } from 'ramda';
@@ -12,20 +12,32 @@ type BookPageRawProps = {
 
 export function BookPageRaw({ book }: BookPageRawProps): JSX.Element {
   const dates = book.stats.map((stat) => stat.start_time);
+  const pages = book.stats.map((stat) => stat.page);
   const min = new Date(apply(Math.min, dates) * 1000);
   const max = new Date(apply(Math.max, dates) * 1000);
+  const maxPage = apply(Math.max, pages);
 
+  const [page, setPage] = useState<number | null>(null);
   const [startDate, setStartDate] = useState(min);
   const [endDate, setEndDate] = useState(max);
 
   const visibleEvents = book.stats.filter(
     (stat) =>
-      stat.start_time >= startDate.getTime() / 1000 && stat.start_time <= endDate.getTime() / 1000
+      (!page || stat.page === page) &&
+      stat.start_time >= startDate.getTime() / 1000 &&
+      stat.start_time <= endDate.getTime() / 1000
   );
 
   return (
     <Flex direction="column" gap={20}>
       <Flex gap={8}>
+        <NumberInput
+          label="Page Number"
+          value={page ?? 0}
+          onChange={(e) => setPage(Number(e))}
+          max={maxPage}
+          step={1}
+        />
         <DateInput
           label="Start date"
           value={startDate}
@@ -41,7 +53,7 @@ export function BookPageRaw({ book }: BookPageRawProps): JSX.Element {
           maxDate={max}
         />
       </Flex>
-      <Table>
+      <Table stickyHeader>
         <Table.Thead>
           <Table.Tr>
             <Table.Th>Page</Table.Th>

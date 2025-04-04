@@ -1,5 +1,5 @@
 import { Book } from '@/common/types/book';
-import { Anchor, Flex, Loader } from '@mantine/core';
+import { Anchor, Flex, Loader, Title } from '@mantine/core';
 import { IconClock } from '@tabler/icons-react';
 import { startOfDay } from 'date-fns/startOfDay';
 import { sum, uniq } from 'ramda';
@@ -9,7 +9,7 @@ import { useBooks } from '../api/use-books';
 import { PageStat, usePageStats } from '../api/use-page-stats';
 import { Calendar, CalendarEvent } from '../components/calendar/calendar';
 import { getBookPath } from '../routes';
-import { formatSecondsToHumanReadable } from '../utils/dates';
+import { getDuration, shortDuration } from '../utils/dates';
 
 type DayData = {
   events: PageStat[];
@@ -55,15 +55,15 @@ export function CalendarPage(): JSX.Element {
           </Anchor>
           <br />
           <IconClock size={14} />{' '}
-          {formatSecondsToHumanReadable(
-            sum(
-              data.events
-                .filter((event) => event.book_id === book.id)
-                .map((event) => event.duration)
+          {shortDuration(
+            getDuration(
+              sum(
+                data.events
+                  .filter((event) => event.book_id === book.id)
+                  .map((event) => event.duration)
+              )
             )
           )}
-          <br />
-          -
           <br />
         </>
       ));
@@ -80,9 +80,12 @@ export function CalendarPage(): JSX.Element {
   }
 
   return (
-    <Calendar<DayData>
-      events={calendarEvents}
-      dayRenderer={(data) => getBookNames(data).map((el) => <div>{el}</div>)}
-    />
+    <>
+      <Title mb="xl">Calendar</Title>
+      <Calendar<DayData>
+        events={calendarEvents}
+        dayRenderer={(data) => getBookNames(data).map((el) => <div>{el}</div>)}
+      />
+    </>
   );
 }

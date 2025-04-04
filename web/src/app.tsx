@@ -2,20 +2,21 @@ import { createTheme, MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import { JSX } from 'react';
-import { Route, Routes } from 'react-router';
-import { Header } from './components/header/header';
+import { Navigate, Route, Routes } from 'react-router';
+import { Navbar } from './components/navbar/navbar';
 import { BookPage } from './pages/book-page/book-page';
 import { BooksPage } from './pages/books-page/books-page';
 import { CalendarPage } from './pages/calendar-page';
 import { StatsPage } from './pages/stats-page';
+import { SyncsPage } from './pages/syncs-page';
 import { RoutePath } from './routes';
 
 import style from './app.module.css';
-import { SyncsPage } from './pages/syncs-page';
 
 const theme = createTheme({
+  fontFamily: 'Noto Serif, serif',
   primaryColor: 'kobuddy',
-  primaryShade: 7,
+  primaryShade: 8,
   colors: {
     kobuddy: [
       '#e2fefc',
@@ -37,16 +38,19 @@ export function App(): JSX.Element {
     <MantineProvider theme={theme}>
       <ModalsProvider>
         <Notifications />
-        <Header />
-        <main className={style.Main}>
-          <Routes>
-            <Route path={RoutePath.BOOKS} element={<BooksPage />} />
-            <Route path={RoutePath.BOOK} element={<BookPage />} />
-            <Route path={RoutePath.CALENDAR} element={<CalendarPage />} />
-            <Route path={RoutePath.STATS} element={<StatsPage />} />
-            <Route path={RoutePath.SYNCS} element={<SyncsPage />} />
-          </Routes>
-        </main>
+        <div className={style.App}>
+          <Navbar />
+          <main className={style.Main}>
+            <Routes>
+              <Route index element={<Navigate to={RoutePath.BOOKS} />} />
+              <Route path={RoutePath.BOOKS} element={<BooksPage />} />
+              <Route path={RoutePath.BOOK} element={<BookPage />} />
+              <Route path={RoutePath.CALENDAR} element={<CalendarPage />} />
+              <Route path={RoutePath.STATS} element={<StatsPage />} />
+              <Route path={RoutePath.SYNCS} element={<SyncsPage />} />
+            </Routes>
+          </main>
+        </div>
       </ModalsProvider>
     </MantineProvider>
   );

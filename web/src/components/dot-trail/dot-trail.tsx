@@ -1,8 +1,9 @@
 import { darken, rgba, Tooltip } from '@mantine/core';
-import { startOfDay, startOfMonth, subMonths } from 'date-fns';
-import { JSX, ReactNode, useMemo } from 'react';
+import { startOfDay, startOfMonth, startOfWeek, subDays, subMonths } from 'date-fns';
+import { JSX, ReactNode, useMemo, useRef } from 'react';
 
 import style from './dot-trail.module.css';
+import { useElementSize, useViewportSize } from '@mantine/hooks';
 
 export type DayData = {
   percent: number;
@@ -14,28 +15,42 @@ type DotTrailProps = {
 };
 
 export function DotTrail({ percentPerDay }: DotTrailProps): JSX.Element {
+  const { width } = useViewportSize();
+
+  // TODO: find a better way to compute this
+  const dotsToFit = Math.floor((width - 500) / 18);
+  const daysToFit = dotsToFit * 7;
+
   const today = startOfDay(new Date());
-  const start = startOfMonth(subMonths(today, 12));
-  const end = today;
+
+  const start = startOfDay(
+    startOfWeek(subDays(today, daysToFit), {
+      locale: { options: { weekStartsOn: 1 } },
+    })
+  );
 
   const allDays = useMemo(() => {
     const days = [];
     let current = start;
-    while (current <= end) {
-      days.push(current.getTime());
+    while (current <= today) {
+      days.push(startOfDay(current.getTime()).valueOf());
       current = new Date(current.getTime() + 24 * 60 * 60 * 1000);
     }
 
     return days;
-  }, [start, end]);
+  }, [start, today]);
 
   return (
-    <div className={style.dotGrid}>
+    <div className={style.dotGrid} style={{ width: `${width}px` }}>
       {allDays.map((day) => (
         <div key={day}>
           <Tooltip
             withArrow
-            label={percentPerDay[day] ? percentPerDay[day].tooltip : 'No data for this day'}
+            label={
+              percentPerDay[day]
+                ? percentPerDay[day].tooltip
+                : `No data for ${new Date(day).toDateString()}`
+            }
           >
             <div
               key={day}

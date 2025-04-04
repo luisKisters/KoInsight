@@ -1,0 +1,14 @@
+.Placeholder {
+  position: absolute;
+  display: block;
+  width: 180px;
+  height: 250px;
+  background-color: var(--mantine-color-gray-1);
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.Cover {
+  position: relative;
+  z-index: 2;
+}

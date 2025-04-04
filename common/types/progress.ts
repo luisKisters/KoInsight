@@ -1,3 +1,5 @@
+import { User } from './user';
+
 export type Progress = {
   id: number;
   user_id: number;
@@ -9,3 +11,5 @@ export type Progress = {
   created_at: Date;
   updated_at: Date;
 };
+
+export type ProgressWithUsername = Progress & Pick<User, 'username'>;

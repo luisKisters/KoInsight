@@ -7,12 +7,12 @@ import { PageStatRepository } from '../db/page-stat-repository';
 const router = Router();
 
 router.get('/books', async (_: Request, res: Response) => {
-  const books = await BookRepository.getAll();
+  const books = await BookRepository.getAllWithGenres();
   res.json(books);
 });
 
 router.get('/books/:id', async (req: Request, res: Response, next: NextFunction) => {
-  const book = await BookRepository.getById(Number(req.params.id));
+  const book = await BookRepository.getByIdWithGenres(Number(req.params.id));
 
   if (!book) {
     res.status(404).json({ error: 'Book not found' });
@@ -39,7 +39,7 @@ router.delete('/books/:id', async (req: Request, res: Response) => {
 
   try {
     await BookRepository.softDelete(Number(id));
-    res.status(200).json({ status: 'Book deleted' });
+    res.status(200).json({ message: 'Book deleted' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to delete book' });
@@ -52,6 +52,24 @@ router.get('/books/:id/cover', (req: Request, res: Response) => {
       res.status(404).send('Cover not found');
     }
   });
+});
+
+router.post('/books/:id/genres', (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { genreName } = req.body;
+
+  if (!id || !genreName) {
+    res.status(400).json({ error: 'Missing required fields' });
+    return;
+  }
+
+  try {
+    BookRepository.addGenre(Number(id), genreName);
+    res.status(200).json({ message: 'Genre added' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to add genre' });
+  }
 });
 
 export { router as booksRouter };

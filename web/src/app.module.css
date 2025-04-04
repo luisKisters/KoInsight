@@ -1,4 +1,18 @@
+.App {
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  height: calc(100vh - 80px);
+  margin: 40px;
+  padding-block: var(--mantine-spacing-xl);
+  border-radius: var(--mantine-radius-lg);
+  background-color: #fff; /* TODO: lightdark */
+  box-shadow: var(--mantine-shadow-xs);
+}
+
 .Main {
+  padding-bottom: var(--mantine-spacing-xl);
   padding-inline: var(--mantine-spacing-xl);
-  height: calc(100vh - 96px);
+  overflow-y: auto;
+  flex-grow: 1;
 }

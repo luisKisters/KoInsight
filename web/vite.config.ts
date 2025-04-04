@@ -1,10 +1,13 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+const PORT = Number(process.env.PORT ?? 3000);
+const HOST = process.env.HOST || 'localhost';
+
 export default defineConfig({
   plugins: [react()],
   css: { postcss: './postcss.config.cjs' },
-  server: { port: 3000 },
+  server: { host: HOST, port: PORT },
   build: {
     target: 'esnext',
     outDir: '../server/dist/public', // Output static files here

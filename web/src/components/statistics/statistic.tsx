@@ -14,7 +14,7 @@ export function Statistic({ label, value, icon: Icon }: StatisticProps): JSX.Ele
   return (
     <Paper withBorder p="md" radius="md" key={label}>
       <Group justify="space-between">
-        <Text size="xs" c="dimmed" className={style.title}>
+        <Text size="xs" c="dimmed" fw={700} className={style.title}>
           {label}
         </Text>
         <Icon className={style.icon} size={22} stroke={1.5} />

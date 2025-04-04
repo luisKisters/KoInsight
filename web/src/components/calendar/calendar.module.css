@@ -1,17 +1,17 @@
 .Calendar {
   width: 100%;
   margin: auto;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 1px solid var(--mantine-color-gray-4);
+  border-radius: var(--mantine-radius-md);
+  overflow: hidden;
 }
 
 .CalendarHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  background-color: #f4f4f4;
-  border-bottom: 1px solid #ddd;
+  padding: var(--mantine-spacing-xs);
+  border-bottom: 1px solid var(--mantine-color-gray-4);
 }
 
 .CalendarGrid {
@@ -20,17 +20,27 @@
 }
 
 .CalendarDate {
-  padding: 10px;
-  text-align: center;
+  padding: var(--mantine-spacing-xs);
   border: 1px solid #f1f1f1;
+  min-height: 150px;
+}
+
+.CalendarDay {
+  text-align: left;
+  font-size: 1.1rem;
+  margin-bottom: 2px;
+}
+
+.CalendarEvent {
+  text-align: center;
 }
 
 .CalendarDateToday {
-  background-color: #eaf6ff;
+  background-color: var(--mantine-color-kobuddy-light);
   font-weight: bold;
-  border: 1px solid #3498db;
+  border: 1px solid var(--mantine-color-kobuddy-light-color);
 }
 
 .CalendarDateDisabled {
-  color: #ccc;
+  color: var(--mantine-color-gray-5);
 }

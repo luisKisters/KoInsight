@@ -45,8 +45,6 @@ router.get('/users/auth', async (req: Request, res: Response) => {
   const username = req.header('x-auth-user');
   const password = req.header('x-auth-key');
 
-  console.log({ username, password });
-
   if (!username || !password) {
     res.status(400).json({ message: 'Invalid request' });
     return;
@@ -123,8 +121,6 @@ router.put('/syncs/progress', authenticate, async (req: Request, res: Response) 
  * "expected_status" : [200, 401]
  */
 router.get('/syncs/progress/:document', authenticate, async (req: Request, res: Response) => {
-  console.log('params', req.params);
-  console.log('user', req.user);
   const { document } = req.params;
   const user = req.user;
 
@@ -147,6 +143,7 @@ router.get('/syncs/progress/:document', authenticate, async (req: Request, res: 
   console.log('progress', progress);
   res.status(200).json(progress);
 });
+
 router.get('/syncs/progress', async (req: Request, res: Response) => {
   const progresses = await ProgressRepository.getAll();
   res.status(200).json(progresses);

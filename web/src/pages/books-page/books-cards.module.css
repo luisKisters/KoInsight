@@ -1,5 +1,6 @@
 .CardGrid {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--mantine-spacing-lg) var(--mantine-spacing-lg);
 }
 

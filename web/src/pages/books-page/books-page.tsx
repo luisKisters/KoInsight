@@ -21,8 +21,8 @@ export function BooksPage(): JSX.Element {
       ? books ?? []
       : (books ?? []).filter((book) =>
           [book.title, book.authors, book.series]
-            .map((value) => value.toLowerCase())
-            .some((v) => v.includes(searchTerm.toLowerCase()))
+            .map((value) => value?.toLowerCase())
+            .some((v) => v?.includes(searchTerm.toLowerCase()))
         );
 
   if (error) {
@@ -43,12 +43,11 @@ export function BooksPage(): JSX.Element {
 
   return (
     <>
-      <Title order={3} mb="xs">
-        Books
-      </Title>
+      <Title mb="xl">Books</Title>
       <Flex justify="space-between">
         <TextInput
           placeholder="Search books..."
+          w={300}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           rightSection={
