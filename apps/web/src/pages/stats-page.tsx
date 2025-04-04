@@ -1,5 +1,13 @@
 import { BarChart } from '@mantine/charts';
-import { Box, Flex, Loader, Text, Title, useMantineTheme } from '@mantine/core';
+import {
+  Box,
+  Flex,
+  Loader,
+  Text,
+  Title,
+  useComputedColorScheme,
+  useMantineTheme,
+} from '@mantine/core';
 import { IconArrowsVertical, IconClock, IconMaximize, IconPageBreak } from '@tabler/icons-react';
 import { format, formatDate, isSameDay, startOfDay, subDays } from 'date-fns';
 import { range, sum, uniqBy } from 'ramda';
@@ -22,6 +30,7 @@ const CustomBar = (props: BarProps & { accent: string }) => {
 };
 
 export function StatsPage(): JSX.Element {
+  const colorScheme = useComputedColorScheme();
   const { colors } = useMantineTheme();
   const { data: books, isLoading } = useBooks();
   const { data: stats, isLoading: statsLoading } = usePageStats();
@@ -110,7 +119,11 @@ export function StatsPage(): JSX.Element {
         mb="md"
         style={{ display: 'inline' }}
         variant="gradient"
-        gradient={{ from: 'violet.8', to: 'kobuddy.8', deg: 120 }}
+        gradient={{
+          from: colorScheme === 'dark' ? 'violet.4' : 'violet.8',
+          to: colorScheme === 'dark' ? 'kobuddy.5' : 'kobuddy.8',
+          deg: 120,
+        }}
         fw={600}
       >
         {weeklyReadTime > 0 ? (
@@ -196,7 +209,13 @@ export function StatsPage(): JSX.Element {
           shape: (props: BarProps) => <CustomBar {...props} accent={colors.kobuddy[8]} />,
         }}
         valueFormatter={(value) => formatSecondsToHumanReadable(value)}
-        series={[{ name: 'duration', label: 'Reading time', color: 'kobuddy.1' }]}
+        series={[
+          {
+            name: 'duration',
+            label: 'Reading time',
+            color: colorScheme === 'dark' ? 'kobuddy.8' : 'kobuddy.1',
+          },
+        ]}
       />
 
       <Title mt="xl" order={3}>
@@ -214,7 +233,13 @@ export function StatsPage(): JSX.Element {
           shape: (props: BarProps) => <CustomBar {...props} accent={colors.violet[8]} />,
         }}
         valueFormatter={(value) => formatSecondsToHumanReadable(value)}
-        series={[{ name: 'duration', label: 'Reading time', color: 'violet.1' }]}
+        series={[
+          {
+            name: 'duration',
+            label: 'Reading time',
+            color: colorScheme === 'dark' ? 'violet.7' : 'violet.1',
+          },
+        ]}
       />
     </>
   );

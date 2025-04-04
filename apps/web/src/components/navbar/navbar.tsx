@@ -1,12 +1,18 @@
-import { Box } from '@mantine/core';
-import { IconBooks, IconCalendar, IconChartBar, IconReload } from '@tabler/icons-react';
+import { ActionIcon, Box, useComputedColorScheme, useMantineColorScheme } from '@mantine/core';
+import {
+  IconBooks,
+  IconCalendar,
+  IconChartBar,
+  IconMoon,
+  IconReload,
+  IconSun,
+} from '@tabler/icons-react';
 import { JSX, useState } from 'react';
-
 import { NavLink, useLocation } from 'react-router';
 import { RoutePath } from '../../routes';
 import { UploadForm } from '../header/upload-form';
-
 import { Logo } from '../logo/logo';
+
 import style from './navbar.module.css';
 
 const tabs = [
@@ -17,6 +23,14 @@ const tabs = [
 ];
 
 export function Navbar({ onNavigate }: { onNavigate?: () => void }): JSX.Element {
+  // Correct color scheme toggle implementation
+  // computedColorScheme is always either 'light' or 'dark'
+  const { colorScheme, setColorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme();
+  const toggleColorScheme = () => {
+    setColorScheme(computedColorScheme === 'dark' ? 'light' : 'dark');
+  };
+
   const { pathname } = useLocation();
   const [active, setActive] = useState(
     () => tabs.find((item) => item.link === pathname)?.link ?? RoutePath.HOME
@@ -52,6 +66,14 @@ export function Navbar({ onNavigate }: { onNavigate?: () => void }): JSX.Element
       <div>{links}</div>
       <div className={style.Footer}>
         <UploadForm />
+        <ActionIcon
+          onClick={toggleColorScheme}
+          variant="default"
+          size="lg"
+          aria-label="Toggle color scheme"
+        >
+          {computedColorScheme === 'dark' ? <IconSun stroke={1.5} /> : <IconMoon stroke={1.5} />}
+        </ActionIcon>
       </div>
     </Box>
   );

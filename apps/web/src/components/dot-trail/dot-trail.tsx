@@ -1,4 +1,4 @@
-import { darken, Tooltip } from '@mantine/core';
+import { darken, Tooltip, useComputedColorScheme } from '@mantine/core';
 import { useResizeObserver } from '@mantine/hooks';
 import { startOfDay, startOfWeek, subDays } from 'date-fns';
 import { JSX, ReactNode, useMemo } from 'react';
@@ -16,6 +16,7 @@ type DotTrailProps = {
 
 export function DotTrail({ percentPerDay }: DotTrailProps): JSX.Element {
   const [ref, rect] = useResizeObserver();
+  const colorScheme = useComputedColorScheme();
 
   const today = startOfDay(new Date());
 
@@ -25,6 +26,16 @@ export function DotTrail({ percentPerDay }: DotTrailProps): JSX.Element {
   const start = startOfDay(
     startOfWeek(subDays(today, daysToFit), { locale: { options: { weekStartsOn: 1 } } })
   );
+
+  const getOutlineColor = (percent?: number): string => {
+    const backgound = colorScheme === 'light' ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.1)';
+
+    return percent ? darken(`rgba(35, 186, 175, ${percent / 100})`, 0.4) : backgound;
+  };
+  const getBackgroundColor = (percent?: number): string => {
+    const backgound = colorScheme === 'dark' ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255)';
+    return percent ? `rgba(35, 186, 175, ${percent / 100})` : backgound;
+  };
 
   const allDays = useMemo(() => {
     const days = [];
@@ -53,12 +64,8 @@ export function DotTrail({ percentPerDay }: DotTrailProps): JSX.Element {
               key={day}
               className={style.Dot}
               style={{
-                outlineColor: percentPerDay[day]
-                  ? darken(`rgba(35, 186, 175, ${percentPerDay[day].percent / 100})`, 0.4)
-                  : 'rgba(0, 0, 0, 0.05)',
-                backgroundColor: percentPerDay[day]
-                  ? `rgba(35, 186, 175, ${percentPerDay[day].percent / 100})`
-                  : 'rgba(255, 255, 255)',
+                outlineColor: getOutlineColor(percentPerDay[day]?.percent),
+                backgroundColor: getBackgroundColor(percentPerDay[day]?.percent),
               }}
             />
           </Tooltip>

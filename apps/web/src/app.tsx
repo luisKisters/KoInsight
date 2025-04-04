@@ -11,9 +11,9 @@ import { StatsPage } from './pages/stats-page';
 import { SyncsPage } from './pages/syncs-page';
 import { RoutePath } from './routes';
 
+import { useDisclosure } from '@mantine/hooks';
 import style from './app.module.css';
 import { Logo } from './components/logo/logo';
-import { useDisclosure } from '@mantine/hooks';
 
 const theme = createTheme({
   fontFamily: 'Noto Serif, serif',
@@ -37,8 +37,9 @@ const theme = createTheme({
 
 export function App(): JSX.Element {
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] = useDisclosure(false);
+
   return (
-    <MantineProvider theme={theme}>
+    <MantineProvider theme={theme} defaultColorScheme="light">
       <ModalsProvider>
         <Notifications />
         <div className={style.App}>

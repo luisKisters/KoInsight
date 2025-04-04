@@ -7,7 +7,7 @@
   margin: 40px auto;
   padding-block: var(--mantine-spacing-xl);
   border-radius: var(--mantine-radius-lg);
-  background-color: #fff; /* TODO: lightdark */
+  background-color: light-dark(#fff, var(--mantine-color-dark-8));
   box-shadow: var(--mantine-shadow-sm);
 }
 

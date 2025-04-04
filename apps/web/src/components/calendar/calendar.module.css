@@ -1,7 +1,8 @@
 .Calendar {
+  --border-color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-gray-7));
   width: 100%;
   margin: auto;
-  border: 1px solid var(--mantine-color-gray-4);
+  border: 1px solid var(--border-color);
   border-radius: var(--mantine-radius-md);
   overflow: hidden;
 }
@@ -11,7 +12,7 @@
   justify-content: space-between;
   align-items: center;
   padding: var(--mantine-spacing-xs);
-  border-bottom: 1px solid var(--mantine-color-gray-4);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .CalendarGrid {
@@ -21,7 +22,7 @@
 
 .CalendarDate {
   padding: var(--mantine-spacing-xs);
-  border: 1px solid #f1f1f1;
+  border: 1px solid var(--border-color);
   min-height: 150px;
 }
 

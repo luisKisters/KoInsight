@@ -1,8 +1,7 @@
 .CalendarWeek {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  background-color: #f9f9f9;
-  border-bottom: 1px solid #ddd;
+  background-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-8));
   text-align: center;
   padding: 10px 0;
   font-weight: bold;

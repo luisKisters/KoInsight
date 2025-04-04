@@ -1,3 +1,7 @@
+import { Button, Flex } from '@mantine/core';
+import { MonthPickerInput } from '@mantine/dates';
+import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
+import clsx from 'clsx';
 import { addDays } from 'date-fns/addDays';
 import { addMonths } from 'date-fns/addMonths';
 import { endOfMonth } from 'date-fns/endOfMonth';
@@ -9,11 +13,6 @@ import { startOfMonth } from 'date-fns/startOfMonth';
 import { startOfWeek } from 'date-fns/startOfWeek';
 import { subMonths } from 'date-fns/subMonths';
 import { JSX, ReactNode, useEffect, useState } from 'react';
-
-import { Button, Flex } from '@mantine/core';
-import { MonthPickerInput } from '@mantine/dates';
-import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
-import clsx from 'clsx';
 import { CalendarWeek } from './calendar-week';
 
 import style from './calendar.module.css';
