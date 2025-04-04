@@ -5,7 +5,7 @@
   height: calc(100vh - 80px);
   max-width: min(1600px, 90vw);
   margin: 40px auto;
-  padding-block: var(--mantine-spacing-xl);
+  padding-block: var(--mantine-spacing-lg);
   border-radius: var(--mantine-radius-lg);
   background-color: light-dark(#fff, var(--mantine-color-dark-8));
   box-shadow: var(--mantine-shadow-sm);
