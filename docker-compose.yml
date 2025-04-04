@@ -3,7 +3,8 @@ services:
     build: .
     container_name: kobuddy
     ports:
-      - "3005:3001"
+      - "3005:3000"
     volumes:
-      - ${DOCKER_DATA}/kobuddy/data:/app/data
+      - ./.docker-data:/app/data
+      - ./.env:/app/.env
     restart: unless-stopped

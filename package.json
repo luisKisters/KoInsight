@@ -1,0 +1,20 @@
+{
+  "name": "kobuddy",
+  "private": true,
+  "packageManager": "npm@10.2.4",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3",
+    "turbo": "2.5.0",
+    "typescript": "5.8.2"
+  }
+}

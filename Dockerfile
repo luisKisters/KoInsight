@@ -1,24 +1,32 @@
-FROM node:20-alpine AS runtime
-
-ENV HOST "0.0.0.0"
-ENV VITE_API_URL ""
-ENV NODE_ENV "production"
-ENV DATA_PATH "/app/data"
+# Builder
+FROM node:20-alpine as builder
 
 WORKDIR /app
 
-RUN apk add --no-cache python3 make g++ sqlite-dev
+COPY package.json .
+COPY apps/server/package.json ./apps/server/package.json
+COPY apps/web/package.json ./apps/web/package.json
+COPY packages/common/package.json ./packages/common/package.json
 
-COPY ./common ./common
-COPY ./server ./server
-RUN npm --prefix ./server install --include=dev
+RUN npm install
 
-COPY ./web ./web
-RUN npm --prefix ./web install --include=dev
+COPY turbo.json .
+COPY apps ./apps
+COPY packages ./packages
 
-COPY build.js ./
+RUN npm run build
 
-RUN node build.js
+# Runner
+FROM node:20-alpine
 
-EXPOSE 3000
-CMD ["node", "./dist/app.js"]
+WORKDIR /app
+RUN mkdir -p /app/data
+
+COPY --from=builder /app/node_modules /app/node_modules
+COPY --from=builder /app/apps/server/dist /app/apps/server/dist
+COPY --from=builder /app/apps/web/dist /app/apps/web/dist
+
+ENV NODE_ENV "production"
+ENV DATA_PATH "/app/data"
+
+CMD ["node", "./apps/server/dist/app.js"]
