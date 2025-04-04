@@ -8,12 +8,15 @@ import { getBookPath } from '../../routes';
 import { formatRelativeDate, getDuration, shortDuration } from '../../utils/dates';
 
 import style from './books-table.module.css';
+import { useMediaQuery } from '@mantine/hooks';
 
 type BooksTableProps = {
   books: Book[];
 };
 
 export function BooksTable({ books }: BooksTableProps): JSX.Element {
+  const media = useMediaQuery(`(max-width: 62em)`);
+
   return (
     <Table>
       <Table.Thead>
@@ -36,7 +39,7 @@ export function BooksTable({ books }: BooksTableProps): JSX.Element {
                   <Image
                     src={`${API_URL}/books/${book.id}/cover`}
                     style={{ aspectRatio: '1/1.5' }}
-                    h={60}
+                    w={media ? 40 : 60}
                     fit="contain"
                     alt={book.title}
                     fallbackSrc="/book-placeholder-small.png"

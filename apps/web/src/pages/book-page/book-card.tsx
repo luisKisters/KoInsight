@@ -1,4 +1,5 @@
 import { Flex, Group, Image, Text, Tooltip } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import {
   IconBooks,
   IconCalendar,
@@ -13,7 +14,6 @@ import { BookWithStats } from '../../api/use-book-with-stats';
 import { formatRelativeDate } from '../../utils/dates';
 
 import style from './book-card.module.css';
-import { useMediaQuery } from '@mantine/hooks';
 
 type BookCardProps = {
   book: BookWithStats;
