@@ -1,7 +1,8 @@
 .CardGrid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--mantine-spacing-lg) var(--mantine-spacing-lg);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  justify-items: center;
+  gap: var(--mantine-spacing-lg);
 }
 
 .Card {
@@ -20,7 +21,9 @@
     opacity: 0;
     padding-block: var(--mantine-spacing-lg);
 
-    transition: opacity 300ms ease, bottom 300ms ease;
+    transition:
+      opacity 300ms ease,
+      bottom 300ms ease;
   }
 
   &:hover .CardDetails {
