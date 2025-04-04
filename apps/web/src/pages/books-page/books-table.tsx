@@ -2,7 +2,7 @@ import { Book } from '@kobuddy/common/types/book';
 import { Anchor, Flex, Image, Progress, Stack, Table, Text, Tooltip } from '@mantine/core';
 import { IconHighlight, IconNote } from '@tabler/icons-react';
 import { JSX } from 'react';
-import { Link } from 'react-router';
+import { Link, NavLink } from 'react-router';
 import { API_URL } from '../../api/api';
 import { getBookPath } from '../../routes';
 import { formatRelativeDate, getDuration, shortDuration } from '../../utils/dates';
@@ -30,7 +30,7 @@ export function BooksTable({ books }: BooksTableProps): JSX.Element {
           <Table.Tr key={book.id}>
             <Table.Td>
               <Flex align="center" gap="sm">
-                <Anchor to={getBookPath(book.id)} component={Link}>
+                <Anchor to={getBookPath(book.id)} component={NavLink}>
                   <Image
                     src={`${API_URL}/books/${book.id}/cover`}
                     style={{ aspectRatio: '1/1.5' }}
@@ -42,7 +42,7 @@ export function BooksTable({ books }: BooksTableProps): JSX.Element {
                   />
                 </Anchor>
                 <Stack gap={0} justify="center">
-                  <Anchor to={getBookPath(book.id)} component={Link}>
+                  <Anchor to={getBookPath(book.id)} component={NavLink}>
                     {book.title}
                   </Anchor>
                   <Text className={style.SubTitle}>
