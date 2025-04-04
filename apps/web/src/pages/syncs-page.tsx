@@ -10,11 +10,11 @@ import {
   IconUser,
 } from '@tabler/icons-react';
 import { groupBy } from 'ramda';
-import { useProgresses } from '../api/kosync';
-import { useBooks } from '../api/use-books';
 import { useCallback, useMemo } from 'react';
 import { generatePath, NavLink } from 'react-router';
-import { RoutePath } from 'src/routes';
+import { useProgresses } from '../api/kosync';
+import { useBooks } from '../api/use-books';
+import { RoutePath } from '../routes';
 
 export function SyncsPage() {
   const { data: progresses, isLoading } = useProgresses();
