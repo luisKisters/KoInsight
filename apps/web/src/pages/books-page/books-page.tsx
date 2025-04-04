@@ -1,6 +1,6 @@
 import { Book } from '@kobuddy/common/types/book';
 import { Button, Flex, Group, Loader, Select, TextInput, Title, Tooltip } from '@mantine/core';
-import { useLocalStorage } from '@mantine/hooks';
+import { useLocalStorage, useMediaQuery } from '@mantine/hooks';
 import {
   IconArrowsDownUp,
   IconCards,
@@ -17,6 +17,8 @@ import { BooksTable } from './books-table';
 import style from './books-page.module.css';
 
 export function BooksPage(): JSX.Element {
+  const media = useMediaQuery(`(max-width: 62em)`);
+
   const [mode, setMode] = useLocalStorage<'table' | 'cards'>({
     key: 'kobuddy-books-search',
     defaultValue: 'table',
@@ -88,7 +90,7 @@ export function BooksPage(): JSX.Element {
       <div className={style.Controls}>
         <TextInput
           placeholder="Search books..."
-          w={300}
+          w={media ? '100%' : 300}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           rightSection={

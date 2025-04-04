@@ -1,5 +1,6 @@
 import { Book } from '@kobuddy/common/types/book';
 import { Anchor, Flex, Image, Progress, Stack, Table, Text, Tooltip } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { IconHighlight, IconNote } from '@tabler/icons-react';
 import { JSX } from 'react';
 import { NavLink } from 'react-router';
@@ -8,7 +9,6 @@ import { getBookPath } from '../../routes';
 import { formatRelativeDate, getDuration, shortDuration } from '../../utils/dates';
 
 import style from './books-table.module.css';
-import { useMediaQuery } from '@mantine/hooks';
 
 type BooksTableProps = {
   books: Book[];
@@ -46,11 +46,11 @@ export function BooksTable({ books }: BooksTableProps): JSX.Element {
                     radius="sm"
                   />
                 </Anchor>
-                <Stack gap={0} justify="center">
-                  <Anchor to={getBookPath(book.id)} component={NavLink}>
+                <Stack gap={2} justify="center">
+                  <Anchor to={getBookPath(book.id)} component={NavLink} fw={800}>
                     {book.title}
                   </Anchor>
-                  <Text className={style.SubTitle}>
+                  <span className={style.SubTitle}>
                     {book.authors ?? 'N/A'} · {book.series} ·&nbsp;
                     <Tooltip label="Highlights" withArrow>
                       <Flex align="center">
@@ -65,7 +65,7 @@ export function BooksTable({ books }: BooksTableProps): JSX.Element {
                         &nbsp;{book.notes}
                       </Flex>
                     </Tooltip>
-                  </Text>
+                  </span>
                 </Stack>
               </Flex>
             </Table.Td>
