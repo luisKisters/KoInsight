@@ -30,15 +30,17 @@ export function BooksTable({ books }: BooksTableProps): JSX.Element {
           <Table.Tr key={book.id}>
             <Table.Td>
               <Flex align="center" gap="sm">
-                <Image
-                  src={`${API_URL}/books/${book.id}/cover`}
-                  style={{ aspectRatio: '1/1.5' }}
-                  h={60}
-                  fit="contain"
-                  alt={book.title}
-                  fallbackSrc="/book-placeholder-small.png"
-                  radius="sm"
-                />
+                <Anchor to={getBookPath(book.id)} component={Link}>
+                  <Image
+                    src={`${API_URL}/books/${book.id}/cover`}
+                    style={{ aspectRatio: '1/1.5' }}
+                    h={60}
+                    fit="contain"
+                    alt={book.title}
+                    fallbackSrc="/book-placeholder-small.png"
+                    radius="sm"
+                  />
+                </Anchor>
                 <Stack gap={0} justify="center">
                   <Anchor to={getBookPath(book.id)} component={Link}>
                     {book.title}
