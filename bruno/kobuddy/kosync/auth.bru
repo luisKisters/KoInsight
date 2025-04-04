@@ -1,0 +1,16 @@
+meta {
+  name: auth
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://{{host}}:{{port}}/users/auth
+  body: json
+  auth: inherit
+}
+
+headers {
+  x-auth-user: {{username}}
+  x-auth-key: {{password}}
+}

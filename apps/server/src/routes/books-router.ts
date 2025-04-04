@@ -24,12 +24,15 @@ router.get('/books/:id', async (req: Request, res: Response, next: NextFunction)
 
   const started_reading = stats.reduce((acc, stat) => Math.min(acc, stat.start_time), Infinity);
 
-  const read_per_day = stats.reduce((acc, stat) => {
-    const day = startOfDay(stat.start_time * 1000).getTime();
-    acc[day] = (acc[day] || 0) + stat.duration;
+  const read_per_day = stats.reduce(
+    (acc, stat) => {
+      const day = startOfDay(stat.start_time * 1000).getTime();
+      acc[day] = (acc[day] || 0) + stat.duration;
 
-    return acc;
-  }, {} as Record<string, number>);
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   res.json({ ...book, stats, started_reading, read_per_day });
 });
@@ -54,7 +57,7 @@ router.get('/books/:id/cover', (req: Request, res: Response) => {
   });
 });
 
-router.post('/books/:id/genres', (req: Request, res: Response) => {
+router.post('/books/:id/genres', async (req: Request, res: Response) => {
   const { id } = req.params;
   const { genreName } = req.body;
 
@@ -64,7 +67,7 @@ router.post('/books/:id/genres', (req: Request, res: Response) => {
   }
 
   try {
-    BookRepository.addGenre(Number(id), genreName);
+    await BookRepository.addGenre(Number(id), genreName);
     res.status(200).json({ message: 'Genre added' });
   } catch (error) {
     console.error(error);

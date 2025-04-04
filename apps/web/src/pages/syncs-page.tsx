@@ -10,9 +10,11 @@ import {
 } from '@tabler/icons-react';
 import { groupBy } from 'ramda';
 import { useProgresses } from '../api/kosync';
+import { useBooks } from '../api/use-books';
 
 export function SyncsPage() {
   const { data: progresses, isLoading } = useProgresses();
+  const { data: books } = useBooks();
 
   const byDevice = groupBy((progress: ProgressWithUsername) => progress.device_id)(
     progresses || []
@@ -57,7 +59,9 @@ export function SyncsPage() {
                     <Tooltip withArrow label="Document">
                       <IconNote size={18} />
                     </Tooltip>
-                    <Code>{progress.document}</Code>
+                    <Code>
+                      {progress.document} {books?.find((b) => b.md5 === progress.document)?.title}
+                    </Code>
                   </Flex>
                   <Flex gap="xs" align="center">
                     <Tooltip withArrow label="Progress">

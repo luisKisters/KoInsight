@@ -1,0 +1,26 @@
+meta {
+  name: put progress
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://{{host}}:{{port}}/syncs/progress
+  body: json
+  auth: inherit
+}
+
+headers {
+  x-auth-user: {{username}}
+  x-auth-key: {{password}}
+}
+
+body:json {
+  {
+    "document": "d1",
+    "progress": "40%",
+    "percentage": 30,
+    "device": "dev1",
+    "device_id": "dev1-id"
+  }
+}

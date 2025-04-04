@@ -1,0 +1,16 @@
+meta {
+  name: get progress
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://{{host}}:{{port}}/syncs/progress
+  body: json
+  auth: inherit
+}
+
+headers {
+  x-auth-user: {{username}}
+  x-auth-key: {{password}}
+}
