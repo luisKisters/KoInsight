@@ -1,7 +1,8 @@
 import { ProgressWithUsername } from '@kobuddy/common/types/progress';
-import { Card, Code, Flex, Progress, Text, Title, Tooltip } from '@mantine/core';
+import { Anchor, Card, Code, Flex, Progress, Text, Title, Tooltip } from '@mantine/core';
 import {
   IconAlertTriangle,
+  IconCode,
   IconDeviceTablet,
   IconNote,
   IconPercentage,
@@ -11,14 +12,20 @@ import {
 import { groupBy } from 'ramda';
 import { useProgresses } from '../api/kosync';
 import { useBooks } from '../api/use-books';
+import { useCallback, useMemo } from 'react';
+import { generatePath, NavLink } from 'react-router';
+import { RoutePath } from 'src/routes';
 
 export function SyncsPage() {
   const { data: progresses, isLoading } = useProgresses();
   const { data: books } = useBooks();
 
-  const byDevice = groupBy((progress: ProgressWithUsername) => progress.device_id)(
-    progresses || []
+  const byDevice = useMemo(
+    () => groupBy((progress: ProgressWithUsername) => progress.device_id)(progresses),
+    [progresses]
   );
+
+  const findBook = useCallback((md5: string) => books?.find((book) => book.md5 === md5), [books]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -59,9 +66,25 @@ export function SyncsPage() {
                     <Tooltip withArrow label="Document">
                       <IconNote size={18} />
                     </Tooltip>
-                    <Code>
-                      {progress.document} {books?.find((b) => b.md5 === progress.document)?.title}
-                    </Code>
+                    {findBook(progress.document) ? (
+                      <>
+                        <Anchor
+                          component={NavLink}
+                          to={generatePath(RoutePath.BOOK, {
+                            id: findBook(progress.document)!.id.toString(),
+                          })}
+                        >
+                          {findBook(progress.document)!.title}
+                        </Anchor>
+                        <Tooltip withArrow label={`MD5: ${progress.document}`} position="top">
+                          <IconCode size={18} />
+                        </Tooltip>
+                      </>
+                    ) : (
+                      <>
+                        MD5: <Code>{progress.document}</Code>
+                      </>
+                    )}
                   </Flex>
                   <Flex gap="xs" align="center">
                     <Tooltip withArrow label="Progress">

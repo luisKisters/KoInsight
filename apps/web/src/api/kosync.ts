@@ -3,9 +3,12 @@ import useSWR from 'swr';
 import { SERVER_URL } from './api';
 
 export function useProgresses() {
-  return useSWR('progresses', () =>
-    fetch(`${SERVER_URL}/syncs/progress`).then(
-      (res) => res.json() as Promise<ProgressWithUsername[]>
-    )
+  return useSWR(
+    'progresses',
+    () =>
+      fetch(`${SERVER_URL}/syncs/progress`).then(
+        (res) => res.json() as Promise<ProgressWithUsername[]>
+      ),
+    { fallbackData: [] }
   );
 }

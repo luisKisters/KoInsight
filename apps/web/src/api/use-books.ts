@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import { fetchFromAPI } from './api';
 
 export function useBooks() {
-  return useSWR('books', () => fetchFromAPI<Book[]>('books'));
+  return useSWR('books', () => fetchFromAPI<Book[]>('books'), { fallbackData: [] });
 }
 
 export async function deleteBook(id: string | number) {
