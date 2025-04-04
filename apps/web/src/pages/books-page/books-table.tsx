@@ -7,6 +7,8 @@ import { API_URL } from '../../api/api';
 import { getBookPath } from '../../routes';
 import { formatRelativeDate, getDuration, shortDuration } from '../../utils/dates';
 
+import style from './books-table.module.css';
+
 type BooksTableProps = {
   books: Book[];
 };
@@ -41,7 +43,7 @@ export function BooksTable({ books }: BooksTableProps): JSX.Element {
                   <Anchor to={getBookPath(book.id)} component={Link}>
                     {book.title}
                   </Anchor>
-                  <Text fz="xs" c="gray.7" style={{ display: 'flex', alignItems: 'center' }}>
+                  <Text className={style.SubTitle}>
                     {book.authors ?? 'N/A'} · {book.series} ·&nbsp;
                     <Tooltip label="Highlights" withArrow>
                       <Flex align="center">

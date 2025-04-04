@@ -1,8 +1,11 @@
 import { Box, Burger, createTheme, Drawer, Group, MantineProvider } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import { JSX } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
+import style from './app.module.css';
+import { Logo } from './components/logo/logo';
 import { Navbar } from './components/navbar/navbar';
 import { BookPage } from './pages/book-page/book-page';
 import { BooksPage } from './pages/books-page/books-page';
@@ -11,12 +14,8 @@ import { StatsPage } from './pages/stats-page';
 import { SyncsPage } from './pages/syncs-page';
 import { RoutePath } from './routes';
 
-import { useDisclosure } from '@mantine/hooks';
-import style from './app.module.css';
-import { Logo } from './components/logo/logo';
-
 const theme = createTheme({
-  fontFamily: 'Noto Serif, serif',
+  headings: { fontFamily: 'Noto Serif, serif' },
   primaryColor: 'kobuddy',
   primaryShade: 8,
   colors: {

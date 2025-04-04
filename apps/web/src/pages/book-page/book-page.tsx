@@ -39,7 +39,9 @@ export function BookPage(): JSX.Element {
   return (
     <Stack gap="md">
       <Group justify="space-between" gap="md">
-        <BookCard book={book} />
+        <Box maw="50%">
+          <BookCard book={book} />
+        </Box>
         <Paper withBorder p="md" radius="md">
           <Text size="xs" c="dimmed" tt="uppercase" fw={700}>
             Reading progress

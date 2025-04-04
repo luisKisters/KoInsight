@@ -23,9 +23,7 @@ const tabs = [
 ];
 
 export function Navbar({ onNavigate }: { onNavigate?: () => void }): JSX.Element {
-  // Correct color scheme toggle implementation
-  // computedColorScheme is always either 'light' or 'dark'
-  const { colorScheme, setColorScheme } = useMantineColorScheme();
+  const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme();
   const toggleColorScheme = () => {
     setColorScheme(computedColorScheme === 'dark' ? 'light' : 'dark');
@@ -72,7 +70,11 @@ export function Navbar({ onNavigate }: { onNavigate?: () => void }): JSX.Element
           size="lg"
           aria-label="Toggle color scheme"
         >
-          {computedColorScheme === 'dark' ? <IconSun stroke={1.5} /> : <IconMoon stroke={1.5} />}
+          {computedColorScheme === 'dark' ? (
+            <IconSun stroke={1.5} color="yellow" />
+          ) : (
+            <IconMoon stroke={1.5} color="violet" />
+          )}
         </ActionIcon>
       </div>
     </Box>

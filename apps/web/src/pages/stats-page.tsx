@@ -124,7 +124,7 @@ export function StatsPage(): JSX.Element {
           to: colorScheme === 'dark' ? 'kobuddy.5' : 'kobuddy.8',
           deg: 120,
         }}
-        fw={600}
+        fw={900}
       >
         {weeklyReadTime > 0 ? (
           <>You read for {formatSecondsToHumanReadable(weeklyReadTime)} this week. Keep it up!</>

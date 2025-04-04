@@ -6,6 +6,7 @@
   text-decoration: none;
   transition: color 200ms ease;
   font-size: rem(18px);
+  font-family: var(--mantine-font-family-headings);
 
   &:hover {
     color: var(--mantine-color-violet-text);

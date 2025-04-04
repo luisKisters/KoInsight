@@ -116,10 +116,7 @@ export function BooksPage(): JSX.Element {
             w={150}
             value={sortBy.key}
             allowDeselect={false}
-            onChange={(value) => {
-              console.log('change sorty');
-              setSortBy((prev) => ({ ...prev, key: value as keyof Book }));
-            }}
+            onChange={(value) => setSortBy((prev) => ({ ...prev, key: value as keyof Book }))}
             data={
               [
                 { label: 'Added', value: 'id' },
@@ -131,10 +128,10 @@ export function BooksPage(): JSX.Element {
             }
             defaultValue="title"
           />
-          <Button.Group>
+          <Button.Group variant="outline">
             <Tooltip label="Table view" position="top" withArrow>
               <Button
-                variant={mode === 'table' ? 'primary' : 'light'}
+                variant={mode === 'table' ? 'primary' : 'outline'}
                 onClick={() => setMode('table')}
               >
                 <IconTable size={16} />
@@ -142,7 +139,7 @@ export function BooksPage(): JSX.Element {
             </Tooltip>
             <Tooltip label="Cards view" position="top" withArrow>
               <Button
-                variant={mode === 'cards' ? 'primary' : 'light'}
+                variant={mode === 'cards' ? 'primary' : 'outline'}
                 onClick={() => setMode('cards')}
               >
                 <IconCards size={16} />
