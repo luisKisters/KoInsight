@@ -20,7 +20,7 @@ export function DotTrail({ percentPerDay }: DotTrailProps): JSX.Element {
 
   const today = startOfDay(new Date());
 
-  const dotsToFit = Math.floor((rect.width - 36) / 18);
+  const dotsToFit = Math.floor((rect.width - 18) / 18);
   const daysToFit = dotsToFit * 7;
 
   const start = startOfDay(
