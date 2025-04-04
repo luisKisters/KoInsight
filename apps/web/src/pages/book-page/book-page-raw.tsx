@@ -13,8 +13,8 @@ type BookPageRawProps = {
 export function BookPageRaw({ book }: BookPageRawProps): JSX.Element {
   const dates = book.stats.map((stat) => stat.start_time);
   const pages = book.stats.map((stat) => stat.page);
-  const min = new Date(apply(Math.min, dates) * 1000);
-  const max = new Date(apply(Math.max, dates) * 1000);
+  const min = dates.length > 0 ? new Date(apply(Math.min, dates) * 1000) : new Date();
+  const max = dates.length > 0 ? new Date(apply(Math.max, dates) * 1000) : new Date();
   const maxPage = apply(Math.max, pages);
 
   const [page, setPage] = useState<number | null>(null);
