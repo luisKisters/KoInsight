@@ -1,5 +1,5 @@
-export const API_URL = `${import.meta.env.VITE_API_URL ?? ''}/api`;
-export const SERVER_URL = `${import.meta.env.VITE_API_URL ?? ''}`;
+export const API_URL = `${import.meta.env.VITE_WEB_API_URL ?? ''}/api`;
+export const SERVER_URL = `${import.meta.env.VITE_WEB_API_URL ?? ''}`;
 
 export async function fetchFromAPI<T>(endpoint: string, method: string = 'GET') {
   const response = await fetch(`${API_URL}/${endpoint}`, { method });
