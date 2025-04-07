@@ -55,7 +55,7 @@ export function BookPage(): JSX.Element {
                 sections={[
                   {
                     value: (book.total_read_pages / book.pages) * 100,
-                    color: 'kobuddy',
+                    color: 'koinsight',
                   },
                 ]}
                 w="100%"

@@ -37,9 +37,9 @@
 }
 
 .CalendarDateToday {
-  background-color: var(--mantine-color-kobuddy-light);
+  background-color: var(--mantine-color-koinsight-light);
   font-weight: bold;
-  border: 1px solid var(--mantine-color-kobuddy-light-color);
+  border: 1px solid var(--mantine-color-koinsight-light-color);
 }
 
 .CalendarDateDisabled {

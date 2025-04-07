@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import knex from '../knex';
-import { User } from '@kobuddy/common/types/user';
+import { User } from '@koinsight/common/types/user';
 
 const SALT_ROUNDS = 12;
 

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { UserRepository } from '../db/user-repository';
-import { User } from '@kobuddy/common/types/user';
+import { User } from '@koinsight/common/types/user';
 
 declare global {
   namespace Express {

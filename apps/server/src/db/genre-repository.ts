@@ -1,4 +1,4 @@
-import { Genre } from '@kobuddy/common/types/genre';
+import { Genre } from '@koinsight/common/types/genre';
 import knex from '../knex';
 
 type GenreCreate = Omit<Genre, 'id'>;

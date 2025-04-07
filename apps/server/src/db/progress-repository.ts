@@ -1,5 +1,5 @@
-import { Progress } from '@kobuddy/common/types/progress';
-import { User } from '@kobuddy/common/types/user';
+import { Progress } from '@koinsight/common/types/progress';
+import { User } from '@koinsight/common/types/user';
 import knex from '../knex';
 
 export type ProgressCreate = Omit<Progress, 'id' | 'created_at' | 'updated_at'>;

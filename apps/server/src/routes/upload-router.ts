@@ -1,5 +1,5 @@
-import { Book } from '@kobuddy/common/types/book';
-import { DbPageStat } from '@kobuddy/common/types/page-stat';
+import { Book } from '@koinsight/common/types/book';
+import { DbPageStat } from '@koinsight/common/types/page-stat';
 import Database from 'better-sqlite3';
 import { Router } from 'express';
 import { unlinkSync } from 'fs';

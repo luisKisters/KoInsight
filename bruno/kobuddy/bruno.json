@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "kobuddy",
+  "name": "KoInsight",
   "type": "collection",
   "ignore": [
     "node_modules",
@@ -9,7 +9,6 @@
   "size": 0.0003681182861328125,
   "filesCount": 3,
   "presets": {
-    "requestType": "http",
-    "requestUrl": "http://10.8.0.3:3200"
+    "requestType": "http"
   }
 }

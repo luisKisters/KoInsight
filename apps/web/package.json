@@ -1,7 +1,7 @@
 {
   "name": "web",
   "version": "1.0.0",
-  "description": "KoBuddy front-end web app",
+  "description": "KoInsight front-end web app",
   "type": "module",
   "license": "MIT",
   "scripts": {
@@ -21,7 +21,7 @@
     "vite": "6.0.0"
   },
   "dependencies": {
-    "@kobuddy/common": "*",
+    "@koinsight/common": "*",
     "@mantine/charts": "7.15.2",
     "@mantine/core": "7.15.2",
     "@mantine/dates": "7.15.2",

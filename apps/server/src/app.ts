@@ -48,7 +48,7 @@ async function setupServer() {
 
   // Start :)
   const server = app.listen(PORT, HOSTNAME, () => {
-    console.info(`KoBuddy back-end is running on http://${HOSTNAME}:${PORT}`);
+    console.info(`KoInsight back-end is running on http://${HOSTNAME}:${PORT}`);
   });
 
   return server;

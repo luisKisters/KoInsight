@@ -2,7 +2,7 @@ local _ = require("gettext")
 local callApi = require("call_api")
 local InfoMessage = require("ui/widget/infomessage")
 local JSON = require("json")
-local KobuddyDbReader = require("db_reader")
+local KoInsightDbReader = require("db_reader")
 local logger = require("logger")
 local UIManager = require("ui/uimanager")
 
@@ -17,8 +17,8 @@ function getHeaders(body)
 end
 
 function gather_data()
-    local stats = KobuddyDbReader.progressData()
-    local books = KobuddyDbReader.bookData()
+    local stats = KoInsightDbReader.progressData()
+    local books = KoInsightDbReader.bookData()
 
     local body = {
         stats = stats,
@@ -32,7 +32,7 @@ end
 function render_response_message(response, prefix, default_text)
     local text = prefix .. " " .. default_text
     if response ~= nil and response['message'] ~= nil then
-        logger.dbg("[Kobuddy] API message received: ", JSON.encode(response))
+        logger.dbg("[KoInsight] API message received: ", JSON.encode(response))
         text = prefix .. " " .. response['message']
     end
 

@@ -16,10 +16,10 @@ import { RoutePath } from './routes';
 
 const theme = createTheme({
   headings: { fontFamily: 'Noto Serif, serif' },
-  primaryColor: 'kobuddy',
+  primaryColor: 'koinsight',
   primaryShade: 8,
   colors: {
-    kobuddy: [
+    koinsight: [
       '#e2fefc',
       '#d3f8f5',
       '#acede8',

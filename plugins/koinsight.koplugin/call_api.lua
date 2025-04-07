@@ -9,7 +9,7 @@ local InfoMessage = require("ui/widget/infomessage")
 local _ = require("gettext")
 
 function response_not_valid(content)
-    logger.err("[Kobuddy] callApi: response was not valid JSON", content)
+    logger.err("[KoInsight] callApi: response was not valid JSON", content)
     UIManager:show(InfoMessage:new{
         text = _("Server response is not valid.")
     })
@@ -33,14 +33,14 @@ return function(method, url, headers, body, filepath, quiet)
         request.source = ltn12.source.string(body)
     end
 
-    logger.dbg("[Kobuddy] callApi:", request.method, request.url)
+    logger.dbg("[KoInsight] callApi:", request.method, request.url)
 
     local code, resp_headers, status = socket.skip(1, http.request(request))
     socketutil:reset_timeout()
 
     -- Raise error if network is unavailable
     if resp_headers == nil then
-        logger.err("[Kobuddy] callApi: network error", status or code)
+        logger.err("[KoInsight] callApi: network error", status or code)
         return false, "network_error"
     end
 
@@ -68,7 +68,7 @@ return function(method, url, headers, body, filepath, quiet)
             })
         end
 
-        logger.err("[Kobuddy] callApi: HTTP error", status or code, resp_headers)
+        logger.err("[KoInsight] callApi: HTTP error", status or code, resp_headers)
         return false, "http_error", code
     end
 end

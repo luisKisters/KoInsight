@@ -14,5 +14,5 @@
 }
 
 .LogoIcon {
-  color: light-dark(var(--mantine-color-kobuddy-light-color), var(--mantine-color-kobuddy-7));
+  color: light-dark(var(--mantine-color-koinsight-light-color), var(--mantine-color-koinsight-7));
 }

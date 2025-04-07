@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { UserExistsError, UserRepository } from '../db/user-repository';
 import { authenticate } from '../middleware/authenticate';
-import { Progress } from '@kobuddy/common/types/progress';
+import { Progress } from '@koinsight/common/types/progress';
 import { ProgressRepository } from '../db/progress-repository';
 
 const router = Router();

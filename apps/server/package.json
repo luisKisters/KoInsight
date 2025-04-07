@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "KoBuddy back-end server",
+  "description": "KoInsight back-end server",
   "license": "MIT",
   "scripts": {
     "start": "node dist/app.js",
@@ -10,7 +10,7 @@
     "knex": "DATA_PATH=../../data knex --knexfile ./src/knexfile.ts"
   },
   "dependencies": {
-    "@kobuddy/common": "*",
+    "@koinsight/common": "*",
     "@types/bcrypt": "^5.0.2",
     "archiver": "^7.0.1",
     "bcryptjs": "^3.0.2",

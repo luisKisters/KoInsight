@@ -1,4 +1,4 @@
-import { Book } from '@kobuddy/common/types/book';
+import { Book } from '@koinsight/common/types/book';
 import { Box, Group, Image, Progress, Text, Tooltip } from '@mantine/core';
 import { IconBooks, IconProgress, IconUser } from '@tabler/icons-react';
 import { JSX } from 'react';
@@ -35,7 +35,7 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
             radius={0}
             h={5}
             value={(book.total_read_pages / book.pages) * 100}
-            color="kobuddy"
+            color="koinsight"
           />
           <Box px="lg" className={style.CardDetails}>
             <Text fz="md" fw={600} style={{ wordBreak: 'break-word', whiteSpace: 'wrap' }}>

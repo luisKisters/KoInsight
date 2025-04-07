@@ -1,7 +1,7 @@
 import knex from '../knex';
-import { Book, BookWithGenres } from '@kobuddy/common/types/book';
+import { Book, BookWithGenres } from '@koinsight/common/types/book';
 import { GenreRepository } from './genre-repository';
-import { Genre } from '@kobuddy/common/types/genre';
+import { Genre } from '@koinsight/common/types/genre';
 
 export class BookRepository {
   static async getAll(): Promise<Book[]> {

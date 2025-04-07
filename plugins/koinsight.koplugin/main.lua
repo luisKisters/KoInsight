@@ -5,45 +5,45 @@ local logger = require("logger")
 local onUpload = require("upload")
 local UIManager = require("ui/uimanager")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
-local KobuddySettings = require("settings")
+local KoInsightSettings = require("settings")
 
-local Kobuddy = WidgetContainer:extend{
-    name = "kobuddy",
+local KoInsight = WidgetContainer:extend{
+    name = "koinsight",
     is_doc_only = false
 }
 
-function Kobuddy:init()
-    self.ui.menu:registerToMainMenu(self)
+function KoInsight:init()
+    KoInsight.ui.menu:registerToMainMenu(KoInsight)
 
-    self.kobuddy_settings = KobuddySettings:new{}
+    KoInsight.koinsight_settings = KoInsightSettings:new{}
 end
 
-function Kobuddy:addToMainMenu(menu_items)
-    menu_items.kobuddy = {
-        text = _("Kobuddy"),
+function KoInsight:addToMainMenu(menu_items)
+    menu_items.koinsight = {
+        text = _("KoInsight"),
         sorting_hint = "tools",
         sub_item_table = {{
-            text = _("Configure Kobuddy"),
+            text = _("Configure KoInsight"),
             keep_menu_open = true,
             callback = function()
-                self.kobuddy_settings:editServerSettings()
+                KoInsight.koinsight_settings:editServerSettings()
             end
         }, {
             text = _("Synchronize"),
             separator = true,
             callback = function()
-                onUpload(self.kobuddy_settings.server_url)
+                onUpload(KoInsight.koinsight_settings.server_url)
             end
         }, {
-            text = _("About Kobuddy"),
+            text = _("About KoInsight"),
             keep_menu_open = true,
             callback = function()
                 UIManager:show(InfoMessage:new{
-                    text = "KoBuddy is a plugin for Kobuddy instances. \nSee https://github.com/GeorgeSG/kobuddy."
+                    text = "KoInsight is a sync plugin for KoInsight instances. \nSee https://github.com/GeorgeSG/koinsight."
                 })
             end
         }}
     }
 end
 
-return Kobuddy
+return KoInsight

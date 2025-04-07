@@ -1,5 +1,5 @@
-import { Book } from '@kobuddy/common/types/book';
-import { DbPageStat, PageStat } from '@kobuddy/common/types/page-stat';
+import { Book } from '@koinsight/common/types/book';
+import { DbPageStat, PageStat } from '@koinsight/common/types/page-stat';
 import knex from '../knex';
 
 export function transformPageStats(pageStats: DbPageStat[]): PageStat[] {

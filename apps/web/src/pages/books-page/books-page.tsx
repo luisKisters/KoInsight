@@ -1,4 +1,4 @@
-import { Book } from '@kobuddy/common/types/book';
+import { Book } from '@koinsight/common/types/book';
 import { Button, Flex, Group, Loader, Select, TextInput, Title, Tooltip } from '@mantine/core';
 import { useLocalStorage, useMediaQuery } from '@mantine/hooks';
 import {
@@ -20,13 +20,13 @@ export function BooksPage(): JSX.Element {
   const media = useMediaQuery(`(max-width: 62em)`);
 
   const [mode, setMode] = useLocalStorage<'table' | 'cards'>({
-    key: 'kobuddy-books-search',
+    key: 'koinsight-books-search',
     defaultValue: 'table',
   });
 
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useLocalStorage<{ key: keyof Book; direction: 'asc' | 'desc' }>({
-    key: 'kobuddy-books-sort',
+    key: 'koinsight-books-sort',
     defaultValue: {
       key: 'last_open',
       direction: 'desc',

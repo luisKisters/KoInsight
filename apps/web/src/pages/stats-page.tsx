@@ -121,7 +121,7 @@ export function StatsPage(): JSX.Element {
         variant="gradient"
         gradient={{
           from: colorScheme === 'dark' ? 'violet.4' : 'violet.8',
-          to: colorScheme === 'dark' ? 'kobuddy.5' : 'kobuddy.8',
+          to: colorScheme === 'dark' ? 'koinsight.5' : 'koinsight.8',
           deg: 120,
         }}
         fw={900}
@@ -168,7 +168,7 @@ export function StatsPage(): JSX.Element {
       <Title mt="xl" mb={4} order={3}>
         Last 7 days
       </Title>
-      <Text c="kobuddy" tt="uppercase" mb="md" size="sm" fw={600}>
+      <Text c="koinsight" tt="uppercase" mb="md" size="sm" fw={600}>
         {formatDate(subDays(new Date(), 7), 'dd MMM')} - {formatDate(new Date(), 'dd MMM')}
       </Text>
       <Statistics
@@ -206,14 +206,14 @@ export function StatsPage(): JSX.Element {
         withYAxis={false}
         barProps={{
           maxBarSize: 100,
-          shape: (props: BarProps) => <CustomBar {...props} accent={colors.kobuddy[8]} />,
+          shape: (props: BarProps) => <CustomBar {...props} accent={colors.koinsight[8]} />,
         }}
         valueFormatter={(value) => formatSecondsToHumanReadable(value)}
         series={[
           {
             name: 'duration',
             label: 'Reading time',
-            color: colorScheme === 'dark' ? 'kobuddy.8' : 'kobuddy.1',
+            color: colorScheme === 'dark' ? 'koinsight.8' : 'koinsight.1',
           },
         ]}
       />

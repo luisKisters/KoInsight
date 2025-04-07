@@ -3,9 +3,9 @@ local DataStorage = require("datastorage")
 
 local db_location = DataStorage:getSettingsDir() .. "/statistics.sqlite3"
 
-local KobuddyDbReader = {}
+local KoInsightDbReader = {}
 
-function KobuddyDbReader.bookData()
+function KoInsightDbReader.bookData()
     local conn = SQ3.open(db_location)
     local result, rows = conn:exec("SELECT * FROM book")
     local books = {}
@@ -32,7 +32,7 @@ function KobuddyDbReader.bookData()
     return books
 end
 
-function KobuddyDbReader.progressData()
+function KoInsightDbReader.progressData()
     local conn = SQ3.open(db_location)
     local result, rows = conn:exec("SELECT * FROM page_stat_data")
     local results = {}
@@ -51,4 +51,4 @@ function KobuddyDbReader.progressData()
     return results
 end
 
-return KobuddyDbReader
+return KoInsightDbReader

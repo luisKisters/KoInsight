@@ -1,4 +1,4 @@
-import { Book } from '@kobuddy/common/types/book';
+import { Book } from '@koinsight/common/types/book';
 import { Box, Button, Flex, Image, Skeleton, Tooltip } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { JSX, useState } from 'react';

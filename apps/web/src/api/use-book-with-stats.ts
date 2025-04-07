@@ -1,4 +1,4 @@
-import { BookWithGenres } from '@kobuddy/common/types/book';
+import { BookWithGenres } from '@koinsight/common/types/book';
 import useSWR from 'swr';
 import { fetchFromAPI } from './api';
 import { PageStat } from './use-page-stats';

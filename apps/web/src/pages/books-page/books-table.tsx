@@ -1,4 +1,4 @@
-import { Book } from '@kobuddy/common/types/book';
+import { Book } from '@koinsight/common/types/book';
 import { Anchor, Flex, Image, Progress, Stack, Table, Text, Tooltip } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconHighlight, IconNote } from '@tabler/icons-react';

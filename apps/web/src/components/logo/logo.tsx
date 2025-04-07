@@ -15,7 +15,7 @@ export function Logo({ onClick, className }: LogoProps): JSX.Element {
   return (
     <NavLink to={RoutePath.HOME} onClick={onClick} className={C(style.Logo, className)}>
       <IconBook className={style.LogoIcon} size={24} />
-      <strong>KoBuddy</strong>
+      <strong>KoInsight</strong>
     </NavLink>
   );
 }

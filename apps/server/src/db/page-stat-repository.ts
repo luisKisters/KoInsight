@@ -1,4 +1,4 @@
-import { PageStat } from '@kobuddy/common/types/page-stat';
+import { PageStat } from '@koinsight/common/types/page-stat';
 import knex from '../knex';
 
 export class PageStatRepository {

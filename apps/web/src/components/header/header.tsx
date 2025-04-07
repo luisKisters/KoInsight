@@ -12,7 +12,7 @@ export function Header(): JSX.Element {
       <Flex justify="space-between" align="center" h="100%">
         <Flex gap={16} align="center" h="100%">
           <Link to={RoutePath.HOME} className={style.Logo}>
-            <strong>KoBuddy</strong>
+            <strong>KoInsight</strong>
           </Link>
           <Flex h="100%">
             <Link to={RoutePath.BOOKS} className={style.Link}>

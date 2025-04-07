@@ -1,11 +1,11 @@
-import { Book } from '@kobuddy/common/types/book';
-import { PageStat } from '@kobuddy/common/types/page-stat';
+import { Book } from '@koinsight/common/types/book';
+import { PageStat } from '@koinsight/common/types/page-stat';
 import archiver from 'archiver';
 import { Router } from 'express';
 import path from 'path';
 import { transformPageStats, uploadStatisticData } from '../db/upload-data';
 
-// Router for kobuddy koreader plugin
+// Router for KoInsight koreader plugin
 const router = Router();
 
 router.post('/plugin/import', async (req, res) => {
@@ -34,7 +34,7 @@ router.get('/plugin/download', (_, res) => {
   const archive = archiver('zip', { zlib: { level: 9 } });
 
   res.setHeader('Content-Type', 'application/zip');
-  res.setHeader('Content-Disposition', 'attachment; filename=kobuddy.plugin.zip');
+  res.setHeader('Content-Disposition', 'attachment; filename=koinsight.plugin.zip');
 
   archive.on('error', (err) => {
     console.error('Archive error:', err);

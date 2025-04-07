@@ -1,4 +1,4 @@
-import { ProgressWithUsername } from '@kobuddy/common/types/progress';
+import { ProgressWithUsername } from '@koinsight/common/types/progress';
 import { Anchor, Card, Code, Flex, Progress, Text, Title, Tooltip } from '@mantine/core';
 import {
   IconAlertTriangle,
@@ -37,7 +37,7 @@ export function SyncsPage() {
       <Flex mb="xl" gap="xs" align="center">
         <IconAlertTriangle color="var(--mantine-color-orange-5)" />
         <Text>
-          Progress syncs are detached from the rest of the Kobuddy database for now.
+          Progress syncs are detached from the rest of the KoInsight database for now.
           <br />
           This page gives a summary of what data is available in the syncs database.
         </Text>

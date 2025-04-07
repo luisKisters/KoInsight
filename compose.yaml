@@ -1,7 +1,7 @@
 services:
-  kobuddy:
+  koinsight:
     build: .
-    container_name: kobuddy
+    container_name: koinsight
     ports:
       - "3005:3000"
     volumes:

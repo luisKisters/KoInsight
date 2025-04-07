@@ -1,4 +1,4 @@
-import { ProgressWithUsername } from '@kobuddy/common/types/progress';
+import { ProgressWithUsername } from '@koinsight/common/types/progress';
 import useSWR from 'swr';
 import { SERVER_URL } from './api';
 
