@@ -25,6 +25,7 @@ RUN mkdir -p /app/data
 COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/apps/server/dist /app/apps/server/dist
 COPY --from=builder /app/apps/web/dist /app/apps/web/dist
+COPY plugins ./plugins
 
 ENV NODE_ENV "production"
 ENV DATA_PATH "/app/data"
