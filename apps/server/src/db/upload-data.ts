@@ -27,7 +27,6 @@ export function uploadStatisticData(newBooks: Book[], newPageStats: PageStat[]) 
       )
     );
 
-    console.log('newPageStats', newPageStats);
     await Promise.all(
       // TODO: Figure out if onConflict here is viable. What if the book is read from 2 different devices?
       newPageStats.map((pageStat) => trx('page_stat').insert(pageStat).onConflict().ignore())
