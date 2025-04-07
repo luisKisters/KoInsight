@@ -1,5 +1,3 @@
-# KoInsight
-
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="images/heading.png">
@@ -12,13 +10,13 @@
 </p>
 
 
-# Features
+## Features
 
 - Import & Visualize KoReader reading statistics
 - Keep track of your reading habits
 - Act as a KoReader Sync Server
 - Custo KoReader plugin for easier sync
 
-# Run via docker compose
+## Run via docker compose
 1. Edit the port exposed in compose.yaml
 2. Run `docker compose up -d`
