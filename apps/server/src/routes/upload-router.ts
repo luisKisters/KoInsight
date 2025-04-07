@@ -1,11 +1,11 @@
 import { Book } from '@kobuddy/common/types/book';
-import { PageStat } from '@kobuddy/common/types/page-stat';
+import { DbPageStat } from '@kobuddy/common/types/page-stat';
 import Database from 'better-sqlite3';
 import { Router } from 'express';
 import { unlinkSync } from 'fs';
 import multer from 'multer';
 import { DATA_PATH, UPLOAD_DB_FILENAME } from '../const';
-import knex from '../knex';
+import { transformPageStats, uploadStatisticData } from '../db/upload-data';
 
 const storage = multer.diskStorage({
   destination: (_req, _res, cb) => {
@@ -30,15 +30,15 @@ const upload = multer({
 
 const router = Router();
 
-router.post('/import', (req, res) => {
-  console.log('Importing database', req.file);
-  const uploadedFilePath = req.file?.path;
+// router.post('/import', (req, res) => {
+//   console.log('Importing database', req.file);
+//   const uploadedFilePath = req.file?.path;
 
-  if (!uploadedFilePath) {
-    res.status(400).json({ error: 'No file uploaded' });
-    return;
-  }
-});
+//   if (!uploadedFilePath) {
+//     res.status(400).json({ error: 'No file uploaded' });
+//     return;
+//   }
+// });
 
 router.post('/upload', upload.single('file'), async (req, res, next) => {
   const uploadedFilePath = req.file?.path;
@@ -66,34 +66,10 @@ router.post('/upload', upload.single('file'), async (req, res, next) => {
 
   try {
     const newBooks = db.prepare('SELECT * FROM book').all() as Book[];
-    const newPageStats: PageStat[] = (
-      db.prepare('SELECT * FROM page_stat').all() as Array<
-        Omit<PageStat, 'book_id'> & { id_book: number }
-      >
-    ).map(({ id_book, ...pageStat }) => ({ ...pageStat, book_id: id_book }));
+    const dbPageStats = db.prepare('SELECT * FROM page_stat').all() as DbPageStat[];
+    const newPageStats = transformPageStats(dbPageStats);
 
-    await knex.transaction(async (trx) => {
-      await Promise.all(
-        newBooks.map((book) =>
-          trx('book')
-            .insert(book)
-            .onConflict('id')
-            .merge([
-              'pages',
-              'last_open',
-              'total_read_time',
-              'total_read_pages',
-              'notes',
-              'highlights',
-            ])
-        )
-      );
-      await Promise.all(
-        newPageStats.map((pageStat) => trx('page_stat').insert(pageStat).onConflict().ignore())
-      );
-
-      await trx.commit();
-    });
+    await uploadStatisticData(newBooks, newPageStats);
 
     res.json({ message: 'Database imported successfully' });
   } catch (err) {

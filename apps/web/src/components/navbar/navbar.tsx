@@ -1,4 +1,10 @@
-import { ActionIcon, Box, useComputedColorScheme, useMantineColorScheme } from '@mantine/core';
+import {
+  ActionIcon,
+  Box,
+  Button,
+  useComputedColorScheme,
+  useMantineColorScheme,
+} from '@mantine/core';
 import {
   IconBooks,
   IconCalendar,
@@ -63,6 +69,9 @@ export function Navbar({ onNavigate }: { onNavigate?: () => void }): JSX.Element
       />
       <div>{links}</div>
       <div className={style.Footer}>
+        <Button component="a" href="/api/plugin/download" variant="subtle">
+          Download Plugin
+        </Button>
         <UploadForm />
         <ActionIcon
           onClick={toggleColorScheme}

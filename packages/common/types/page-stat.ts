@@ -5,3 +5,5 @@ export type PageStat = {
   duration: number;
   total_pages: number;
 };
+
+export type DbPageStat = Omit<PageStat, 'book_id'> & { id_book: number };

@@ -5,15 +5,15 @@ import express, { Request, Response } from 'express';
 import { Server } from 'http';
 import morgan from 'morgan';
 import path from 'path';
-
-import { BASE_PATH, WEB_BUILD_PATH } from './const';
+import { WEB_BUILD_PATH } from './const';
+import knex from './knex';
 import { booksRouter } from './routes/books-router';
 import { kosyncRouter } from './routes/kosync-router';
+import { openAiRouter } from './routes/open-ai-router';
 import { openLibraryRouter } from './routes/open-library-router';
+import { pluginRouter } from './routes/plugin-router';
 import { statsRouter } from './routes/stats-router';
 import { uploadRouter } from './routes/upload-router';
-import { openAiRouter } from './routes/open-ai-router';
-import knex from './knex';
 
 const HOSTNAME = process.env.HOST || 'localhost';
 const PORT = Number(process.env.PORT ?? 3000);
@@ -31,6 +31,7 @@ async function setupServer() {
 
   // Setup controllers
   app.use('/', kosyncRouter);
+  app.use('/api', pluginRouter);
   app.use('/api', booksRouter);
   app.use('/api', statsRouter);
   app.use('/api', uploadRouter);
