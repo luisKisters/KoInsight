@@ -15,13 +15,18 @@ KoInsightSettings.__index = KoInsightSettings
 local SETTING_KEY = "koinsight"
 
 function KoInsightSettings:new()
-    local obj = setmetatable({}, KoInsightSettings)
+    logger.warn('-------------------------------------------')
+    logger.warn("KoInsight new")
+    local obj = setmetatable({}, self)
     obj.settings = obj:readSettings()
     obj.server_url = obj.settings.data.koinsight.server_url
     return obj
 end
 
 function KoInsightSettings:readSettings()
+    logger.warn('-------------------------------------------')
+    logger.warn("Reading KoInsight settings", DataStorage:getSettingsDir() .. "/" .. SETTING_KEY .. ".lua")
+    logger.warn('-------------------------------------------')
     local settings = LuaSettings:open(DataStorage:getSettingsDir() .. "/" .. SETTING_KEY .. ".lua")
     settings:readSetting(SETTING_KEY, {})
     return settings
@@ -29,18 +34,18 @@ end
 
 function KoInsightSettings:persistSettings()
     local new_settings = {
-        server_url = KoInsightSettings.server_url
+        server_url = self.server_url
     }
 
-    KoInsightSettings.settings:saveSetting(SETTING_KEY, new_settings)
-    KoInsightSettings.settings:flush()
+    self.settings:saveSetting(SETTING_KEY, new_settings)
+    self.settings:flush()
 end
 
 function KoInsightSettings:editServerSettings()
-    KoInsightSettings.settings_dialog = MultiInputDialog:new{
+    self.settings_dialog = MultiInputDialog:new{
         title = _("KoInsight settings"),
         fields = {{
-            text = KoInsightSettings.server_url,
+            text = self.server_url,
             description = _("Server URL:"),
             hint = _("http://example.com:port")
         }},
@@ -48,7 +53,7 @@ function KoInsightSettings:editServerSettings()
             text = _("Cancel"),
             id = "close",
             callback = function()
-                UIManager:close(KoInsightSettings.settings_dialog)
+                UIManager:close(self.settings_dialog)
             end
         }, {
             text = _("Info"),
@@ -60,16 +65,16 @@ function KoInsightSettings:editServerSettings()
         }, {
             text = _("Apply"),
             callback = function()
-                local myfields = KoInsightSettings.settings_dialog:getFields()
-                KoInsightSettings.server_url = myfields[1]:gsub("/*$", "") -- remove all trailing slashes
-                KoInsightSettings:persistSettings()
-                UIManager:close(KoInsightSettings.settings_dialog)
+                local myfields = self.settings_dialog:getFields()
+                self.server_url = myfields[1]:gsub("/*$", "") -- remove all trailing slashes
+                self:persistSettings()
+                UIManager:close(self.settings_dialog)
             end
         }}}
     }
 
-    UIManager:show(KoInsightSettings.settings_dialog)
-    KoInsightSettings.settings_dialog:onShowKeyboard()
+    UIManager:show(self.settings_dialog)
+    self.settings_dialog:onShowKeyboard()
 end
 
 return KoInsightSettings

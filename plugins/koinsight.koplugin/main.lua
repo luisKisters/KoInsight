@@ -7,18 +7,17 @@ local UIManager = require("ui/uimanager")
 local WidgetContainer = require("ui/widget/container/widgetcontainer")
 local KoInsightSettings = require("settings")
 
-local KoInsight = WidgetContainer:extend{
+local koinsight = WidgetContainer:extend{
     name = "koinsight",
     is_doc_only = false
 }
 
-function KoInsight:init()
-    KoInsight.ui.menu:registerToMainMenu(KoInsight)
-
-    KoInsight.koinsight_settings = KoInsightSettings:new{}
+function koinsight:init()
+    self.ui.menu:registerToMainMenu(self)
+    self.koinsight_settings = KoInsightSettings:new{}
 end
 
-function KoInsight:addToMainMenu(menu_items)
+function koinsight:addToMainMenu(menu_items)
     menu_items.koinsight = {
         text = _("KoInsight"),
         sorting_hint = "tools",
@@ -26,13 +25,13 @@ function KoInsight:addToMainMenu(menu_items)
             text = _("Configure KoInsight"),
             keep_menu_open = true,
             callback = function()
-                KoInsight.koinsight_settings:editServerSettings()
+                self.koinsight_settings:editServerSettings()
             end
         }, {
             text = _("Synchronize"),
             separator = true,
             callback = function()
-                onUpload(KoInsight.koinsight_settings.server_url)
+                onUpload(self.koinsight_settings.server_url)
             end
         }, {
             text = _("About KoInsight"),
@@ -46,4 +45,4 @@ function KoInsight:addToMainMenu(menu_items)
     }
 end
 
-return KoInsight
+return koinsight
