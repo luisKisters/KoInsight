@@ -25,8 +25,8 @@ async function setupServer() {
   app.use(morgan('tiny'));
 
   // Increase the limit to be able to upload the whole database
-  app.use(express.json({ limit: '50mb' }));
-  app.use(express.urlencoded({ limit: '50mb', extended: true }));
+  app.use(express.json({ limit: '1000mb' }));
+  app.use(express.urlencoded({ limit: '1000mb', extended: true }));
 
   if (ENV === 'development') {
     // Allow requests from dev build
