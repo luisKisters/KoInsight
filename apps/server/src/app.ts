@@ -26,7 +26,7 @@ async function setupServer() {
 
   // Increase the limit to be able to upload the whole database
   app.use(express.json({ limit: '50mb' }));
-  app.use(express.urlencoded({ limit: '50mb' }));
+  app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
   if (ENV === 'development') {
     // Allow requests from dev build
