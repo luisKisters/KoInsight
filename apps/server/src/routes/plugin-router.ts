@@ -9,6 +9,9 @@ import { transformPageStats, uploadStatisticData } from '../db/upload-data';
 const router = Router();
 
 router.post('/plugin/import', async (req, res) => {
+  const contentLength = req.headers['content-length'];
+  console.warn(`[${req.method}] ${req.url} — Content-Length: ${contentLength || 'unknown'} bytes`);
+
   const newBooks: Book[] = req.body.books;
   const newPageStats: PageStat[] = transformPageStats(req.body.stats);
 
