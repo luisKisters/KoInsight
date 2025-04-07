@@ -15,8 +15,6 @@ KoInsightSettings.__index = KoInsightSettings
 local SETTING_KEY = "koinsight"
 
 function KoInsightSettings:new()
-    logger.warn('-------------------------------------------')
-    logger.warn("KoInsight new")
     local obj = setmetatable({}, self)
     obj.settings = obj:readSettings()
     obj.server_url = obj.settings.data.koinsight.server_url
@@ -24,9 +22,6 @@ function KoInsightSettings:new()
 end
 
 function KoInsightSettings:readSettings()
-    logger.warn('-------------------------------------------')
-    logger.warn("Reading KoInsight settings", DataStorage:getSettingsDir() .. "/" .. SETTING_KEY .. ".lua")
-    logger.warn('-------------------------------------------')
     local settings = LuaSettings:open(DataStorage:getSettingsDir() .. "/" .. SETTING_KEY .. ".lua")
     settings:readSetting(SETTING_KEY, {})
     return settings
