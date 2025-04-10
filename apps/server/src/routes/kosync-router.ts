@@ -83,7 +83,6 @@ router.get('/users/auth', async (req: Request, res: Response) => {
  */
 router.put('/syncs/progress', authenticate, async (req: Request, res: Response) => {
   const { document, progress, percentage, device, device_id } = req.body;
-  console.log('req.body', req.body);
 
   if (!req.user) {
     res.status(401).json({ error: 'Unauthorized' });
@@ -140,7 +139,6 @@ router.get('/syncs/progress/:document', authenticate, async (req: Request, res: 
     return;
   }
 
-  console.log('progress', progress);
   res.status(200).json(progress);
 });
 

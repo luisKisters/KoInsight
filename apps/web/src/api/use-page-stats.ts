@@ -10,7 +10,7 @@ export type PageStat = {
 };
 
 export function usePageStats() {
-  return useSWR('stats', () => fetchFromAPI<PageStat[]>('stats'));
+  return useSWR('stats', () => fetchFromAPI<PageStat[]>('stats'), { fallbackData: [] });
 }
 
 export function useBookStats(bookId: number) {

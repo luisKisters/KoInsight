@@ -2,6 +2,7 @@ import {
   ActionIcon,
   Box,
   Button,
+  Flex,
   useComputedColorScheme,
   useMantineColorScheme,
 } from '@mantine/core';
@@ -9,6 +10,7 @@ import {
   IconBooks,
   IconCalendar,
   IconChartBar,
+  IconDownload,
   IconMoon,
   IconReload,
   IconSun,
@@ -69,22 +71,29 @@ export function Navbar({ onNavigate }: { onNavigate?: () => void }): JSX.Element
       />
       <div>{links}</div>
       <div className={style.Footer}>
-        <Button component="a" href="/api/plugin/download" variant="subtle">
-          Download Plugin
-        </Button>
-        <UploadForm />
-        <ActionIcon
-          onClick={toggleColorScheme}
-          variant="default"
-          size="lg"
-          aria-label="Toggle color scheme"
+        <Button
+          component="a"
+          href="/api/plugin/download"
+          variant="subtle"
+          leftSection={<IconDownload size={16} />}
         >
-          {computedColorScheme === 'dark' ? (
-            <IconSun stroke={1.5} color="yellow" />
-          ) : (
-            <IconMoon stroke={1.5} color="violet" />
-          )}
-        </ActionIcon>
+          Download KoReader Plugin
+        </Button>
+        <Flex gap="xs">
+          <UploadForm />
+          <ActionIcon
+            onClick={toggleColorScheme}
+            variant="default"
+            size="lg"
+            aria-label="Toggle color scheme"
+          >
+            {computedColorScheme === 'dark' ? (
+              <IconSun stroke={1.5} color="yellow" />
+            ) : (
+              <IconMoon stroke={1.5} color="violet" />
+            )}
+          </ActionIcon>
+        </Flex>
       </div>
     </Box>
   );

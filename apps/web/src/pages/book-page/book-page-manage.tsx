@@ -1,13 +1,13 @@
 import { Book } from '@koinsight/common/types/book';
-import { Button, Flex, Text } from '@mantine/core';
+import { Button, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import { IconTrash } from '@tabler/icons-react';
 import { JSX, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { mutate } from 'swr';
 import { deleteBook } from '../../api/use-books';
 import { RoutePath } from '../../routes';
-import { mutate } from 'swr';
 
 type BookPageManageProps = {
   book: Book;
@@ -54,18 +54,15 @@ export function BookPageManage({ book }: BookPageManageProps): JSX.Element {
       });
     }
   };
+
   return (
-    <Flex align="center" gap="xs">
-      <div>Delete book:</div>
-      <Button
-        size="xs"
-        loading={deleteLoading}
-        leftSection={<IconTrash size={16} />}
-        variant="danger"
-        onClick={openDeleteConfirm}
-      >
-        Delete
-      </Button>
-    </Flex>
+    <Button
+      loading={deleteLoading}
+      leftSection={<IconTrash size={16} />}
+      variant="danger"
+      onClick={openDeleteConfirm}
+    >
+      Delete book
+    </Button>
   );
 }

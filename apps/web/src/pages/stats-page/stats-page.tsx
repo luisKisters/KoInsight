@@ -1,4 +1,4 @@
-import { BarChart } from '@mantine/charts';
+import { BarChart, BubbleChart } from '@mantine/charts';
 import {
   Box,
   Flex,
@@ -8,26 +8,18 @@ import {
   useComputedColorScheme,
   useMantineTheme,
 } from '@mantine/core';
-import { IconArrowsVertical, IconClock, IconMaximize, IconPageBreak } from '@tabler/icons-react';
-import { format, formatDate, isSameDay, startOfDay, subDays } from 'date-fns';
-import { range, sum, uniqBy } from 'ramda';
+import { IconClock, IconMaximize, IconPageBreak } from '@tabler/icons-react';
+import { format, startOfDay, subDays } from 'date-fns';
+import { sum } from 'ramda';
 import { JSX, useMemo } from 'react';
-import { useBooks } from '../api/use-books';
-import { PageStat, usePageStats } from '../api/use-page-stats';
-import { ReadingCalendar } from '../components/statistics/reading-calendar';
-import { Statistics } from '../components/statistics/statistics';
-import { formatSecondsToHumanReadable } from '../utils/dates';
 import { BarProps } from 'recharts';
-
-const CustomBar = (props: BarProps & { accent: string }) => {
-  const { x, y, width, height, fill, accent } = props;
-  return (
-    <>
-      <rect x={x} y={y} width={width} height={height} fill={fill} />
-      {height && height > 0 && <rect x={x} y={y} width={width} height={2} fill={accent} />}
-    </>
-  );
-};
+import { useBooks } from '../../api/use-books';
+import { usePageStats } from '../../api/use-page-stats';
+import { CustomBar } from '../../components/charts/custom-bar';
+import { ReadingCalendar } from '../../components/statistics/reading-calendar';
+import { Statistics } from '../../components/statistics/statistics';
+import { formatSecondsToHumanReadable } from '../../utils/dates';
+import { WeekStats } from './week-stats';
 
 export function StatsPage(): JSX.Element {
   const colorScheme = useComputedColorScheme();
@@ -37,8 +29,13 @@ export function StatsPage(): JSX.Element {
 
   const lastWeek = useMemo(() => {
     const now = subDays(new Date(), 7);
-    return stats?.filter((stat) => stat.start_time * 1000 > now.getTime());
+    return stats.filter((stat) => stat.start_time * 1000 > now.getTime());
   }, [stats]);
+
+  const weeklyReadTime = useMemo(
+    () => sum(lastWeek?.map((stat) => stat.duration) ?? []),
+    [lastWeek]
+  );
 
   const perMonth = useMemo(
     () =>
@@ -56,25 +53,8 @@ export function StatsPage(): JSX.Element {
     [stats]
   );
 
-  const perDay = useMemo(() => {
-    const today = startOfDay(new Date());
-    return range(0, 7)
-      .reduce<{ day: string; duration: number }[]>((acc, day) => {
-        const date = startOfDay(subDays(today, day));
-        const dayStats = stats?.filter((stat) => isSameDay(stat.start_time * 1000, date)) ?? [];
-
-        acc.push({
-          day: format(date, 'dd MMM yyyy'),
-          duration: sum(dayStats.map((s) => s.duration)),
-        });
-
-        return acc;
-      }, [])
-      .reverse();
-  }, [stats]);
-
   const longestDay = useMemo(() => {
-    const timePerDay = stats?.reduce<Record<number, number>>((acc, stat) => {
+    const timePerDay = stats.reduce<Record<number, number>>((acc, stat) => {
       const day = startOfDay(stat.start_time * 1000).getTime();
       acc[day] = (acc[day] || 0) + stat.duration;
       return acc;
@@ -85,7 +65,7 @@ export function StatsPage(): JSX.Element {
   }, [stats]);
 
   const mostPagesInADay = useMemo(() => {
-    const pagesPerDay = stats?.reduce<Record<number, number>>((acc, stat) => {
+    const pagesPerDay = stats.reduce<Record<number, number>>((acc, stat) => {
       const day = startOfDay(stat.start_time * 1000).getTime();
       acc[day] = (acc[day] || 0) + 1;
       return acc;
@@ -97,9 +77,29 @@ export function StatsPage(): JSX.Element {
 
   const totalTime = useMemo(() => sum((stats ?? []).map((s) => s.duration)), [stats]);
 
-  const weeklyReadTime = useMemo(
-    () => sum(lastWeek?.map((stat) => stat.duration) ?? []),
-    [lastWeek]
+  const perWeekDay = useMemo(
+    () =>
+      stats
+        .reduce(
+          (acc, stat) => {
+            const day = format(stat.start_time * 1000, 'EEEE');
+            const existingDay = acc.find((d) => d.name === day);
+            if (existingDay) {
+              existingDay.value += stat.duration;
+            } else {
+              acc.push({
+                name: day,
+                value: stat.duration,
+                day: new Date(stat.start_time * 1000).getUTCDay(),
+                index: 1,
+              });
+            }
+            return acc;
+          },
+          [] as Array<{ name: string; value: number; day: number; index: number }>
+        )
+        .sort((a, b) => a.day - b.day),
+    [stats]
   );
 
   if (isLoading || statsLoading || !books || !stats) {
@@ -113,7 +113,6 @@ export function StatsPage(): JSX.Element {
   return (
     <>
       <Title mb="sm">Reading history</Title>
-
       <Text
         mt={4}
         mb="md"
@@ -164,60 +163,37 @@ export function StatsPage(): JSX.Element {
       <Box mb="xl">
         <ReadingCalendar />
       </Box>
-
       <Title mt="xl" mb={4} order={3}>
-        Last 7 days
+        Weekly stats
       </Title>
-      <Text c="koinsight" tt="uppercase" mb="md" size="sm" fw={600}>
-        {formatDate(subDays(new Date(), 7), 'dd MMM')} - {formatDate(new Date(), 'dd MMM')}
-      </Text>
-      <Statistics
-        data={[
-          {
-            label: 'Read time',
-            value: formatSecondsToHumanReadable(sum(lastWeek?.map((stat) => stat.duration) ?? [])),
-            icon: IconClock,
-          },
-          {
-            label: 'Pages read',
-            value: uniqBy((stat: PageStat) => stat.page)(lastWeek ?? []).length,
-            icon: IconPageBreak,
-          },
-          {
-            label: 'Average pages per day',
-            value: Math.round(uniqBy((stat: PageStat) => stat.page)(lastWeek ?? []).length / 7),
-            icon: IconArrowsVertical,
-          },
-          {
-            label: 'Average time per day',
-            value: formatSecondsToHumanReadable(
-              Math.round(sum(lastWeek?.map((stat) => stat.duration) ?? []) / 7)
-            ),
-            icon: IconClock,
-          },
-        ]}
-      />
+      <WeekStats stats={stats} />
+      <Title mt="xl" order={3}>
+        Per day of the week
+      </Title>
       <BarChart
         h={300}
-        mt="sm"
-        data={perDay}
-        dataKey="day"
+        data={perWeekDay}
+        dataKey="name"
+        series={[
+          {
+            name: 'value',
+            label: 'Reading time',
+            color: colorScheme === 'dark' ? 'koinsight.7' : 'koinsight.1',
+          },
+        ]}
         gridAxis="none"
         withYAxis={false}
         barProps={{
           maxBarSize: 100,
-          shape: (props: BarProps) => <CustomBar {...props} accent={colors.koinsight[8]} />,
+          shape: (props: BarProps) => (
+            <CustomBar
+              {...props}
+              accent={colorScheme === 'dark' ? colors.koinsight[2] : colors.koinsight[8]}
+            />
+          ),
         }}
         valueFormatter={(value) => formatSecondsToHumanReadable(value)}
-        series={[
-          {
-            name: 'duration',
-            label: 'Reading time',
-            color: colorScheme === 'dark' ? 'koinsight.8' : 'koinsight.1',
-          },
-        ]}
       />
-
       <Title mt="xl" order={3}>
         Monthly reading time
       </Title>
@@ -230,7 +206,12 @@ export function StatsPage(): JSX.Element {
         withYAxis={false}
         barProps={{
           maxBarSize: 100,
-          shape: (props: BarProps) => <CustomBar {...props} accent={colors.violet[8]} />,
+          shape: (props: BarProps) => (
+            <CustomBar
+              {...props}
+              accent={colorScheme === 'dark' ? colors.violet[2] : colors.violet[8]}
+            />
+          ),
         }}
         valueFormatter={(value) => formatSecondsToHumanReadable(value)}
         series={[

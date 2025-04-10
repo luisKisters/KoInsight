@@ -2,11 +2,14 @@ import OpenAI from 'openai';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { z } from 'zod';
 
-const openAIClient = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  project: process.env.OPENAI_PROJECT_ID,
-  organization: process.env.OPENAI_ORG_ID,
-});
+let openAIClient: OpenAI | undefined;
+if (process.env.OPENAI_API_KEY && process.env.OPENAI_PROJECT_ID && process.env.OPENAI_ORG_ID) {
+  openAIClient = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+    project: process.env.OPENAI_PROJECT_ID,
+    organization: process.env.OPENAI_ORG_ID,
+  });
+}
 
 const BookInsights = z.object({
   genres: z.string().array(),
@@ -14,7 +17,7 @@ const BookInsights = z.object({
 });
 
 export async function getBookInsights(bookTitle: string, bookAuthor: string) {
-  const completion = await openAIClient.beta.chat.completions.parse({
+  const completion = await openAIClient?.beta.chat.completions.parse({
     model: 'gpt-4o',
     messages: [
       {
@@ -30,5 +33,5 @@ export async function getBookInsights(bookTitle: string, bookAuthor: string) {
     response_format: zodResponseFormat(BookInsights, 'book_insights'),
   });
 
-  return completion.choices[0].message.parsed;
+  return completion?.choices[0].message.parsed;
 }

@@ -10,7 +10,7 @@ import { Navbar } from './components/navbar/navbar';
 import { BookPage } from './pages/book-page/book-page';
 import { BooksPage } from './pages/books-page/books-page';
 import { CalendarPage } from './pages/calendar-page';
-import { StatsPage } from './pages/stats-page';
+import { StatsPage } from './pages/stats-page/stats-page';
 import { SyncsPage } from './pages/syncs-page';
 import { RoutePath } from './routes';
 

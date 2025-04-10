@@ -30,16 +30,6 @@ const upload = multer({
 
 const router = Router();
 
-// router.post('/import', (req, res) => {
-//   console.log('Importing database', req.file);
-//   const uploadedFilePath = req.file?.path;
-
-//   if (!uploadedFilePath) {
-//     res.status(400).json({ error: 'No file uploaded' });
-//     return;
-//   }
-// });
-
 router.post('/upload', upload.single('file'), async (req, res, next) => {
   const uploadedFilePath = req.file?.path;
 

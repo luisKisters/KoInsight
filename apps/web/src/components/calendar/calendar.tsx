@@ -91,7 +91,7 @@ export function Calendar<T>({ events, dayRenderer }: CalendarProps<T>): JSX.Elem
   return (
     <div className={style.Calendar}>
       <div className={style.CalendarHeader}>
-        <Flex gap="xs">
+        <Flex gap="xs" align="center">
           <Button
             size="xs"
             variant="light"
@@ -101,7 +101,7 @@ export function Calendar<T>({ events, dayRenderer }: CalendarProps<T>): JSX.Elem
             <IconArrowLeft size={16} />
           </Button>
 
-          <Button size="xs" variant="outline" onClick={() => setCurrentDate(new Date())}>
+          <Button size="xs" variant="default" onClick={() => setCurrentDate(new Date())}>
             Today
           </Button>
           <MonthPickerInput size="xs" value={currentDate} onChange={(e) => setCurrentDate(e!)} />

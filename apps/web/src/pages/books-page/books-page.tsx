@@ -101,7 +101,7 @@ export function BooksPage(): JSX.Element {
         />
         <Group align="center">
           <Button
-            variant="outline"
+            variant="default"
             onClick={() =>
               setSortBy({
                 key: sortBy.key,
@@ -132,10 +132,10 @@ export function BooksPage(): JSX.Element {
             }
             defaultValue="title"
           />
-          <Button.Group variant="outline">
+          <Button.Group variant="default">
             <Tooltip label="Table view" position="top" withArrow>
               <Button
-                variant={mode === 'table' ? 'primary' : 'outline'}
+                variant={mode === 'table' ? 'filled' : 'default'}
                 onClick={() => setMode('table')}
               >
                 <IconTable size={16} />
@@ -143,7 +143,7 @@ export function BooksPage(): JSX.Element {
             </Tooltip>
             <Tooltip label="Cards view" position="top" withArrow>
               <Button
-                variant={mode === 'cards' ? 'primary' : 'outline'}
+                variant={mode === 'cards' ? 'filled' : 'default'}
                 onClick={() => setMode('cards')}
               >
                 <IconCards size={16} />

@@ -1,6 +1,8 @@
 import { Book } from '@koinsight/common/types/book';
 import { Box, Group, Image, Progress, Text, Tooltip } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { IconBooks, IconProgress, IconUser } from '@tabler/icons-react';
+import C from 'clsx';
 import { JSX } from 'react';
 import { useNavigate } from 'react-router';
 import { API_URL } from '../../api/api';
@@ -14,9 +16,15 @@ type BooksCardsProps = {
 
 export function BooksCards({ books }: BooksCardsProps): JSX.Element {
   const navigate = useNavigate();
+  const isSmallScreen = useMediaQuery(`(max-width: 62em)`);
+
+  const cardWidth = isSmallScreen ? 120 : 200;
 
   return (
-    <div className={style.CardGrid}>
+    <div
+      className={style.CardGrid}
+      style={{ gridTemplateColumns: `repeat(auto-fill, minmax(${cardWidth}px, 1fr))` }}
+    >
       {books.map((book) => (
         <Box
           key={book.id}
@@ -27,7 +35,7 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
           <Image
             src={`${API_URL}/books/${book.id}/cover`}
             style={{ aspectRatio: '1/1.5' }}
-            w="200px"
+            w={cardWidth}
             alt={book.title}
             fallbackSrc="/book-placeholder-small.png"
           />
@@ -37,7 +45,7 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
             value={(book.total_read_pages / book.pages) * 100}
             color="koinsight"
           />
-          <Box px="lg" className={style.CardDetails}>
+          <Box px="lg" className={C(style.CardDetails, { [style.Small]: isSmallScreen })}>
             <Text fz="md" fw={600} style={{ wordBreak: 'break-word', whiteSpace: 'wrap' }}>
               {book.title}
             </Text>
@@ -47,22 +55,26 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
               </Tooltip>
               <span className={style.Attribute}>{book.authors ?? 'N/A'}</span>
             </Group>
-            <Group wrap="nowrap" gap={8}>
-              <Tooltip label="Series" position="top" withArrow>
-                <IconBooks stroke={1.5} size={16} />
-              </Tooltip>
-              <span className={style.Attribute}>{book.series}</span>
-            </Group>
-            <Group wrap="nowrap" gap={8}>
-              <Tooltip label="Pages read" position="top" withArrow>
-                <IconProgress stroke={1.5} size={16} />
-              </Tooltip>
-              <span className={style.Attribute}>
-                {book.total_read_pages}
-                &nbsp;/&nbsp;
-                {book.pages} pages read
-              </span>
-            </Group>
+            {!isSmallScreen && (
+              <>
+                <Group wrap="nowrap" gap={8}>
+                  <Tooltip label="Series" position="top" withArrow>
+                    <IconBooks stroke={1.5} size={16} />
+                  </Tooltip>
+                  <span className={style.Attribute}>{book.series}</span>
+                </Group>
+                <Group wrap="nowrap" gap={8}>
+                  <Tooltip label="Pages read" position="top" withArrow>
+                    <IconProgress stroke={1.5} size={16} />
+                  </Tooltip>
+                  <span className={style.Attribute}>
+                    {book.total_read_pages}
+                    &nbsp;/&nbsp;
+                    {book.pages} pages read
+                  </span>
+                </Group>
+              </>
+            )}
           </Box>
         </Box>
       ))}
