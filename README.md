@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  KoInsight is a web-based tool that helps visualizing your KoReader reading statistics and more.
+<strong>KoInsight</strong> brings your KoReader reading stats to life with a clean, web-based dashboard.
 </p>
 
 <p align="center">
