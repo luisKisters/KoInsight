@@ -81,6 +81,15 @@ The KoInsight plugin syncs your reading statistics from KOReader to KoInsight.
 **Installation:**
 1. Download the plugin ZIP bundle from the **"KOReader Plugin"** button in the main menu.
 1. Extract it into your `KOReader/plugins/` folder.
+1. For the plugin to be installed correctly, the file structure should look like this:
+    ```
+    koreader
+    └── plugins
+        └── koinsight.koplugin
+            ├── _meta.lua
+            ├── main.lua
+            └── ...
+    ```
 
 **Usage:**
 1. Open the KOReader app.
@@ -120,7 +129,7 @@ The progress sync data should appear in the **"Progress syncs"** page in KoInsig
     1. Mark as read
     1. Mark as unread
     1. Edit / add details manually
-    1. Manual cover upload
+    1. ~~Manual cover upload~~
     1. Automatically fetch book cover on new book upload
 1.  **Authors**
     1. Author view - show books per author.
