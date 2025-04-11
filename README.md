@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-<strong>KoInsight</strong> brings your [KoReader](https://koreader.rocks) reading stats to life with a clean, web-based dashboard.
+<strong>KoInsight</strong> brings your <a href="https://koreader.rocks" target="_blank">KoReader</a> reading stats to life with a clean, web-based dashboard.
 </p>
 
 <p align="center">
