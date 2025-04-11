@@ -1,7 +1,7 @@
 import { Book } from '@koinsight/common/types/book';
 import { Knex } from 'knex';
 
-const books: Partial<Book>[] = [
+export const SEED_BOOKS: Partial<Book>[] = [
   {
     id: 1,
     title: 'Mistborn: The Final Empire',
@@ -146,5 +146,5 @@ const books: Partial<Book>[] = [
 
 export async function seed(knex: Knex): Promise<void> {
   await knex('book').del();
-  await knex('book').insert(books);
+  await knex('book').insert(SEED_BOOKS);
 }
