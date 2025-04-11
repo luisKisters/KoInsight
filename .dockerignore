@@ -4,5 +4,6 @@
 
 .turbo/
 .env
+.env.*
 dist
 node_modules
