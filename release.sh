@@ -18,12 +18,12 @@ done
 
 # === Commit version bump ===
 git add .
-git commit -m "chore: release v$VERSION"
+git commit -m "chore: release $VERSION"
 
 # === Tag and push ===
-git tag "v$VERSION"
+git tag "$VERSION"
 git push origin master
-git push origin "v$VERSION"
+git push origin "$VERSION"
 
 # === Build Docker image ===
 docker build -t "$IMAGE_NAME:$VERSION" -t "$IMAGE_NAME:latest" .
