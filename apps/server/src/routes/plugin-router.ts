@@ -30,7 +30,7 @@ router.get('/plugin/health', async (_, res) => {
 });
 
 router.get('/plugin/download', (_, res) => {
-  const folderPath = path.join(__dirname, '../../../../', 'plugins', 'koinsight.koplugin');
+  const folderPath = path.join(__dirname, '../../../../', 'plugins');
   const archive = archiver('zip', { zlib: { level: 9 } });
 
   res.setHeader('Content-Type', 'application/zip');
