@@ -129,6 +129,8 @@ The progress sync data should appear in the **"Progress syncs"** page in KoInsig
     1. Get book information - description, similar books
     1. Tag / Categorize books based on genres
     1. Book recommendations?
+1. **Administration**
+    1. Multi-user support (besides progress syncs)
 1. **Progress sync**
     1. Delete progress syncs
     1. Edit progress syncs
