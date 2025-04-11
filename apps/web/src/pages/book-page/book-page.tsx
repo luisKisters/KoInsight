@@ -19,7 +19,7 @@ import { formatSecondsToHumanReadable } from '../../utils/dates';
 import { BookCard } from './book-card';
 import { BookPageCalendar } from './book-page-calendar';
 import { BookPageCoverSelector } from './book-page-cover-selector';
-import { BookPageManage } from './book-page-manage';
+import { BookPageManage } from './book-page-manage/book-page-manage';
 import { BookPageRaw } from './book-page-raw';
 
 export function BookPage(): JSX.Element {
@@ -75,7 +75,7 @@ export function BookPage(): JSX.Element {
       </Group>
 
       <Flex gap="xs">
-        {book.genres.map((genre) => (
+        {book.genres?.map((genre) => (
           <Badge radius="sm" variant="outline" key={genre.id}>
             {genre.name}
           </Badge>

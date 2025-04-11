@@ -1,8 +1,13 @@
 import { startOfDay } from 'date-fns/startOfDay';
 import { NextFunction, Request, Response, Router } from 'express';
+import { existsSync, mkdirSync, promises, rename, unlink } from 'fs';
+import multer from 'multer';
+import path from 'path';
 import { COVERS_PATH } from '../const';
 import { BookRepository } from '../db/book-repository';
 import { PageStatRepository } from '../db/page-stat-repository';
+import { deleteExistingCover } from '../lib/covers';
+import { getBookById } from '../middleware/get-book-by-id';
 
 const router = Router();
 
@@ -11,14 +16,8 @@ router.get('/books', async (_: Request, res: Response) => {
   res.json(books);
 });
 
-router.get('/books/:id', async (req: Request, res: Response, next: NextFunction) => {
-  const book = await BookRepository.getByIdWithGenres(Number(req.params.id));
-
-  if (!book) {
-    res.status(404).json({ error: 'Book not found' });
-    next();
-    return;
-  }
+router.get('/books/:id', getBookById, async (req: Request, res: Response, next: NextFunction) => {
+  const book = req.book!;
 
   const stats = await PageStatRepository.getByBookId(Number(req.params.id));
 
@@ -49,25 +48,87 @@ router.delete('/books/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/books/:id/cover', async (req: Request, res: Response) => {
-  const bookId = req.params.id;
-  if (!bookId) {
-    res.status(400).send('Book ID is required');
-    return;
-  }
-  // Find book by id
-  const book = await BookRepository.getById(Number(bookId));
-  if (!book) {
-    res.status(404).send('Book not found');
-    return;
-  }
+router.get('/books/:id/cover', getBookById, async (req: Request, res: Response) => {
+  const book = req.book!;
 
-  res.sendFile(`${COVERS_PATH}/${book.md5}.jpg`, (err) => {
-    if (err) {
+  try {
+    // find file by md5 with any extension
+    const files = await promises.readdir(COVERS_PATH);
+    const file = files.find((f) => f.startsWith(book.md5!));
+
+    if (file) {
+      res.sendFile(`${COVERS_PATH}/${file}`);
+    } else {
       res.status(404).send('Cover not found');
     }
-  });
+  } catch (error) {
+    console.error('Error reading cover directory:', error);
+    res.status(500).send({ message: 'Internal server error' });
+  }
 });
+
+const upload = multer({
+  dest: COVERS_PATH,
+  fileFilter: (_req, file, cb) => {
+    const allowedExtensions = ['.png', '.jpg', '.jpeg', '.gif'];
+    if (
+      file.mimetype === 'application/octet-stream' ||
+      allowedExtensions.some((ext) => file.originalname.endsWith(ext))
+    ) {
+      cb(null, true); // Accept the file
+    } else {
+      cb(new Error(`Only ${allowedExtensions.join(', ')} files are allowed`));
+    }
+  },
+  limits: { fileSize: 10 * 1024 * 1024 },
+});
+
+/**
+ * Uploads a book cover
+ */
+router.post(
+  '/books/:id/cover',
+  getBookById,
+  async (req: Request, _res: Response, next: NextFunction) => {
+    console.log('Deleting existing cover for book', req.book!.md5);
+    await deleteExistingCover(req.book!.md5!);
+    next();
+  },
+  upload.single('file'),
+  async (req: Request, res: Response, next: NextFunction) => {
+    const book = req.book!;
+    const file = req.file;
+
+    if (!file) {
+      res.status(400).json({ message: 'Missing file upload' });
+      return next();
+    }
+
+    try {
+      if (!existsSync(COVERS_PATH)) {
+        mkdirSync(COVERS_PATH, { recursive: true });
+      }
+
+      const extension = path.extname(file.originalname) || '';
+      const newFilename = `${book.md5}${extension}`;
+      const newPath = path.join(path.dirname(file.path), newFilename);
+      await rename(file.path, newPath, () => {});
+
+      res.send({ message: 'Cover updated' });
+    } catch (error) {
+      // Cleanup uploaded file if there's an error
+      if (file?.path) {
+        try {
+          unlink(file.path, () => {});
+        } catch (_) {
+          // ignore cleanup errors
+        }
+      }
+      console.log('Error uploading cover:', error);
+      res.status(500).send({ message: 'Unable to update cover' });
+    }
+  }
+);
 
 router.post('/books/:id/genres', async (req: Request, res: Response) => {
   const { id } = req.params;

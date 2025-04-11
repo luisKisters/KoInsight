@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { BookRepository } from '../db/book-repository';
 import { COVERS_PATH } from '../const';
+import { BookRepository } from '../db/book-repository';
+import { deleteExistingCover } from '../lib/covers';
 import { fetchCover, queryCovers } from '../lib/open-library';
 
 const router = Router();
@@ -42,6 +43,7 @@ router.get('/cover', async (req: Request, res: Response, next: NextFunction) => 
   }
 
   try {
+    deleteExistingCover(book.md5 as string);
     const cover = await fetchCover(coverId as string, size as 'S' | 'M' | 'L');
     writeFileSync(`${COVERS_PATH}/${book.md5}.jpg`, Buffer.from(cover));
     res.send({ status: 'Cover updated' });

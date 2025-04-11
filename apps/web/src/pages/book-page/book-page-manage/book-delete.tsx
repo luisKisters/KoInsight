@@ -1,19 +1,19 @@
 import { Book } from '@koinsight/common/types/book';
-import { Button, Text } from '@mantine/core';
+import { Button, Text, Title } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import { IconTrash } from '@tabler/icons-react';
-import { JSX, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { mutate } from 'swr';
-import { deleteBook } from '../../api/use-books';
-import { RoutePath } from '../../routes';
+import { deleteBook } from '../../../api/use-books';
+import { RoutePath } from '../../../routes';
 
-type BookPageManageProps = {
+export type BookDeleteProps = {
   book: Book;
 };
 
-export function BookPageManage({ book }: BookPageManageProps): JSX.Element {
+export function BookDelete({ book }: BookDeleteProps) {
   const navigate = useNavigate();
 
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -30,10 +30,10 @@ export function BookPageManage({ book }: BookPageManageProps): JSX.Element {
       ),
       labels: { confirm: 'Delete', cancel: "No, don't delete it" },
       confirmProps: { color: 'red' },
-      onConfirm: handleDelete,
+      onConfirm: onDelete,
     });
 
-  const handleDelete = async () => {
+  const onDelete = async () => {
     try {
       setDeleteLoading(true);
       await deleteBook(book.id);
@@ -56,13 +56,18 @@ export function BookPageManage({ book }: BookPageManageProps): JSX.Element {
   };
 
   return (
-    <Button
-      loading={deleteLoading}
-      leftSection={<IconTrash size={16} />}
-      variant="danger"
-      onClick={openDeleteConfirm}
-    >
-      Delete book
-    </Button>
+    <>
+      <Title order={3} mb="lg" mt="xl">
+        Delete book
+      </Title>
+      <Button
+        loading={deleteLoading}
+        leftSection={<IconTrash size={16} />}
+        variant="danger"
+        onClick={openDeleteConfirm}
+      >
+        Delete book
+      </Button>
+    </>
   );
 }
