@@ -16,16 +16,14 @@
   </picture>
 </p>
 
-## Features
+# Features
 
 - Import & Visualize KoReader reading statistics
 - Keep track of your reading habits
 - Act as a KoReader Sync Server
 - Custom KoReader plugin for easier sync
 
-
-
-## Screenshots
+# Screenshots
 <table>
   <tr>
     <td><strong>Home page</strong></td>
@@ -48,7 +46,7 @@
 See all [screenshots](/images/screenshots/)
 
 
-## Installation
+# Installation
 Using [Docker](https://docker.com) and [Docker Compose](https://docs.docker.com/compose/)
 
 Add the following to your `compose.yaml` file:
@@ -66,33 +64,50 @@ services:
 ```
 Run `docker compose up -d`.
 
-## Usage
+# Usage
 
-In order to start seeing data in KoInsight, you need to upload your statistics data.
-Currently, there are 2 ways to do that:
-1. Extract your `statistics.sqlite` from Koreader and upload it to KoInsight using the "Upload Statistics DB" button.
-1. Install, configure, and use the KoInsight plugin for KoReader to sync your data from the KoReader app.
+## Reading statistics
 
-## KoReader Plugin
-The KoReader plugin is a simple plugin that syncs your reading statistics to KoInsight.
-To install it:
-1. Download the zip bundle from the "KoReader Plugin" button in the main menu.
-1. Extract it in your `koreader/plugins/` folder.
+To start seeing data in KoInsight, you need to upload your reading statistics.
+Currently, there are two ways to do this:
 
-To use it:
+1. **Manual upload**: Extract your `statistics.sqlite` file from KoReader and upload it using the **"Upload Statistics DB"** button in KoInsight.
+2. **Sync plugin**: Install and configure the KoInsight plugin in KoReader to sync your data directly.
+
+### KoReader sync plugin
+The KoInsight plugin syncs your reading statistics from KoReader to KoInsight.
+
+**Installation:**
+1. Download the plugin ZIP bundle from the **"KoReader Plugin"** button in the main menu.
+1. Extract it into your `koreader/plugins/` folder.
+
+**Usage:**
 1. Open the KoReader app.
-1. Open the KoInsight plugin from the tools menu (should be below the "More tools" submenu).
-1. Click "Configure KoInsight" and enter the URL of your KoInsight server (e.g. `http://server-ip:3000`).
-  1. NOTE: Keep in mind your KoReader needs to have network access to the server to sync.
-1. Click "Sync" in the KoInsight plugin menu.
+1. Go to the **Tools** menu and open **KoInsight** (it should be below "More tools").
+1. Click **Configure KoInsight** and enter your KoInsight server URL (e.g., `http://server-ip:3000`).
+    - ⚠️ Make sure your KoReader device has network access to the server.
+1. Click **Sync** in the KoInsight plugin menu.
 
-Reload your KoInsight web dashboard. If everything went well (🤞), you should see your data
+Reload the KoInsight web dashboard. If everything went well (🤞), your data should appear.
 
-## Uploading Statistics SQLite
-1. Open a file manager on the device you use KoReader on.
-1. Navigate to the KoReader folder.
-1. Open the "settings" folder.
-1. There should be a `statistics.sqlite` file there. Copy it to your computer and upload it to KoInsight using the "Upload Statistics DB" button.
+### Manual Upload: `statistics.sqlite`
+1. Open a file manager on your KoReader device.
+1. Navigate to the `koreader/settings/` folder.
+1. Locate the `statistics.sqlite` file.
+1. Copy it to your computer.
+1. Upload it to KoInsight using the **"Upload Statistics DB"** button.
 1. Reload the KoInsight web dashboard.
 
 Every time you need to reupload data, you would need to upload the statistics database file again.
+
+## Use as progress sync server
+
+You can use your KoInsight instance as a KoReader sync server. This allows you to sync your reading progress across multiple devices.
+
+1. Open the KoReader app.
+1. Go to the **Tools** menu and open **Progress sync**
+1. Set the server URL to your KoInsight instance (e.g., `http://server-ip:3000`).
+1. Register an account and login.
+1. Sync your progress.
+
+The progress sync data should appear in the **"Progress syncs"** page in KoInsight.
