@@ -45,7 +45,7 @@
   </tr>
 </table>
 
-See all [screenshots](/images/)
+See all [screenshots](/images/screenshots/)
 
 
 ## Installation
