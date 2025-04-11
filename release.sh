@@ -26,10 +26,16 @@ git push origin master
 git push origin "$VERSION"
 
 # === Build Docker image ===
-docker build -t "$IMAGE_NAME:$VERSION" -t "$IMAGE_NAME:latest" .
+docker buildx create --use --name koinsight-builder || docker buildx use koinsight-builder
+docker buildx inspect --bootstrap
 
-# === Push image to GHCR ===
-docker push "$IMAGE_NAME:$VERSION"
-docker push "$IMAGE_NAME:latest"
+# === Build multi-arch image and push it
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t "$IMAGE_NAME:$VERSION" \
+  -t "$IMAGE_NAME:latest" \
+  --push \
+  .
+
 
 echo "✅ Released version $VERSION"
