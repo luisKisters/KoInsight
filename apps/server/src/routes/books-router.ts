@@ -49,8 +49,20 @@ router.delete('/books/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/books/:id/cover', (req: Request, res: Response) => {
-  res.sendFile(`${COVERS_PATH}/${req.params.id}.jpg`, (err) => {
+router.get('/books/:id/cover', async (req: Request, res: Response) => {
+  const bookId = req.params.id;
+  if (!bookId) {
+    res.status(400).send('Book ID is required');
+    return;
+  }
+  // Find book by id
+  const book = await BookRepository.getById(Number(bookId));
+  if (!book) {
+    res.status(404).send('Book not found');
+    return;
+  }
+
+  res.sendFile(`${COVERS_PATH}/${book.md5}.jpg`, (err) => {
     if (err) {
       res.status(404).send('Cover not found');
     }

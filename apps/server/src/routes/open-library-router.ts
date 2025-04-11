@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { BookRepository } from 'src/db/book-repository';
 import { COVERS_PATH } from '../const';
 import { fetchCover, queryCovers } from '../lib/open-library';
 
@@ -30,13 +31,19 @@ router.get('/cover', async (req: Request, res: Response, next: NextFunction) => 
     return next();
   }
 
+  const book = await BookRepository.getById(Number(bookId));
+  if (!book) {
+    res.status(404).send('Book not found');
+    return next();
+  }
+
   if (!existsSync(COVERS_PATH)) {
     mkdirSync(COVERS_PATH);
   }
 
   try {
     const cover = await fetchCover(coverId as string, size as 'S' | 'M' | 'L');
-    writeFileSync(`${COVERS_PATH}/${bookId}.jpg`, Buffer.from(cover));
+    writeFileSync(`${COVERS_PATH}/${book.md5}.jpg`, Buffer.from(cover));
     res.send({ status: 'Cover updated' });
   } catch {
     res.status(404).send('Cover not found');
