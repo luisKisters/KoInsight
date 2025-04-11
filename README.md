@@ -114,7 +114,7 @@ You can use your KoInsight instance as a KOReader sync server. This allows you t
 The progress sync data should appear in the **"Progress syncs"** page in KoInsight.
 
 # Roadmap
-(a.k.a thinkgs I want to do)
+(a.k.a things I want to do)
 
 1. **Books**
     1. Mark as read
