@@ -3,8 +3,8 @@
 set -e
 
 # === Config ===
-GHCR_USER="GeorgeSG"
-REPO_NAME="KoInsight"
+GHCR_USER="georgesg"
+REPO_NAME="koinsight"
 PACKAGE_DIRS=("apps/server" "apps/web" "packages/common")
 IMAGE_NAME="ghcr.io/$GHCR_USER/$REPO_NAME"
 
