@@ -58,7 +58,7 @@ export function UploadForm(): JSX.Element {
             paddingTop: 'var(--mantine-spacing-xs)',
           },
         }}
-        title="Upload KoReader statistics database"
+        title="Upload KOReader statistics database"
         opened={modalOpened}
         size="lg"
         onClose={close}
@@ -66,7 +66,7 @@ export function UploadForm(): JSX.Element {
         centered
       >
         <Flex direction="column" gap="sm" mt="lg">
-          <Text>Upload your KoReader statistics.sqlite3 file.</Text>
+          <Text>Upload your KOReader statistics.sqlite3 file.</Text>
           <form onSubmit={handleSubmit} encType="multipart/form-data">
             <FileInput
               label="Choose Database file"

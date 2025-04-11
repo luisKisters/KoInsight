@@ -39,7 +39,7 @@ export function Navbar({ onNavigate }: { onNavigate?: () => void }): JSX.Element
     { link: RoutePath.CALENDAR, label: 'Calendar', icon: IconCalendar },
     { link: RoutePath.STATS, label: 'Reading stats', icon: IconChartBar },
     { link: RoutePath.SYNCS, label: 'Progress syncs', icon: IconReload },
-    { onClick: openDownload, label: 'KoReader Plugin', icon: IconDownload },
+    { onClick: openDownload, label: 'KOReader Plugin', icon: IconDownload },
   ];
 
   const [active, setActive] = useState(
