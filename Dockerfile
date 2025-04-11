@@ -17,7 +17,7 @@ COPY packages ./packages
 RUN npm run build
 
 # Runner
-FROM node:20-alpine
+FROM node:20-alpine AS runner
 
 WORKDIR /app
 RUN mkdir -p /app/data
@@ -27,7 +27,7 @@ COPY --from=builder /app/apps/server/dist /app/apps/server/dist
 COPY --from=builder /app/apps/web/dist /app/apps/web/dist
 COPY plugins ./plugins
 
-ENV NODE_ENV "production"
-ENV DATA_PATH "/app/data"
+ENV NODE_ENV="production"
+ENV DATA_PATH="/app/data"
 
 CMD ["node", "./apps/server/dist/app.js"]
