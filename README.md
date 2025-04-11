@@ -111,3 +111,23 @@ You can use your KoInsight instance as a KoReader sync server. This allows you t
 1. Sync your progress.
 
 The progress sync data should appear in the **"Progress syncs"** page in KoInsight.
+
+# Roadmap
+(a.k.a thinkgs I want to do)
+
+1. **Books**
+    1. Mark as read
+    1. Mark as unread
+    1. Edit / add details manually
+    1. Manual cover upload
+    1. Automatically fetch book cover on new book upload
+1. **Statistics**
+    1. Map KoReader page count to actual page count for better per-page statistics.
+1. **AI Enhancements**
+    1. Get book information - description, similar books
+    1. Tag / Categorize books based on genres
+    1. Book recommendations?
+1. **Progress sync management**
+    1. Delete progress syncs
+    1. Edit progress syncs
+    1. Device management
