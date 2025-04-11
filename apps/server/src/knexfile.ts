@@ -1,16 +1,23 @@
 import { Knex } from 'knex';
 import { DEV_DB_PATH, PROD_DB_PATH } from './const';
 
+const defaultConfig: Knex.Config = {
+  useNullAsDefault: true,
+  client: 'better-sqlite3',
+};
+
 const config: { [key: string]: Knex.Config } = {
   development: {
-    client: 'better-sqlite3',
+    ...defaultConfig,
     connection: { filename: DEV_DB_PATH },
-    useNullAsDefault: true,
+    seeds: { directory: './db/seeds' },
+    migrations: { directory: './db/migrations' },
   },
   production: {
-    client: 'better-sqlite3',
+    ...defaultConfig,
     connection: { filename: PROD_DB_PATH },
     useNullAsDefault: true,
+    migrations: { directory: './db/migrations' },
   },
 };
 

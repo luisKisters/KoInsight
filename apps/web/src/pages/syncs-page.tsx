@@ -1,7 +1,6 @@
 import { ProgressWithUsername } from '@koinsight/common/types/progress';
-import { Anchor, Card, Code, Flex, Progress, Text, Title, Tooltip } from '@mantine/core';
+import { Anchor, Card, Code, Flex, Progress, Title, Tooltip } from '@mantine/core';
 import {
-  IconAlertTriangle,
   IconCode,
   IconDeviceTablet,
   IconNote,
@@ -14,6 +13,7 @@ import { useCallback, useMemo } from 'react';
 import { generatePath, NavLink } from 'react-router';
 import { useProgresses } from '../api/kosync';
 import { useBooks } from '../api/use-books';
+import { EmptyState } from '../components/empty-state/empty-state';
 import { RoutePath } from '../routes';
 
 export function SyncsPage() {
@@ -33,78 +33,83 @@ export function SyncsPage() {
 
   return (
     <div>
-      <Title mb="sm">Progress Syncs</Title>
-      <Flex mb="xl" gap="xs" align="center">
-        <IconAlertTriangle color="var(--mantine-color-orange-5)" />
-        <Text>
-          Progress syncs are detached from the rest of the KoInsight database for now.
-          <br />
-          This page gives a summary of what data is available in the syncs database.
-        </Text>
-      </Flex>
-      {Object.entries(byDevice).map(([deviceId, progresses]) => (
-        <div key={deviceId}>
-          <Tooltip position="top-start" withArrow label={`Device ID: ${progresses?.[0].device_id}`}>
-            <Title order={3} mb="sm" mt="xl">
-              <Flex align="center" gap={4}>
-                <IconDeviceTablet /> {progresses?.[0].device}
-              </Flex>
-            </Title>
-          </Tooltip>
+      <Title mb="sm">Progress syncs</Title>
+      {progresses.length === 0 ? (
+        <EmptyState
+          title="No progress syncs"
+          description="It seems like no one has synced their progress yet."
+        />
+      ) : (
+        <>
+          {Object.entries(byDevice).map(([deviceId, progresses]) => (
+            <div key={deviceId}>
+              <Tooltip
+                position="top-start"
+                withArrow
+                label={`Device ID: ${progresses?.[0].device_id}`}
+              >
+                <Title order={3} mb="sm" mt="xl">
+                  <Flex align="center" gap={4}>
+                    <IconDeviceTablet /> {progresses?.[0].device}
+                  </Flex>
+                </Title>
+              </Tooltip>
 
-          <Flex gap="sm" wrap="wrap">
-            {progresses?.map((progress) => (
-              <Card padding="lg" radius="md" withBorder>
-                <Flex direction="column" key={progress.id} gap="xs">
-                  <Flex gap="xs" align="center">
-                    <Tooltip withArrow label="Username">
-                      <IconUser size={18} />
-                    </Tooltip>
-                    <strong>{progress.username}</strong>
-                  </Flex>
-                  <Flex gap="xs" align="center">
-                    <Tooltip withArrow label="Document">
-                      <IconNote size={18} />
-                    </Tooltip>
-                    {findBook(progress.document) ? (
-                      <>
-                        <Anchor
-                          component={NavLink}
-                          to={generatePath(RoutePath.BOOK, {
-                            id: findBook(progress.document)!.id.toString(),
-                          })}
-                        >
-                          {findBook(progress.document)!.title}
-                        </Anchor>
-                        <Tooltip withArrow label={`MD5: ${progress.document}`} position="top">
-                          <IconCode size={18} />
+              <Flex gap="sm" wrap="wrap">
+                {progresses?.map((progress) => (
+                  <Card padding="lg" radius="md" withBorder>
+                    <Flex direction="column" key={progress.id} gap="xs">
+                      <Flex gap="xs" align="center">
+                        <Tooltip withArrow label="Username">
+                          <IconUser size={18} />
                         </Tooltip>
-                      </>
-                    ) : (
-                      <>
-                        MD5: <Code>{progress.document}</Code>
-                      </>
-                    )}
-                  </Flex>
-                  <Flex gap="xs" align="center">
-                    <Tooltip withArrow label="Progress">
-                      <IconProgress size={18} />
-                    </Tooltip>
-                    <Code>{progress.progress}</Code>
-                  </Flex>
-                  <Flex gap="xs" align="center">
-                    <Tooltip withArrow label="Percentage">
-                      <IconPercentage size={18} />
-                    </Tooltip>
-                    <Progress w="100" value={progress.percentage * 100} />{' '}
-                    {progress.percentage * 100}%
-                  </Flex>
-                </Flex>
-              </Card>
-            ))}
-          </Flex>
-        </div>
-      ))}
+                        <strong>{progress.username}</strong>
+                      </Flex>
+                      <Flex gap="xs" align="center">
+                        <Tooltip withArrow label="Document">
+                          <IconNote size={18} />
+                        </Tooltip>
+                        {findBook(progress.document) ? (
+                          <>
+                            <Anchor
+                              component={NavLink}
+                              to={generatePath(RoutePath.BOOK, {
+                                id: findBook(progress.document)!.id.toString(),
+                              })}
+                            >
+                              {findBook(progress.document)!.title}
+                            </Anchor>
+                            <Tooltip withArrow label={`MD5: ${progress.document}`} position="top">
+                              <IconCode size={18} />
+                            </Tooltip>
+                          </>
+                        ) : (
+                          <>
+                            MD5: <Code>{progress.document}</Code>
+                          </>
+                        )}
+                      </Flex>
+                      <Flex gap="xs" align="center">
+                        <Tooltip withArrow label="Progress">
+                          <IconProgress size={18} />
+                        </Tooltip>
+                        <Code>{progress.progress}</Code>
+                      </Flex>
+                      <Flex gap="xs" align="center">
+                        <Tooltip withArrow label="Percentage">
+                          <IconPercentage size={18} />
+                        </Tooltip>
+                        <Progress w="100" value={progress.percentage * 100} />{' '}
+                        {progress.percentage * 100}%
+                      </Flex>
+                    </Flex>
+                  </Card>
+                ))}
+              </Flex>
+            </div>
+          ))}
+        </>
+      )}
     </div>
   );
 }

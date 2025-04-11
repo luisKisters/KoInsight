@@ -64,7 +64,7 @@ function stopServer(signal: NodeJS.Signals, server: Server) {
 
 async function main() {
   console.log('Running database migrations');
-  await knex.migrate.latest({ directory: path.join(__dirname, 'migrations') });
+  await knex.migrate.latest({ directory: path.join(__dirname, 'db', 'migrations') });
   console.log('Database migrated successfully');
 
   setupServer().then((server) => {

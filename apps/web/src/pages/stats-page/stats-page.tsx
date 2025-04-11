@@ -112,7 +112,7 @@ export function StatsPage(): JSX.Element {
 
   return (
     <>
-      <Title mb="sm">Reading history</Title>
+      <Title mb="sm">Reading statistics</Title>
       <Text
         mt={4}
         mb="md"
@@ -128,7 +128,7 @@ export function StatsPage(): JSX.Element {
         {weeklyReadTime > 0 ? (
           <>You read for {formatSecondsToHumanReadable(weeklyReadTime)} this week. Keep it up!</>
         ) : (
-          <>You haven't read this week yet.</>
+          <>You haven't read this week yet. No better time to start!</>
         )}
       </Text>
       <Box my="xl">

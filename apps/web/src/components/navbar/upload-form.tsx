@@ -50,18 +50,23 @@ export function UploadForm(): JSX.Element {
         Upload Statistics DB
       </Button>
       <Modal
-        title={
-          <Title order={4} px="lg">
-            Upload Koreader Statistics Database
-          </Title>
-        }
+        styles={{
+          title: {
+            fontSize: 'var(--mantine-font-size-xl)',
+            fontWeight: 700,
+            fontFamily: 'Noto Sans',
+            paddingTop: 'var(--mantine-spacing-xs)',
+          },
+        }}
+        title="Upload KoReader statistics database"
         opened={modalOpened}
         size="lg"
         onClose={close}
         radius="lg"
         centered
       >
-        <Flex direction="column" gap="sm" p="lg">
+        <Flex direction="column" gap="sm" mt="lg">
+          <Text>Upload your KoReader statistics.sqlite3 file.</Text>
           <form onSubmit={handleSubmit} encType="multipart/form-data">
             <FileInput
               label="Choose Database file"

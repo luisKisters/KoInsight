@@ -1,11 +1,11 @@
 import {
   ActionIcon,
   Box,
-  Button,
   Flex,
   useComputedColorScheme,
   useMantineColorScheme,
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import {
   IconBooks,
   IconCalendar,
@@ -18,26 +18,30 @@ import {
 import { JSX, useState } from 'react';
 import { NavLink, useLocation } from 'react-router';
 import { RoutePath } from '../../routes';
-import { UploadForm } from '../header/upload-form';
 import { Logo } from '../logo/logo';
+import { DownloadPluginModal } from './download-plugin';
+import { UploadForm } from './upload-form';
 
 import style from './navbar.module.css';
 
-const tabs = [
-  { link: RoutePath.BOOKS, label: 'Books', icon: IconBooks },
-  { link: RoutePath.CALENDAR, label: 'Calendar', icon: IconCalendar },
-  { link: RoutePath.STATS, label: 'Stats', icon: IconChartBar },
-  { link: RoutePath.SYNCS, label: 'Progress Syncs', icon: IconReload },
-];
-
 export function Navbar({ onNavigate }: { onNavigate?: () => void }): JSX.Element {
+  const { pathname } = useLocation();
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme();
   const toggleColorScheme = () => {
     setColorScheme(computedColorScheme === 'dark' ? 'light' : 'dark');
   };
 
-  const { pathname } = useLocation();
+  const [downloadOpened, { close: closeDownload, open: openDownload }] = useDisclosure(false);
+
+  const tabs = [
+    { link: RoutePath.BOOKS, label: 'Books', icon: IconBooks },
+    { link: RoutePath.CALENDAR, label: 'Calendar', icon: IconCalendar },
+    { link: RoutePath.STATS, label: 'Reading stats', icon: IconChartBar },
+    { link: RoutePath.SYNCS, label: 'Progress syncs', icon: IconReload },
+    { onClick: openDownload, label: 'KoReader Plugin', icon: IconDownload },
+  ];
+
   const [active, setActive] = useState(
     () => tabs.find((item) => item.link === pathname)?.link ?? RoutePath.HOME
   );
@@ -47,18 +51,25 @@ export function Navbar({ onNavigate }: { onNavigate?: () => void }): JSX.Element
     onNavigate?.();
   };
 
-  const links = tabs.map((item) => (
-    <NavLink
-      className={style.Link}
-      data-active={item.link === active || undefined}
-      to={item.link}
-      key={item.label}
-      onClick={() => onClick(item.link)}
-    >
-      <item.icon className={style.LinkIcon} stroke={1.5} />
-      <span>{item.label}</span>
-    </NavLink>
-  ));
+  const links = tabs.map((item) =>
+    item.link ? (
+      <NavLink
+        className={style.Link}
+        data-active={item.link === active || undefined}
+        to={item.link}
+        key={item.label}
+        onClick={() => onClick(item.link)}
+      >
+        <item.icon className={style.LinkIcon} stroke={1.5} />
+        <span>{item.label}</span>
+      </NavLink>
+    ) : (
+      <a className={style.Link} key={item.label} onClick={() => item.onClick()}>
+        <item.icon className={style.LinkIcon} stroke={1.5} />
+        <span>{item.label}</span>
+      </a>
+    )
+  );
 
   return (
     <Box className={style.Navbar} component="nav">
@@ -71,14 +82,6 @@ export function Navbar({ onNavigate }: { onNavigate?: () => void }): JSX.Element
       />
       <div>{links}</div>
       <div className={style.Footer}>
-        <Button
-          component="a"
-          href="/api/plugin/download"
-          variant="subtle"
-          leftSection={<IconDownload size={16} />}
-        >
-          Download KoReader Plugin
-        </Button>
         <Flex gap="xs">
           <UploadForm />
           <ActionIcon
@@ -95,6 +98,7 @@ export function Navbar({ onNavigate }: { onNavigate?: () => void }): JSX.Element
           </ActionIcon>
         </Flex>
       </div>
+      <DownloadPluginModal opened={downloadOpened} onClose={closeDownload} />
     </Box>
   );
 }

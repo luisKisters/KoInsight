@@ -1,7 +1,17 @@
-import { Box, Burger, createTheme, Drawer, Group, MantineProvider } from '@mantine/core';
+import {
+  Anchor,
+  Box,
+  Burger,
+  createTheme,
+  Drawer,
+  Group,
+  MantineProvider,
+  Text,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
+import { IconHeart } from '@tabler/icons-react';
 import { JSX } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
 import style from './app.module.css';
@@ -63,6 +73,13 @@ export function App(): JSX.Element {
             </Routes>
           </main>
         </div>
+        <Text size="xs" ta="center" c="dimmed">
+          Made with <IconHeart size={10} /> by{' '}
+          <Anchor href="https://gar.dev" target="_blank">
+            gar.dev
+          </Anchor>
+          .
+        </Text>
       </ModalsProvider>
     </MantineProvider>
   );

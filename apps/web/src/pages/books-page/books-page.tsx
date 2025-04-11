@@ -11,6 +11,7 @@ import {
 } from '@tabler/icons-react';
 import { JSX, useState } from 'react';
 import { useBooks } from '../../api/use-books';
+import { EmptyState } from '../../components/empty-state/empty-state';
 import { BooksCards } from './books-cards';
 import { BooksTable } from './books-table';
 
@@ -81,7 +82,15 @@ export function BooksPage(): JSX.Element {
   }
 
   if (books.length === 0) {
-    return <Flex justify="center">No books found</Flex>;
+    return (
+      <>
+        <Title mb="xl">Books</Title>
+        <EmptyState
+          title="No books yet"
+          description="It seems like you haven't uploaded any reading statistics yet."
+        />
+      </>
+    );
   }
 
   return (
