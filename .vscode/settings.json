@@ -4,5 +4,6 @@
     "**/server/**": "BE · ${filename}.${extname}",
     "**/common/**": "Common · ${filename}.${extname}",
     "**/web/**": "FE · ${filename}.${extname}"
-  }
+  },
+  "javascript.preferences.importModuleSpecifier": "relative"
 }
