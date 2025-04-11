@@ -23,7 +23,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     const user = await UserRepository.login(username, key);
 
     if (!user) {
-      res.status(401).json({ message: 'Unauthorized' });
+      res.status(401).json({ error: 'Unauthorized' });
     } else {
       req.user = user;
       next();

@@ -46,7 +46,7 @@ router.get('/users/auth', async (req: Request, res: Response) => {
   const password = req.header('x-auth-key');
 
   if (!username || !password) {
-    res.status(400).json({ message: 'Invalid request' });
+    res.status(400).json({ error: 'Invalid request' });
     return;
   }
 
@@ -56,7 +56,7 @@ router.get('/users/auth', async (req: Request, res: Response) => {
   } catch (error) {}
 
   if (!user) {
-    res.status(401).json({ message: 'Unauthorized' });
+    res.status(401).json({ error: 'Unauthorized' });
   } else {
     res.status(200).json({ authorized: 'OK' });
   }

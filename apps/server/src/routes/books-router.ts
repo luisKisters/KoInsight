@@ -100,7 +100,7 @@ router.post(
     const file = req.file;
 
     if (!file) {
-      res.status(400).json({ message: 'Missing file upload' });
+      res.status(400).json({ error: 'Missing file upload' });
       return next();
     }
 
