@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-<strong>KoInsight</strong> brings your KoReader reading stats to life with a clean, web-based dashboard.
+<strong>KoInsight</strong> brings your [KoReader](https://koreader.rocks) reading stats to life with a clean, web-based dashboard.
 </p>
 
 <p align="center">
@@ -21,7 +21,7 @@
 - 📈 Interactive dashboard with charts and insights
 - 🔄 KoReader plugin for syncing reading stats
 - 📤 Manual .sqlite upload supported
-- ♻️ Act as a KoReaader (kosync) sync server
+- ♻️ Act as a KoReader (kosync) sync server
 - 🏠 Fully self-hostable (Docker image available)
 
 # Screenshots
