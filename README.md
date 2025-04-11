@@ -18,10 +18,11 @@
 
 # Features
 
-- Import & Visualize KoReader reading statistics
-- Keep track of your reading habits
-- Act as a KoReader Sync Server
-- Custom KoReader plugin for easier sync
+- 📈 Interactive dashboard with charts and insights
+- 🔄 KoReader plugin for syncing reading stats
+- 📤 Manual .sqlite upload supported
+- ♻️ Act as a KoReaader (kosync) sync server
+- 🏠 Fully self-hostable (Docker image available)
 
 # Screenshots
 <table>
