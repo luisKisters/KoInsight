@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { BookRepository } from 'src/db/book-repository';
+import { BookRepository } from '../db/book-repository';
 import { COVERS_PATH } from '../const';
 import { fetchCover, queryCovers } from '../lib/open-library';
 
