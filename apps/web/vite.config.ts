@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 export default ({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
   const PORT = Number(process.env.VITE_WEB_PORT ?? 3000);
-  const HOST = process.env.VITE_WEB_HOST || 'localhost';
+  const HOST = process.env.VITE_WEB_HOSTNAME || 'localhost';
 
   return defineConfig({
     plugins: [react()],

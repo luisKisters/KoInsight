@@ -15,7 +15,7 @@ import { pluginRouter } from './routes/plugin-router';
 import { statsRouter } from './routes/stats-router';
 import { uploadRouter } from './routes/upload-router';
 
-const HOSTNAME = process.env.HOST || 'localhost';
+const HOSTNAME = process.env.HOSTNAME || '127.0.0.1';
 const PORT = Number(process.env.PORT ?? 3000);
 const ENV = process.env.NODE_ENV;
 

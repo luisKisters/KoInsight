@@ -2,14 +2,14 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": [".env"],
   "globalEnv": [
-    "HOST",
-    "PORT",
     "NODE_ENV",
+    "HOSTNAME",
+    "PORT",
+    "VITE_WEB_HOSTNAME",
+    "VITE_WEB_PORT",
     "OPENAI_API_KEY",
     "OPENAI_API_URL",
-    "OPENAI_API_VERSION",
-    "VITE_WEB_HOST",
-    "VITE_WEB_PORT"
+    "OPENAI_API_VERSION"
   ],
   "tasks": {
     "build": {
