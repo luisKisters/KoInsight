@@ -54,7 +54,7 @@ router.get('/books/:id/cover', getBookById, async (req: Request, res: Response) 
   try {
     // find file by md5 with any extension
     const files = await promises.readdir(COVERS_PATH);
-    const file = files.find((f) => f.startsWith(book.md5!));
+    const file = files.find((f) => f.startsWith(book.md5));
 
     if (file) {
       res.sendFile(`${COVERS_PATH}/${file}`);

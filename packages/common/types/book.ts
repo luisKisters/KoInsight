@@ -8,9 +8,9 @@ type KoReaderBook = {
   last_open: number;
   highlights: number;
   pages: number;
-  series: string | null;
-  language: string | null;
-  md5: string | null;
+  series: string;
+  language: string;
+  md5: string;
   total_read_time: number;
   total_read_pages: number;
 };

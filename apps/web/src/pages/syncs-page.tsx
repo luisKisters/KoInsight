@@ -25,7 +25,7 @@ export function SyncsPage() {
     [progresses]
   );
 
-  const findBook = useCallback((md5: string) => books?.find((book) => book.md5 === md5), [books]);
+  const findBook = useCallback((md5: string) => books.find((book) => book.md5 === md5), [books]);
 
   if (isLoading) {
     return <div>Loading...</div>;

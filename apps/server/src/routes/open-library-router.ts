@@ -43,7 +43,7 @@ router.get('/cover', async (req: Request, res: Response, next: NextFunction) => 
   }
 
   try {
-    deleteExistingCover(book.md5 as string);
+    deleteExistingCover(book.md5);
     const cover = await fetchCover(coverId as string, size as 'S' | 'M' | 'L');
     writeFileSync(`${COVERS_PATH}/${book.md5}.jpg`, Buffer.from(cover));
     res.send({ status: 'Cover updated' });
