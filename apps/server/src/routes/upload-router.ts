@@ -56,7 +56,7 @@ router.post('/upload', upload.single('file'), async (req, res, next) => {
 
   try {
     const newBooks = db.prepare('SELECT * FROM book').all() as Book[];
-    const dbPageStats = db.prepare('SELECT * FROM page_stat').all() as DbPageStat[];
+    const dbPageStats = db.prepare('SELECT * FROM page_stat_data').all() as DbPageStat[];
     const newPageStats = transformPageStats(dbPageStats);
 
     await uploadStatisticData(newBooks, newPageStats);

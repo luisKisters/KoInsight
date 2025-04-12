@@ -28,8 +28,12 @@ export function uploadStatisticData(newBooks: Book[], newPageStats: PageStat[]) 
     );
 
     await Promise.all(
-      // TODO: Figure out if onConflict here is viable. What if the book is read from 2 different devices?
-      newPageStats.map((pageStat) => trx('page_stat').insert(pageStat).onConflict().ignore())
+      newPageStats.map((pageStat) =>
+        trx('page_stat')
+          .insert(pageStat)
+          .onConflict(['book_id', 'page', 'start_time'])
+          .merge(['duration', 'total_pages'])
+      )
     );
 
     await trx.commit();
