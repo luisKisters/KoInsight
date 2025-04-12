@@ -148,4 +148,23 @@ router.post('/books/:id/genres', async (req: Request, res: Response) => {
   }
 });
 
+router.put('/books/:id/reference_pages', getBookById, async (req: Request, res: Response) => {
+  const book = req.book!;
+  const { reference_pages } = req.body;
+  console.log(req.body);
+
+  if (!reference_pages) {
+    res.status(400).json({ error: 'Missing required fields' });
+    return;
+  }
+
+  try {
+    await BookRepository.setReferencePages(book.id, reference_pages);
+    res.status(200).json({ message: 'Reference pages updated' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update reference pages' });
+  }
+});
+
 export { router as booksRouter };

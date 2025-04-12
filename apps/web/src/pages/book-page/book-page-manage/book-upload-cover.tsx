@@ -1,9 +1,9 @@
+import { Book } from '@koinsight/common/types/book';
 import { Button, FileInput, Flex, Title } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { FormEvent, useState } from 'react';
 import { mutate } from 'swr';
-import { uploadBookCover } from '../../../api/upload-book-cover';
-import { Book } from '@koinsight/common/types/book';
+import { uploadBookCover } from '../../../api/books';
 
 export type BookUploadCoverProps = {
   book: Book;
@@ -50,8 +50,8 @@ export function BookUploadCover({ book }: BookUploadCoverProps) {
   };
 
   return (
-    <>
-      <Title order={3} mb="lg">
+    <div>
+      <Title order={3} mb="md">
         Upload cover
       </Title>
       <form onSubmit={handleUpload} encType="multipart/form-data">
@@ -69,6 +69,6 @@ export function BookUploadCover({ book }: BookUploadCoverProps) {
         </Flex>
         {message && <p>{message}</p>}
       </form>
-    </>
+    </div>
   );
 }

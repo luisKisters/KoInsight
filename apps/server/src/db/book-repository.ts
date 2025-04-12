@@ -79,4 +79,8 @@ export class BookRepository {
 
     return knex('book_genre').insert({ book_id: id, genre_id: genre.id });
   }
+
+  static async setReferencePages(id: number, referencePages: number | null) {
+    return knex('book').where({ id }).update({ reference_pages: referencePages });
+  }
 }

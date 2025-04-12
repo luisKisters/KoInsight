@@ -7,14 +7,30 @@ import {
   IconClock,
   IconPageBreak,
 } from '@tabler/icons-react';
-import { addDays, endOfWeek, format, formatDate, isBefore, isSameDay, startOfWeek } from 'date-fns';
-import { sum, uniqBy } from 'ramda';
+import {
+  addDays,
+  endOfWeek,
+  format,
+  formatDate,
+  isBefore,
+  isSameDay,
+  startOfDay,
+  startOfWeek,
+} from 'date-fns';
+import { groupBy, sum, uniqBy } from 'ramda';
 import { useMemo, useState } from 'react';
 import { PageStat } from '../../api/use-page-stats';
 import { Statistics } from '../../components/statistics/statistics';
 import { formatSecondsToHumanReadable } from '../../utils/dates';
+import { Book } from '@koinsight/common/types/book';
 
-export function WeekStats({ stats }: { stats: PageStat[] }) {
+export function WeekStats({
+  stats,
+  booksById,
+}: {
+  stats: PageStat[];
+  booksById: Record<number, Book>;
+}) {
   const [weekStart, setWeekStart] = useState<number>(
     startOfWeek(new Date(), { weekStartsOn: 1 }).getTime()
   );
@@ -30,6 +46,41 @@ export function WeekStats({ stats }: { stats: PageStat[] }) {
         start_time * 1000 < weekEnd.getTime() && start_time * 1000 > start.getTime()
     );
   }, [stats, weekStart, weekEnd]);
+
+  const pagesRead = useMemo(
+    () =>
+      Math.round(
+        weekData?.reduce((acc, stat) => {
+          if (stat.total_pages && booksById[stat.book_id]?.reference_pages) {
+            return acc + (1 / stat.total_pages) * booksById[stat.book_id].reference_pages!;
+          } else {
+            return acc + 1;
+          }
+        }, 0) ?? 0
+      ),
+    [weekData]
+  );
+
+  const avgPagesPerDay = useMemo(() => {
+    const statsPerDay = groupBy((stat: PageStat) =>
+      startOfDay(stat.start_time * 1000)
+        .getTime()
+        .toString()
+    )(weekData ?? []);
+
+    const pagesPerDay = Object.values(statsPerDay).map(
+      (dayStats) =>
+        dayStats?.reduce((acc, stat) => {
+          if (stat.total_pages && booksById[stat.book_id]?.reference_pages) {
+            return acc + (1 / stat.total_pages) * booksById[stat.book_id].reference_pages!;
+          } else {
+            return acc + 1;
+          }
+        }, 0) ?? 0
+    );
+
+    return Math.round(sum(pagesPerDay) / pagesPerDay.length);
+  }, [weekData]);
 
   const perDay = useMemo(() => {
     const perDayResult = [];
@@ -79,12 +130,12 @@ export function WeekStats({ stats }: { stats: PageStat[] }) {
           },
           {
             label: 'Pages read',
-            value: uniqBy((stat: PageStat) => stat.page)(weekData ?? []).length,
+            value: pagesRead,
             icon: IconPageBreak,
           },
           {
             label: 'Average pages per day',
-            value: Math.round(uniqBy((stat: PageStat) => stat.page)(weekData ?? []).length / 7),
+            value: avgPagesPerDay,
             icon: IconArrowsVertical,
           },
           {

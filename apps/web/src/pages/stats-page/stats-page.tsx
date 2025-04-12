@@ -1,4 +1,4 @@
-import { BarChart, BubbleChart } from '@mantine/charts';
+import { BarChart } from '@mantine/charts';
 import {
   Box,
   Flex,
@@ -10,22 +10,33 @@ import {
 } from '@mantine/core';
 import { IconClock, IconMaximize, IconPageBreak } from '@tabler/icons-react';
 import { format, startOfDay, subDays } from 'date-fns';
-import { sum } from 'ramda';
+import { groupBy, max, sum } from 'ramda';
 import { JSX, useMemo } from 'react';
 import { BarProps } from 'recharts';
-import { useBooks } from '../../api/use-books';
-import { usePageStats } from '../../api/use-page-stats';
+import { useBooks } from '../../api/books';
+import { PageStat, usePageStats } from '../../api/use-page-stats';
 import { CustomBar } from '../../components/charts/custom-bar';
 import { ReadingCalendar } from '../../components/statistics/reading-calendar';
 import { Statistics } from '../../components/statistics/statistics';
 import { formatSecondsToHumanReadable } from '../../utils/dates';
 import { WeekStats } from './week-stats';
+import { Book } from '@koinsight/common/types/book';
 
 export function StatsPage(): JSX.Element {
   const colorScheme = useComputedColorScheme();
   const { colors } = useMantineTheme();
   const { data: books, isLoading } = useBooks();
   const { data: stats, isLoading: statsLoading } = usePageStats();
+
+  const booksById = useMemo(() => {
+    return books?.reduce(
+      (acc, book) => {
+        acc[book.id] = book;
+        return acc;
+      },
+      {} as Record<number, Book>
+    );
+  }, [books]);
 
   const lastWeek = useMemo(() => {
     const now = subDays(new Date(), 7);
@@ -66,16 +77,28 @@ export function StatsPage(): JSX.Element {
     return maxTime;
   }, [stats]);
 
-  const mostPagesInADay = useMemo(() => {
-    const pagesPerDay = stats.reduce<Record<number, number>>((acc, stat) => {
-      const day = startOfDay(stat.start_time * 1000).getTime();
-      acc[day] = (acc[day] || 0) + 1;
-      return acc;
-    }, {});
+  const pagesPerDay = useMemo(() => {
+    const statsPerDay = groupBy((stat: PageStat) =>
+      startOfDay(stat.start_time * 1000)
+        .getTime()
+        .toString()
+    )(stats);
 
-    const maxTime = Math.max(...Object.values(pagesPerDay ?? []));
-    return maxTime;
-  }, [stats]);
+    const pagesPerDay = Object.values(statsPerDay).map(
+      (dayStats) =>
+        dayStats?.reduce((acc, stat) => {
+          if (stat.total_pages && booksById[stat.book_id]?.reference_pages) {
+            return acc + (1 / stat.total_pages) * booksById[stat.book_id].reference_pages!;
+          } else {
+            return acc + 1;
+          }
+        }, 0) ?? 0
+    );
+
+    return pagesPerDay;
+  }, [stats, booksById]);
+
+  const mostPagesInADay = useMemo(() => Math.max(...pagesPerDay), [pagesPerDay]);
 
   const totalTime = useMemo(() => sum((stats ?? []).map((s) => s.duration)), [stats]);
 
@@ -103,6 +126,16 @@ export function StatsPage(): JSX.Element {
         .sort((a, b) => a.day - b.day),
     [stats]
   );
+
+  const totalPagesRead = useMemo(() => {
+    return books.reduce(
+      (acc, book) =>
+        book.reference_pages && book.reference_pages > 0
+          ? acc + Math.round((book.total_read_pages / book.pages) * book.reference_pages)
+          : acc + book.total_read_pages,
+      0
+    );
+  }, [books]);
 
   if (isLoading || statsLoading || !books || !stats) {
     return (
@@ -143,7 +176,7 @@ export function StatsPage(): JSX.Element {
             },
             {
               label: 'Total pages read',
-              value: books.reduce((acc, book) => acc + book.total_read_pages, 0),
+              value: totalPagesRead,
               icon: IconPageBreak,
             },
             {
@@ -168,7 +201,7 @@ export function StatsPage(): JSX.Element {
       <Title mt="xl" mb={4} order={3}>
         Weekly stats
       </Title>
-      <WeekStats stats={stats} />
+      <WeekStats stats={stats} booksById={booksById} />
       <Title mt="xl" order={3}>
         Per day of the week
       </Title>

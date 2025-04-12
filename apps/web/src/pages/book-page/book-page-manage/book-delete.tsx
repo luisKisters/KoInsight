@@ -6,7 +6,7 @@ import { IconTrash } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { mutate } from 'swr';
-import { deleteBook } from '../../../api/use-books';
+import { deleteBook } from '../../../api/books';
 import { RoutePath } from '../../../routes';
 
 export type BookDeleteProps = {
@@ -56,8 +56,8 @@ export function BookDelete({ book }: BookDeleteProps) {
   };
 
   return (
-    <>
-      <Title order={3} mb="lg" mt="xl">
+    <div>
+      <Title order={3} mb="md">
         Delete book
       </Title>
       <Button
@@ -68,6 +68,6 @@ export function BookDelete({ book }: BookDeleteProps) {
       >
         Delete book
       </Button>
-    </>
+    </div>
   );
 }

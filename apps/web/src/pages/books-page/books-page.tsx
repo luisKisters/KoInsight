@@ -10,7 +10,7 @@ import {
   IconX,
 } from '@tabler/icons-react';
 import { JSX, useState } from 'react';
-import { useBooks } from '../../api/use-books';
+import { useBooks } from '../../api/books';
 import { EmptyState } from '../../components/empty-state/empty-state';
 import { BooksCards } from './books-cards';
 import { BooksTable } from './books-table';

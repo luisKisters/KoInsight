@@ -1,0 +1,21 @@
+meta {
+  name: set reference pages
+  type: http
+  seq: 6
+}
+
+put {
+  url: http://{{host}}:{{port}}/api/books/1/reference_pages
+  body: json
+  auth: inherit
+}
+
+params:query {
+  ~: 
+}
+
+body:json {
+  { 
+    "reference_pages": 3
+  }
+}

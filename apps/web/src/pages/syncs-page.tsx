@@ -12,7 +12,7 @@ import { groupBy } from 'ramda';
 import { useCallback, useMemo } from 'react';
 import { generatePath, NavLink } from 'react-router';
 import { useProgresses } from '../api/kosync';
-import { useBooks } from '../api/use-books';
+import { useBooks } from '../api/books';
 import { EmptyState } from '../components/empty-state/empty-state';
 import { RoutePath } from '../routes';
 

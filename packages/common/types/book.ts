@@ -17,6 +17,7 @@ type KoReaderBook = {
 
 export type Book = KoReaderBook & {
   soft_deleted: boolean;
+  reference_pages: number | null;
 };
 
 export type BookWithGenres = Book & {

@@ -5,7 +5,7 @@ import { startOfDay } from 'date-fns/startOfDay';
 import { sum, uniq } from 'ramda';
 import { JSX, useCallback, useMemo } from 'react';
 import { Link } from 'react-router';
-import { useBooks } from '../api/use-books';
+import { useBooks } from '../api/books';
 import { PageStat, usePageStats } from '../api/use-page-stats';
 import { Calendar, CalendarEvent } from '../components/calendar/calendar';
 import { getBookPath } from '../routes';
