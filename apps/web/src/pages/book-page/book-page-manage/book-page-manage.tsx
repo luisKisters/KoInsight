@@ -1,9 +1,9 @@
-import { Book } from '@koinsight/common/types/book';
+import { Book } from '@koinsight/common/types';
+import { Flex } from '@mantine/core';
 import { JSX } from 'react';
 import { BookDelete } from './book-delete';
-import { BookUploadCover } from './book-upload-cover';
 import { BookReferencePages } from './book-reference-pages';
-import { Flex, Stack } from '@mantine/core';
+import { BookUploadCover } from './book-upload-cover';
 
 type BookPageManageProps = {
   book: Book;

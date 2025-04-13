@@ -1,11 +1,11 @@
-import { Book } from '@koinsight/common/types/book';
-import { Box, Button, Flex, Image, Loader, LoadingOverlay, Skeleton, Tooltip } from '@mantine/core';
+import { Book } from '@koinsight/common/types';
+import { Box, Button, Flex, Image, Skeleton, Tooltip } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { JSX, useState } from 'react';
 import { listCovers, saveCover } from '../../api/open-library';
 
-import style from './book-page-cover-selector.module.css';
 import { IconSearch } from '@tabler/icons-react';
+import style from './book-page-cover-selector.module.css';
 
 type BookPageCoverSelectorProps = {
   book: Book;

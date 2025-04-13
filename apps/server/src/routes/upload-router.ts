@@ -1,4 +1,4 @@
-import { Book } from '@koinsight/common/types/book';
+import { Book, KoReaderBook } from '@koinsight/common/types/book';
 import { DbPageStat } from '@koinsight/common/types/page-stat';
 import Database from 'better-sqlite3';
 import { Router } from 'express';
@@ -55,7 +55,7 @@ router.post('/upload', upload.single('file'), async (req, res, next) => {
   }
 
   try {
-    const newBooks = db.prepare('SELECT * FROM book').all() as Book[];
+    const newBooks = db.prepare('SELECT * FROM book').all() as KoReaderBook[];
     const dbPageStats = db.prepare('SELECT * FROM page_stat_data').all() as DbPageStat[];
     const newPageStats = transformPageStats(dbPageStats);
 

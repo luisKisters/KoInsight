@@ -1,15 +1,14 @@
-import { Device } from '@koinsight/common/types/device';
+import { BookWithData, Device } from '@koinsight/common/types';
 import { Flex, NumberInput, Table } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { endOfDay, formatDate, startOfDay } from 'date-fns';
 import { apply } from 'ramda';
 import { JSX, useMemo, useState } from 'react';
 import { useDevices } from '../../api/devices';
-import { BookWithStats } from '../../api/use-book-with-stats';
 import { formatSecondsToHumanReadable } from '../../utils/dates';
 
 type BookPageRawProps = {
-  book: BookWithStats;
+  book: BookWithData;
 };
 
 export function BookPageRaw({ book }: BookPageRawProps): JSX.Element {

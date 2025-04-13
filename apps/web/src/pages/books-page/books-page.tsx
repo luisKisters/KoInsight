@@ -1,4 +1,4 @@
-import { Book } from '@koinsight/common/types/book';
+import { Book, BookWithData, GetAllBooksWithData } from '@koinsight/common/types';
 import { Button, Flex, Group, Loader, Select, TextInput, Title, Tooltip } from '@mantine/core';
 import { useLocalStorage, useMediaQuery } from '@mantine/hooks';
 import {
@@ -26,7 +26,10 @@ export function BooksPage(): JSX.Element {
   });
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useLocalStorage<{ key: keyof Book; direction: 'asc' | 'desc' }>({
+  const [sortBy, setSortBy] = useLocalStorage<{
+    key: keyof GetAllBooksWithData;
+    direction: 'asc' | 'desc';
+  }>({
     key: 'koinsight-books-sort',
     defaultValue: {
       key: 'last_open',

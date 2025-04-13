@@ -1,4 +1,4 @@
-import { Book } from '@koinsight/common/types/book';
+import { Book, KoReaderBook } from '@koinsight/common/types/book';
 import { PageStat } from '@koinsight/common/types/page-stat';
 import archiver from 'archiver';
 import { NextFunction, Request, Response, Router } from 'express';
@@ -49,7 +49,7 @@ router.post('/plugin/import', rejectOldPluginVersion, async (req, res) => {
   const contentLength = req.headers['content-length'];
   console.warn(`[${req.method}] ${req.url} — Content-Length: ${contentLength || 'unknown'} bytes`);
 
-  const newBooks: Book[] = req.body.books;
+  const newBooks: KoReaderBook[] = req.body.books;
   const newPageStats: PageStat[] = transformPageStats(req.body.stats);
 
   try {

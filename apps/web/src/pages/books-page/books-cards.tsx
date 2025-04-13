@@ -7,11 +7,12 @@ import { JSX } from 'react';
 import { useNavigate } from 'react-router';
 import { API_URL } from '../../api/api';
 import { getBookPath } from '../../routes';
+import { GetAllBooksWithData } from '@koinsight/common/types';
 
 import style from './books-cards.module.css';
 
 type BooksCardsProps = {
-  books: Book[];
+  books: GetAllBooksWithData[];
 };
 
 export function BooksCards({ books }: BooksCardsProps): JSX.Element {
@@ -42,7 +43,7 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
           <Progress
             radius={0}
             h={5}
-            value={(book.total_read_pages / book.pages) * 100}
+            value={(book.total_read_pages / book.total_pages) * 100}
             color="koinsight"
           />
           <Box px="lg" className={C(style.CardDetails, { [style.Small]: isSmallScreen })}>
@@ -70,7 +71,7 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
                   <span className={style.Attribute}>
                     {book.total_read_pages}
                     &nbsp;/&nbsp;
-                    {book.pages} pages read
+                    {book.total_pages} pages read
                   </span>
                 </Group>
               </>

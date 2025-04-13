@@ -1,5 +1,5 @@
-import { Book } from '@koinsight/common/types/book';
-import { Anchor, Flex, Image, Progress, Stack, Table, Text, Tooltip } from '@mantine/core';
+import { GetAllBooksWithData } from '@koinsight/common/types';
+import { Anchor, Flex, Image, Progress, Stack, Table, Tooltip } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconHighlight, IconNote } from '@tabler/icons-react';
 import { JSX } from 'react';
@@ -11,7 +11,7 @@ import { formatRelativeDate, getDuration, shortDuration } from '../../utils/date
 import style from './books-table.module.css';
 
 type BooksTableProps = {
-  books: Book[];
+  books: GetAllBooksWithData[];
 };
 
 export function BooksTable({ books }: BooksTableProps): JSX.Element {
@@ -52,19 +52,19 @@ export function BooksTable({ books }: BooksTableProps): JSX.Element {
                   </Anchor>
                   <span className={style.SubTitle}>
                     {book.authors ?? 'N/A'} · {book.series} ·&nbsp;
-                    <Tooltip label="Highlights" withArrow>
+                    {/* <Tooltip label="Highlights" withArrow>
                       <Flex align="center">
                         <IconHighlight size={13} />
-                        &nbsp;{book.highlights}
+                        &nbsp;{book.device_data.reduce((acc, device) => acc + device.highlights, 0)}
                       </Flex>
                     </Tooltip>
                     &nbsp;·&nbsp;
                     <Tooltip label="Notes" withArrow>
                       <Flex align="center">
                         <IconNote size={13} />
-                        &nbsp;{book.notes}
+                        &nbsp;{book.device_data.reduce((acc, device) => acc + device.notes, 0)}
                       </Flex>
-                    </Tooltip>
+                    </Tooltip> */}
                   </span>
                 </Stack>
               </Flex>
@@ -72,12 +72,12 @@ export function BooksTable({ books }: BooksTableProps): JSX.Element {
             <Table.Td visibleFrom="md">
               {book.total_read_pages}
               <Progress
-                value={(book.total_read_pages / book.pages) * 100}
+                value={(book.total_read_pages / book.total_pages) * 100}
                 aria-label="Percentage read"
-                aria-valuetext={String((book.total_read_pages / book.pages) * 100)}
+                aria-valuetext={String((book.total_read_pages / book.total_pages) * 100)}
               />
             </Table.Td>
-            <Table.Td visibleFrom="md">{book.pages}</Table.Td>
+            <Table.Td visibleFrom="md">{book.total_pages}</Table.Td>
             <Table.Td visibleFrom="md">
               {book.total_read_time ? shortDuration(getDuration(book.total_read_time)) : 'N/A'}
             </Table.Td>

@@ -1,14 +1,13 @@
-import { PageStat } from '@koinsight/common/types/page-stat';
+import { BookWithData, PageStat } from '@koinsight/common/types';
 import { IconClock } from '@tabler/icons-react';
 import { startOfDay } from 'date-fns/startOfDay';
 import { sum } from 'ramda';
 import { JSX } from 'react';
-import { BookWithStats } from '../../api/use-book-with-stats';
 import { Calendar, CalendarEvent } from '../../components/calendar/calendar';
 import { getDuration, shortDuration } from '../../utils/dates';
 
 type BookPageCalendarProps = {
-  book: BookWithStats;
+  book: BookWithData;
 };
 
 type DayData = {

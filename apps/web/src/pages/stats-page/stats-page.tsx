@@ -132,7 +132,7 @@ export function StatsPage(): JSX.Element {
     return books.reduce(
       (acc, book) =>
         book.reference_pages && book.reference_pages > 0
-          ? acc + Math.round((book.total_read_pages / book.pages) * book.reference_pages)
+          ? acc + Math.round((book.total_read_pages / book.total_pages) * book.reference_pages)
           : acc + book.total_read_pages,
       0
     );

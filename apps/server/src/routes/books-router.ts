@@ -8,11 +8,13 @@ import { BookRepository } from '../db/book-repository';
 import { PageStatRepository } from '../db/page-stat-repository';
 import { deleteExistingCover } from '../lib/covers';
 import { getBookById } from '../middleware/get-book-by-id';
+import { BookWithData } from '@koinsight/common/types';
+import { GenreRepository } from '../db/genre-repository';
 
 const router = Router();
 
 router.get('/books', async (_: Request, res: Response) => {
-  const books = await BookRepository.getAllWithGenres();
+  const books = await BookRepository.getAllWithData();
   res.json(books);
 });
 
@@ -20,8 +22,17 @@ router.get('/books/:id', getBookById, async (req: Request, res: Response, next: 
   const book = req.book!;
 
   const stats = await PageStatRepository.getByBookMD5(book.md5);
+  const device_data = await BookRepository.getBookDeviceData(book.md5);
+  const genres = await GenreRepository.getByBookMd5(book.md5);
+
+  const total_pages =
+    book.reference_pages || Math.max(...device_data.map((device) => device.pages || 0));
+
+  const total_read_time = device_data.reduce((acc, device) => acc + device.total_read_time, 0);
 
   const started_reading = stats.reduce((acc, stat) => Math.min(acc, stat.start_time), Infinity);
+
+  const last_open = device_data.reduce((acc, device) => Math.max(acc, device.last_open), 0);
 
   const read_per_day = stats.reduce(
     (acc, stat) => {
@@ -33,7 +44,30 @@ router.get('/books/:id', getBookById, async (req: Request, res: Response, next: 
     {} as Record<string, number>
   );
 
-  res.json({ ...book, stats, started_reading, read_per_day });
+  const total_read_pages = Math.round(
+    stats.reduce((acc, stat) => {
+      if (book.reference_pages) {
+        return acc + (1 / stat.total_pages) * book.reference_pages;
+      } else {
+        return acc + 1;
+      }
+    }, 0)
+  );
+
+  const response: BookWithData = {
+    ...book,
+    stats,
+    device_data,
+    started_reading,
+    read_per_day,
+    total_read_time,
+    total_read_pages,
+    total_pages,
+    last_open,
+    genres,
+  };
+
+  res.json(response);
 });
 
 router.delete('/books/:id', async (req: Request, res: Response) => {
