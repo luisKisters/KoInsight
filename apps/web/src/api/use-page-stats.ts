@@ -1,18 +1,11 @@
+import { PageStat } from '@koinsight/common/types/page-stat';
 import useSWR from 'swr';
 import { fetchFromAPI } from './api';
-
-export type PageStat = {
-  book_id: number;
-  page: number;
-  start_time: number;
-  duration: number;
-  total_pages: number;
-};
 
 export function usePageStats() {
   return useSWR('stats', () => fetchFromAPI<PageStat[]>('stats'), { fallbackData: [] });
 }
 
-export function useBookStats(bookId: number) {
-  return useSWR(`stats/${bookId}`, () => fetchFromAPI<PageStat[]>(`stats/${bookId}`));
+export function useBookStats(bookMd5: string) {
+  return useSWR(`stats/${bookMd5}`, () => fetchFromAPI<PageStat[]>(`stats/${bookMd5}`));
 }

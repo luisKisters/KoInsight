@@ -1,7 +1,7 @@
 import { BookWithGenres } from '@koinsight/common/types/book';
+import { PageStat } from '@koinsight/common/types/page-stat';
 import useSWR from 'swr';
 import { fetchFromAPI } from './api';
-import { PageStat } from './use-page-stats';
 
 type Stats = {
   stats: PageStat[];

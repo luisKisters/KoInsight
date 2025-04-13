@@ -45,7 +45,7 @@ export class BookRepository {
     const books = await knex('book')
       .select('book.*', knex.raw(`GROUP_CONCAT(genre.id || ':' || genre.name) as genres`))
       .where({ 'book.soft_deleted': false })
-      .leftJoin('book_genre', 'book.id', 'book_genre.book_id')
+      .leftJoin('book_genre', 'book.md5', 'book_genre.book_md5')
       .leftJoin('genre', 'book_genre.id', 'genre.id')
       .groupBy('book.id');
 
@@ -59,8 +59,8 @@ export class BookRepository {
     const book = await knex('book')
       .select('book.*', knex.raw(`GROUP_CONCAT(genre.id || ':' || genre.name) as genres`))
       .where({ 'book.id': id })
-      .leftJoin('book_genre', 'book.id', 'book_genre.book_id')
-      .leftJoin('genre', 'book_genre.id', 'genre.id')
+      .leftJoin('book_genre', 'book.md5', 'book_genre.book_md5')
+      .leftJoin('genre', 'book_genre.genre_id', 'genre.id')
       .groupBy('book.id')
       .first();
 

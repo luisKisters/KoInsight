@@ -1,3 +1,5 @@
+import { Book } from '@koinsight/common/types/book';
+import { PageStat } from '@koinsight/common/types/page-stat';
 import { AreaChart } from '@mantine/charts';
 import { Flex, Popover, Text, useComputedColorScheme, useMantineTheme } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
@@ -17,19 +19,17 @@ import {
   startOfDay,
   startOfWeek,
 } from 'date-fns';
-import { groupBy, sum, uniqBy } from 'ramda';
+import { groupBy, sum } from 'ramda';
 import { useMemo, useState } from 'react';
-import { PageStat } from '../../api/use-page-stats';
 import { Statistics } from '../../components/statistics/statistics';
 import { formatSecondsToHumanReadable } from '../../utils/dates';
-import { Book } from '@koinsight/common/types/book';
 
 export function WeekStats({
   stats,
-  booksById,
+  booksByMd5,
 }: {
   stats: PageStat[];
-  booksById: Record<number, Book>;
+  booksByMd5: Record<string, Book>;
 }) {
   const [weekStart, setWeekStart] = useState<number>(
     startOfWeek(new Date(), { weekStartsOn: 1 }).getTime()
@@ -51,8 +51,8 @@ export function WeekStats({
     () =>
       Math.round(
         weekData?.reduce((acc, stat) => {
-          if (stat.total_pages && booksById[stat.book_id]?.reference_pages) {
-            return acc + (1 / stat.total_pages) * booksById[stat.book_id].reference_pages!;
+          if (stat.total_pages && booksByMd5[stat.book_md5]?.reference_pages) {
+            return acc + (1 / stat.total_pages) * booksByMd5[stat.book_md5].reference_pages!;
           } else {
             return acc + 1;
           }
@@ -71,8 +71,8 @@ export function WeekStats({
     const pagesPerDay = Object.values(statsPerDay).map(
       (dayStats) =>
         dayStats?.reduce((acc, stat) => {
-          if (stat.total_pages && booksById[stat.book_id]?.reference_pages) {
-            return acc + (1 / stat.total_pages) * booksById[stat.book_id].reference_pages!;
+          if (stat.total_pages && booksByMd5[stat.book_md5]?.reference_pages) {
+            return acc + (1 / stat.total_pages) * booksByMd5[stat.book_md5].reference_pages!;
           } else {
             return acc + 1;
           }

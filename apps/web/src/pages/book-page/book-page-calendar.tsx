@@ -1,13 +1,10 @@
-import { Anchor } from '@mantine/core';
+import { PageStat } from '@koinsight/common/types/page-stat';
 import { IconClock } from '@tabler/icons-react';
 import { startOfDay } from 'date-fns/startOfDay';
 import { sum } from 'ramda';
 import { JSX } from 'react';
-import { Link } from 'react-router';
 import { BookWithStats } from '../../api/use-book-with-stats';
-import { PageStat } from '../../api/use-page-stats';
 import { Calendar, CalendarEvent } from '../../components/calendar/calendar';
-import { getBookPath } from '../../routes';
 import { getDuration, shortDuration } from '../../utils/dates';
 
 type BookPageCalendarProps = {

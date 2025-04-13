@@ -8,6 +8,7 @@ import path from 'path';
 import { WEB_BUILD_PATH } from './const';
 import knex from './knex';
 import { booksRouter } from './routes/books-router';
+import { devicesRouter } from './routes/devices-router';
 import { kosyncRouter } from './routes/kosync-router';
 import { openAiRouter } from './routes/open-ai-router';
 import { openLibraryRouter } from './routes/open-library-router';
@@ -34,6 +35,7 @@ async function setupServer() {
   // Setup controllers
   app.use('/', kosyncRouter);
   app.use('/api', pluginRouter);
+  app.use('/api', devicesRouter);
   app.use('/api', booksRouter);
   app.use('/api', statsRouter);
   app.use('/api', uploadRouter);

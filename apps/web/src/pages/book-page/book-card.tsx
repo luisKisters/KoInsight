@@ -1,13 +1,6 @@
-import { Flex, Group, Image, Text, Title, Tooltip } from '@mantine/core';
+import { Flex, Group, Image, Title, Tooltip } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import {
-  IconBooks,
-  IconCalendar,
-  IconHighlight,
-  IconNote,
-  IconProgress,
-  IconUser,
-} from '@tabler/icons-react';
+import { IconBooks, IconCalendar, IconHighlight, IconNote, IconUser } from '@tabler/icons-react';
 import { JSX } from 'react';
 import { API_URL } from '../../api/api';
 import { BookWithStats } from '../../api/use-book-with-stats';

@@ -1,6 +1,12 @@
 import { Book } from '@koinsight/common/types/book';
 import { Knex } from 'knex';
 
+function generateMd5Hash(title: string): string {
+  const hash = require('crypto').createHash('md5');
+  hash.update(title);
+  return hash.digest('hex');
+}
+
 export const SEED_BOOKS: Partial<Book>[] = [
   {
     id: 1,
@@ -12,7 +18,7 @@ export const SEED_BOOKS: Partial<Book>[] = [
     pages: 541,
     series: 'Mistborn',
     language: 'en',
-    md5: null,
+    md5: generateMd5Hash('Mistborn: The Final Empire'),
     total_read_time: 38600,
     total_read_pages: 358,
   },
@@ -26,7 +32,7 @@ export const SEED_BOOKS: Partial<Book>[] = [
     pages: 662,
     series: 'The Kingkiller Chronicle',
     language: 'en',
-    md5: null,
+    md5: generateMd5Hash('The Name of the Wind'),
     total_read_time: 44200,
     total_read_pages: 411,
   },
@@ -40,7 +46,7 @@ export const SEED_BOOKS: Partial<Book>[] = [
     pages: 694,
     series: 'A Song of Ice and Fire',
     language: 'en',
-    md5: null,
+    md5: generateMd5Hash('A Game of Thrones'),
     total_read_time: 62300,
     total_read_pages: 496,
   },
@@ -54,7 +60,7 @@ export const SEED_BOOKS: Partial<Book>[] = [
     pages: 1007,
     series: 'The Stormlight Archive',
     language: 'en',
-    md5: null,
+    md5: generateMd5Hash('The Way of Kings'),
     total_read_time: 79200,
     total_read_pages: 486,
   },
@@ -68,7 +74,7 @@ export const SEED_BOOKS: Partial<Book>[] = [
     pages: 479,
     series: 'The Lord of the Rings',
     language: 'en',
-    md5: null,
+    md5: generateMd5Hash('The Fellowship of the Ring'),
     total_read_time: 41800,
     total_read_pages: 264,
   },
@@ -82,7 +88,7 @@ export const SEED_BOOKS: Partial<Book>[] = [
     pages: 415,
     series: 'The Lord of the Rings',
     language: 'en',
-    md5: null,
+    md5: generateMd5Hash('The Two Towers'),
     total_read_time: 36200,
     total_read_pages: 302,
   },
@@ -96,7 +102,7 @@ export const SEED_BOOKS: Partial<Book>[] = [
     pages: 384,
     series: 'The Witcher',
     language: 'en',
-    md5: null,
+    md5: generateMd5Hash('The Last Wish'),
     total_read_time: 28000,
     total_read_pages: 289,
   },
@@ -110,7 +116,7 @@ export const SEED_BOOKS: Partial<Book>[] = [
     pages: 482,
     series: 'Hyperion Cantos',
     language: 'en',
-    md5: null,
+    md5: generateMd5Hash('Hyperion'),
     total_read_time: 41500,
     total_read_pages: 377,
   },
@@ -122,9 +128,9 @@ export const SEED_BOOKS: Partial<Book>[] = [
     last_open: 1712119000,
     highlights: 10,
     pages: 369,
-    series: null,
+    series: 'N/A',
     language: 'en',
-    md5: null,
+    md5: generateMd5Hash('The Martian'),
     total_read_time: 24000,
     total_read_pages: 312,
   },
@@ -138,7 +144,7 @@ export const SEED_BOOKS: Partial<Book>[] = [
     pages: 244,
     series: 'Foundation Series',
     language: 'en',
-    md5: null,
+    md5: generateMd5Hash('Foundation'),
     total_read_time: 36900,
     total_read_pages: 283,
   },

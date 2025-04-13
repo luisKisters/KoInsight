@@ -1,11 +1,12 @@
+import { Book } from '@koinsight/common/types/book';
 import { PageStat } from '@koinsight/common/types/page-stat';
+import { subDays, subMinutes } from 'date-fns';
 import { Knex } from 'knex';
 import { SEED_BOOKS } from './01_books';
-import { subDays, subHours, subMinutes } from 'date-fns';
-import { Book } from '@koinsight/common/types/book';
+import { SEED_DEVICES } from './02_devices';
 
 function generateBookStats(book: Book): PageStat[] {
-  const pageStats = [];
+  const pageStats: PageStat[] = [];
   const today = new Date();
 
   const startDate = subDays(today, Math.floor(Math.random() * 100));
@@ -13,11 +14,12 @@ function generateBookStats(book: Book): PageStat[] {
   const maxPages = Math.min(book.pages ?? 0, 300);
   for (let i = 0; i < maxPages; i++) {
     pageStats.push({
-      book_id: book.id,
       page: i,
       start_time: subMinutes(startDate, (maxPages - i) * 30).valueOf() / 1000,
       duration: Math.floor(Math.random() * 100),
       total_pages: book.pages,
+      device_id: SEED_DEVICES[Math.floor(Math.random() * SEED_DEVICES.length)].id,
+      book_md5: book.md5,
     });
   }
 

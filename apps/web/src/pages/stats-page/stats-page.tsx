@@ -1,3 +1,5 @@
+import { Book } from '@koinsight/common/types/book';
+import { PageStat } from '@koinsight/common/types/page-stat';
 import { BarChart } from '@mantine/charts';
 import {
   Box,
@@ -10,17 +12,16 @@ import {
 } from '@mantine/core';
 import { IconClock, IconMaximize, IconPageBreak } from '@tabler/icons-react';
 import { format, startOfDay, subDays } from 'date-fns';
-import { groupBy, max, sum } from 'ramda';
+import { groupBy, sum } from 'ramda';
 import { JSX, useMemo } from 'react';
 import { BarProps } from 'recharts';
 import { useBooks } from '../../api/books';
-import { PageStat, usePageStats } from '../../api/use-page-stats';
+import { usePageStats } from '../../api/use-page-stats';
 import { CustomBar } from '../../components/charts/custom-bar';
 import { ReadingCalendar } from '../../components/statistics/reading-calendar';
 import { Statistics } from '../../components/statistics/statistics';
 import { formatSecondsToHumanReadable } from '../../utils/dates';
 import { WeekStats } from './week-stats';
-import { Book } from '@koinsight/common/types/book';
 
 export function StatsPage(): JSX.Element {
   const colorScheme = useComputedColorScheme();
@@ -28,13 +29,13 @@ export function StatsPage(): JSX.Element {
   const { data: books, isLoading } = useBooks();
   const { data: stats, isLoading: statsLoading } = usePageStats();
 
-  const booksById = useMemo(() => {
+  const booksByMd5 = useMemo(() => {
     return books?.reduce(
       (acc, book) => {
-        acc[book.id] = book;
+        acc[book.md5] = book;
         return acc;
       },
-      {} as Record<number, Book>
+      {} as Record<string, Book>
     );
   }, [books]);
 
@@ -87,8 +88,8 @@ export function StatsPage(): JSX.Element {
     const pagesPerDay = Object.values(statsPerDay).map(
       (dayStats) =>
         dayStats?.reduce((acc, stat) => {
-          if (stat.total_pages && booksById[stat.book_id]?.reference_pages) {
-            return acc + (1 / stat.total_pages) * booksById[stat.book_id].reference_pages!;
+          if (stat.total_pages && booksByMd5[stat.book_md5]?.reference_pages) {
+            return acc + (1 / stat.total_pages) * booksByMd5[stat.book_md5].reference_pages!;
           } else {
             return acc + 1;
           }
@@ -96,7 +97,7 @@ export function StatsPage(): JSX.Element {
     );
 
     return pagesPerDay;
-  }, [stats, booksById]);
+  }, [stats, booksByMd5]);
 
   const mostPagesInADay = useMemo(() => Math.max(...pagesPerDay), [pagesPerDay]);
 
@@ -201,7 +202,7 @@ export function StatsPage(): JSX.Element {
       <Title mt="xl" mb={4} order={3}>
         Weekly stats
       </Title>
-      <WeekStats stats={stats} booksById={booksById} />
+      <WeekStats stats={stats} booksByMd5={booksByMd5} />
       <Title mt="xl" order={3}>
         Per day of the week
       </Title>

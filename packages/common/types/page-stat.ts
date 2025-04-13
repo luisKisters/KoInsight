@@ -1,5 +1,6 @@
 export type PageStat = {
-  book_id: number;
+  device_id: string;
+  book_md5: string;
   page: number;
   start_time: number;
   duration: number;

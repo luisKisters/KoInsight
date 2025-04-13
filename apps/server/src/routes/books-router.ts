@@ -19,7 +19,7 @@ router.get('/books', async (_: Request, res: Response) => {
 router.get('/books/:id', getBookById, async (req: Request, res: Response, next: NextFunction) => {
   const book = req.book!;
 
-  const stats = await PageStatRepository.getByBookId(Number(req.params.id));
+  const stats = await PageStatRepository.getByBookMD5(book.md5);
 
   const started_reading = stats.reduce((acc, stat) => Math.min(acc, stat.start_time), Infinity);
 

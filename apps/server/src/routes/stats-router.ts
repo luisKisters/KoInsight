@@ -9,8 +9,8 @@ router.get('/stats', async (_: Request, res: Response) => {
   res.json(stats);
 });
 
-router.get('/stats/:id', async (req: Request, res: Response) => {
-  const book = await PageStatRepository.getByBookId(Number(req.params.id));
+router.get('/stats/:book_md5', async (req: Request, res: Response) => {
+  const book = await PageStatRepository.getByBookMD5(req.params.book_md5);
   res.json(book);
 });
 

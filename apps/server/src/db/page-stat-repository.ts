@@ -6,8 +6,8 @@ export class PageStatRepository {
     return knex<PageStat>('page_stat').select('*');
   }
 
-  static async getByBookId(book_id: number): Promise<PageStat[]> {
-    return knex<PageStat>('page_stat').where({ book_id });
+  static async getByBookMD5(book_md5: string): Promise<PageStat[]> {
+    return knex<PageStat>('page_stat').where({ book_md5 });
   }
 
   static async insert(data: PageStat): Promise<number[]> {
@@ -15,23 +15,14 @@ export class PageStatRepository {
   }
 
   static async update(
-    book_id: number,
+    book_md5: string,
+    device_id: string,
     page: number,
     start_time: number,
     data: Partial<PageStat>
   ): Promise<number> {
-    return knex<PageStat>('page_stat').where({ book_id, page, start_time }).update(data);
-  }
-
-  static async delete(book_id: number, page: number, start_time: number): Promise<number> {
-    return knex<PageStat>('page_stat').where({ book_id, page, start_time }).del();
-  }
-
-  static async getByUniqueKey(
-    book_id: number,
-    page: number,
-    start_time: number
-  ): Promise<PageStat | undefined> {
-    return knex<PageStat>('page_stat').where({ book_id, page, start_time }).first();
+    return knex<PageStat>('page_stat')
+      .where({ book_md5, device_id, page, start_time })
+      .update(data);
   }
 }

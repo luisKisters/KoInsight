@@ -5,17 +5,16 @@ import knex from '../knex';
 export function transformPageStats(pageStats: DbPageStat[]): PageStat[] {
   return pageStats.map(({ id_book, ...pageStat }) => ({
     ...pageStat,
-    book_id: id_book,
   }));
 }
 
 export function uploadStatisticData(newBooks: Book[], newPageStats: PageStat[]) {
   return knex.transaction(async (trx) => {
     await Promise.all(
-      newBooks.map((book) =>
+      newBooks.map(({ id, ...book }) =>
         trx('book')
           .insert(book)
-          .onConflict('id')
+          .onConflict('md5')
           .merge([
             'pages',
             'last_open',
@@ -31,7 +30,7 @@ export function uploadStatisticData(newBooks: Book[], newPageStats: PageStat[]) 
       newPageStats.map((pageStat) =>
         trx('page_stat')
           .insert(pageStat)
-          .onConflict(['book_id', 'page', 'start_time'])
+          .onConflict(['device_id', 'book_md5', 'page', 'start_time'])
           .merge(['duration', 'total_pages'])
       )
     );
