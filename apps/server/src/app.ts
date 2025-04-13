@@ -6,7 +6,7 @@ import { Server } from 'http';
 import morgan from 'morgan';
 import path from 'path';
 import { WEB_BUILD_PATH } from './const';
-import knex from './knex';
+import { db } from './knex';
 import { booksRouter } from './routes/books-router';
 import { devicesRouter } from './routes/devices-router';
 import { kosyncRouter } from './routes/kosync-router';
@@ -66,7 +66,7 @@ function stopServer(signal: NodeJS.Signals, server: Server) {
 
 async function main() {
   console.log('Running database migrations');
-  await knex.migrate.latest({ directory: path.join(__dirname, 'db', 'migrations') });
+  await db.migrate.latest({ directory: path.join(__dirname, 'db', 'migrations') });
   console.log('Database migrated successfully');
 
   setupServer().then((server) => {

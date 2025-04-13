@@ -1,20 +1,20 @@
 import { Device } from '@koinsight/common/types/device';
-import knex from '../knex';
+import { db } from '../knex';
 
 export class DeviceRepository {
   static async getAll(): Promise<Device[]> {
-    return knex<Device>('device').select('*');
+    return db<Device>('device').select('*');
   }
 
   static async getById(id: string): Promise<Device | undefined> {
-    return knex<Device>('device').where({ id }).first();
+    return db<Device>('device').where({ id }).first();
   }
 
   static async insertIfNotExists(device: Device): Promise<void> {
     const existingDevice = await this.getById(device.id);
 
     if (!existingDevice) {
-      await knex<Device>('device').insert(device);
+      await db<Device>('device').insert(device);
     }
   }
 }

@@ -11,4 +11,5 @@ export const UPLOAD_DB_FILENAME = 'statistics.sqlite3';
 export const UPLOAD_DB_PATH = path.resolve(DATA_PATH, UPLOAD_DB_FILENAME);
 
 export const DEV_DB_PATH = path.resolve(DATA_PATH, 'dev.sqlite3');
+export const TEST_DB_PATH = path.resolve(DATA_PATH, 'test.sqlite3');
 export const PROD_DB_PATH = path.resolve(DATA_PATH, 'prod.sqlite3');

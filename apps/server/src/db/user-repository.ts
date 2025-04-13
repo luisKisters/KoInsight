@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import knex from '../knex';
+import { db } from '../knex';
 import { User } from '@koinsight/common/types/user';
 
 const SALT_ROUNDS = 12;
@@ -17,7 +17,7 @@ export class UserExistsError extends Error {
 
 export class UserRepository {
   static async login(username: string, password: string): Promise<User | null> {
-    const user = await knex('User').where({ username }).first();
+    const user = await db('User').where({ username }).first();
     if (!user) {
       return null;
     }
@@ -30,13 +30,13 @@ export class UserRepository {
   }
 
   static async createUser(username: string, password: string): Promise<void> {
-    const existingUser = await knex('User').where({ username }).first();
+    const existingUser = await db('User').where({ username }).first();
 
     if (existingUser) {
       throw new UserExistsError();
     }
 
     const passwordHash = await hashPassword(password);
-    await knex('User').insert({ username, password_hash: passwordHash });
+    await db('User').insert({ username, password_hash: passwordHash });
   }
 }

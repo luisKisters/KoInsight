@@ -1,5 +1,5 @@
 import { Book, BookDevice, DbPageStat, KoReaderBook, PageStat } from '@koinsight/common/types';
-import knex from '../knex';
+import { db } from '../knex';
 
 export function transformPageStats(pageStats: DbPageStat[]): PageStat[] {
   return pageStats.map(({ id_book, ...pageStat }) => ({
@@ -8,7 +8,7 @@ export function transformPageStats(pageStats: DbPageStat[]): PageStat[] {
 }
 
 export function uploadStatisticData(booksTomport: KoReaderBook[], newPageStats: PageStat[]) {
-  return knex.transaction(async (trx) => {
+  return db.transaction(async (trx) => {
     // Insert books
     const newBooks: Partial<Book>[] = booksTomport.map((book) => ({
       id: book.id,

@@ -1,22 +1,19 @@
 import { Progress } from '@koinsight/common/types/progress';
 import { User } from '@koinsight/common/types/user';
-import knex from '../knex';
+import { db } from '../knex';
 
 export type ProgressCreate = Omit<Progress, 'id' | 'created_at' | 'updated_at'>;
 export type ProgressUpdate = Omit<Progress, 'id' | 'user_id' | 'created_at' | 'updated_at'>;
 
 export class ProgressRepository {
   static async hasDocument(user_id: User['id'], document: Progress['document']): Promise<boolean> {
-    const result = await knex<Progress>('progress')
-      .where({ user_id, document })
-      .select('id')
-      .first();
+    const result = await db<Progress>('progress').where({ user_id, document }).select('id').first();
     return !!result;
   }
 
   static async create(progress: ProgressCreate): Promise<Progress | undefined> {
     const date = new Date();
-    const result = await knex<Progress>('progress')
+    const result = await db<Progress>('progress')
       .insert({ ...progress, created_at: date, updated_at: date })
       .returning('*');
     return result.at(0);
@@ -26,7 +23,7 @@ export class ProgressRepository {
     user_id: User['id'],
     progress: ProgressUpdate
   ): Promise<Progress | undefined> {
-    const result = await knex<Progress>('progress')
+    const result = await db<Progress>('progress')
       .where({ user_id, document: progress.document })
       .update({ ...progress, updated_at: new Date() })
       .returning('*');
@@ -51,15 +48,12 @@ export class ProgressRepository {
     user_id: User['id'],
     document: Progress['document']
   ): Promise<Progress | undefined> {
-    const result = await knex<Progress>('progress')
-      .where({ user_id, document })
-      .select('*')
-      .first();
+    const result = await db<Progress>('progress').where({ user_id, document }).select('*').first();
     return result;
   }
 
   static async getAll(): Promise<Progress[]> {
-    const result = await knex<Progress>('progress')
+    const result = await db<Progress>('progress')
       .select(
         'progress.document',
         'progress.progress',
