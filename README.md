@@ -16,6 +16,8 @@
   </picture>
 </p>
 
+<h2>⚠️ WARNING! KoInsight is not currently suited for multi-device sync. If you sync data from multiple devices, statistics will most likely be wrong. I am working on a next version that will have full support for multiple devices.</h2>
+
 # Features
 
 - 📈 Interactive dashboard with charts and insights
