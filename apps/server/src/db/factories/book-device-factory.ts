@@ -1,9 +1,10 @@
 import { faker } from '@faker-js/faker';
 import { Book, BookDevice, Device } from '@koinsight/common/types';
+import { Knex } from 'knex';
 
 type FakeBookDevice = Omit<BookDevice, 'id'>;
 
-export function createBookDevice(
+export function fakeBookDevice(
   book: Book,
   device: Device,
   overrides: Partial<FakeBookDevice> = {}
@@ -19,6 +20,18 @@ export function createBookDevice(
     total_read_pages: faker.number.int({ min: 0, max: 100 }),
     ...overrides,
   };
+
+  return bookDevice;
+}
+
+export async function createBookDevice(
+  db: Knex,
+  book: Book,
+  device: Device,
+  overrides: Partial<FakeBookDevice> = {}
+): Promise<BookDevice> {
+  const bookDeviceData = fakeBookDevice(book, device, overrides);
+  const [bookDevice] = await  db<BookDevice>('book_device').insert(bookDeviceData).returning('*');
 
   return bookDevice;
 }

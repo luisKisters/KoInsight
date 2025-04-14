@@ -5,6 +5,7 @@ import { Genre } from '@koinsight/common/types/genre';
 import { db } from '../knex';
 import { GenreRepository } from './genre-repository';
 import { PageStatRepository } from './page-stat-repository';
+import { sum } from 'ramda';
 
 export class BookRepository {
   static async getAll(): Promise<Book[]> {
@@ -42,7 +43,7 @@ export class BookRepository {
   private static mapGenreStringToArray(genreString?: string): Genre[] {
     return (
       genreString?.split(',').map((g: string) => {
-        const [id, name] = g.split(':');
+        const [id, name] = g.split('::');
         return { id: Number(id), name };
       }) ?? []
     );
@@ -52,35 +53,71 @@ export class BookRepository {
     const books = await db('book')
       .select(
         'book.*',
-        db.raw(`GROUP_CONCAT(genre.id || ':' || genre.name) as genres`),
-        db.raw(`MAX(book_device.pages) as max_device_pages`),
-        db.raw(`SUM(book_device.total_read_time) as total_read_time`),
-        db.raw(`MAX(book_device.last_open) as last_open`)
+        db.raw(`(
+          SELECT json_group_array(
+            json_object('id', genre.id, 'name', genre.name)
+          )
+          FROM book_genre
+          JOIN genre ON genre.id = book_genre.genre_id
+          WHERE book_genre.book_md5 = book.md5
+        ) as genres`),
+        db.raw(`(
+          SELECT json_group_array(
+            json_object(
+              'id', bd.id,
+              'device_id', bd.device_id,
+              'last_open', bd.last_open,
+              'notes', bd.notes,
+              'highlights', bd.highlights,
+              'pages', bd.pages,
+              'total_read_time', bd.total_read_time,
+              'total_read_pages', bd.total_read_pages
+            )
+          )
+          FROM book_device bd
+          WHERE bd.book_md5 = book.md5
+        ) as book_devices`)
       )
-      .where({ 'book.soft_deleted': false })
-      .leftJoin('book_genre', 'book.md5', 'book_genre.book_md5')
-      .leftJoin('genre', 'book_genre.id', 'genre.id')
-      .leftJoin('book_device', 'book.md5', 'book_device.book_md5')
-      .groupBy('book.id');
+      .where({ 'book.soft_deleted': false });
 
     return Promise.all(
       books.map(async (book) => {
         const stats = await PageStatRepository.getByBookMD5(book.md5);
 
-        const genres = book.genres?.split(',').map(this.mapGenreStringToArray) ?? [];
+        const genres = JSON.parse(book.genres) as Genre[];
+        const bookDevices = JSON.parse(book.book_devices) as BookDevice[];
+
+        const maxDevicePages = Math.max(...bookDevices.map((device) => device.pages));
+
+        const totalPages = Math.max(book.reference_pages, maxDevicePages);
+
+        const lastOpen = Math.max(...bookDevices.map((device) => device.last_open));
+
+        const totalReadTime = sum(bookDevices.map((device) => device.total_read_time));
+
+        const totalReadPages = Math.round(
+          stats.reduce((acc, stat) => {
+            if (book.reference_pages) {
+              return acc + (1 / stat.total_pages) * book.reference_pages;
+            } else {
+              return acc + 1;
+            }
+          }, 0)
+        );
+
+        const { genres: raw_genres, book_devices, ...book_props } = book;
+
         return {
-          ...book,
-          genres,
-          total_pages: Math.max(book.reference_pages, book.max_device_pages),
-          total_read_pages: Math.round(
-            stats.reduce((acc, stat) => {
-              if (book.reference_pages) {
-                return acc + (1 / stat.total_pages) * book.reference_pages;
-              } else {
-                return acc + 1;
-              }
-            }, 0)
-          ),
+          ...book_props,
+          genres: genres,
+          device_data: bookDevices,
+          max_device_pages: maxDevicePages,
+          total_pages: totalPages,
+          total_read_pages: totalReadPages,
+          total_read_time: totalReadTime,
+          last_open: lastOpen,
+          highlights: sum(bookDevices.map((device) => device.highlights)),
+          notes: sum(bookDevices.map((device) => device.notes)),
         };
       })
     );

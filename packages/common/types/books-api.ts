@@ -21,4 +21,11 @@ export type BookWithData = Book &
     started_reading: number;
   };
 
-export type GetAllBooksWithData = Book & Stats & { max_device_pages: number; genres: string[] };
+export type GetAllBooksWithData = Book &
+  Stats & {
+    max_device_pages: number;
+    genres: string[];
+    device_data: BookDevice[];
+    notes: number;
+    highlights: number;
+  };
