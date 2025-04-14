@@ -19,11 +19,13 @@ export class GenreRepository {
       .where({ 'book_genre.book_md5': md5 });
   }
 
-  static async create(genre: GenreCreate): Promise<Genre | undefined> {
-    return (await db<Genre>('genre').insert(genre).returning('*')).at(0);
+  static async create(genre: GenreCreate): Promise<Genre> {
+    const [createdGenre] = await db<Genre>('genre').insert(genre).returning('*');
+
+    return createdGenre;
   }
 
-  static async findOrCreate(genre: GenreCreate): Promise<Genre | undefined> {
+  static async findOrCreate(genre: GenreCreate): Promise<Genre> {
     const existingGenre = await this.getByName(genre.name);
 
     if (existingGenre) {

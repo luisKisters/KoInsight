@@ -1,11 +1,12 @@
-import { Book, BookDevice, BookGenre, Device, GetAllBooksWithData } from '@koinsight/common/types';
+import { Book, BookGenre, Device, GetAllBooksWithData } from '@koinsight/common/types';
+import { range } from 'ramda';
 import { db } from '../knex';
 import { BookRepository } from './book-repository';
-import { createBook, fakeBook } from './factories/book-factory';
-import { createGenre, fakeGenre } from './factories/genre-factory';
 import { createBookDevice } from './factories/book-device-factory';
+import { createBook, fakeBook } from './factories/book-factory';
 import { createDevice } from './factories/device-factory';
-import { O } from '@faker-js/faker/dist/airline-BUL6NtOJ';
+import { createGenre } from './factories/genre-factory';
+import { createPageStat } from './factories/page-stat-factory';
 
 describe(BookRepository, () => {
   describe('getAll', () => {
@@ -177,7 +178,7 @@ describe(BookRepository, () => {
     let book2: Book;
 
     beforeEach(async () => {
-      book1 = await createBook(db, { title: 'Test Book 1' });
+      book1 = await createBook(db, { title: 'Test Book 1', reference_pages: 100 });
       book2 = await createBook(db, { title: 'Test Book 2' });
       await createBook(db, { title: 'Test Book 3' });
 
@@ -243,6 +244,82 @@ describe(BookRepository, () => {
 
       expect(result[0].notes).toEqual(30);
       expect(result[0].highlights).toEqual(30);
+    });
+
+    describe('total read pages', () => {
+      it('returns correct total read pages with a single device and page stats', async () => {
+        const bookDevice1 = await createBookDevice(db, book1, device1);
+
+        // Each page is twice as big as reference
+        await Promise.all(
+          range(0, 10).map((i) =>
+            createPageStat(db, book1, bookDevice1, device1, { page: i + 1, total_pages: 50 })
+          )
+        );
+
+        result = await BookRepository.getAllWithData();
+
+        expect(result[0].total_read_pages).toEqual(20);
+      });
+
+      it('returns correct total read pages with multiple devices and page stats', async () => {
+        const bookDevice1 = await createBookDevice(db, book1, device1);
+        const bookDevice2 = await createBookDevice(db, book1, device2);
+        // Each page is twice as big as reference
+        await Promise.all(
+          range(0, 10).map((i) =>
+            createPageStat(db, book1, bookDevice1, device1, { page: i + 1, total_pages: 50 })
+          )
+        );
+        await Promise.all(
+          range(0, 10).map((i) =>
+            createPageStat(db, book1, bookDevice2, device2, { page: i + 1, total_pages: 70 })
+          )
+        );
+        result = await BookRepository.getAllWithData();
+        expect(result[0].total_read_pages).toEqual(34);
+      });
+
+      describe('with no reference pages set', () => {
+        beforeEach(async () => {
+          await db<Book>('book').where({ id: book1.id }).update({ reference_pages: null });
+        });
+
+        it('returns correct total read pages with a single device and page stats', async () => {
+          const bookDevice1 = await createBookDevice(db, book1, device1);
+
+          await Promise.all(
+            range(0, 10).map((i) =>
+              createPageStat(db, book1, bookDevice1, device1, { page: i + 1, total_pages: 50 })
+            )
+          );
+
+          result = await BookRepository.getAllWithData();
+
+          expect(result[0].total_read_pages).toEqual(10);
+        });
+
+        it('returns correct total read pages with multiple devices and page stats', async () => {
+          const bookDevice1 = await createBookDevice(db, book1, device1);
+          const bookDevice2 = await createBookDevice(db, book1, device2);
+
+          await Promise.all(
+            range(0, 10).map((i) =>
+              createPageStat(db, book1, bookDevice1, device1, { page: i + 1, total_pages: 50 })
+            )
+          );
+
+          await Promise.all(
+            range(0, 10).map((i) =>
+              createPageStat(db, book1, bookDevice2, device2, { page: i + 1, total_pages: 70 })
+            )
+          );
+
+          result = await BookRepository.getAllWithData();
+
+          expect(result[0].total_read_pages).toEqual(20);
+        });
+      });
     });
   });
 

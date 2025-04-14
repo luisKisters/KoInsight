@@ -1,4 +1,4 @@
-import { GetAllBooksWithData } from '@koinsight/common/types';
+import { BookGenre, GetAllBooksWithData } from '@koinsight/common/types';
 import { Book } from '@koinsight/common/types/book';
 import { BookDevice } from '@koinsight/common/types/book-device';
 import { Genre } from '@koinsight/common/types/genre';
@@ -112,15 +112,10 @@ export class BookRepository {
 
   static async addGenre(md5: Book['md5'], genreName: string) {
     const genre = await GenreRepository.findOrCreate({ name: genreName });
-
-    if (!genre) {
-      throw new Error('Unable to find or create genre');
-    }
-
-    return db('book_genre').insert({ book_md5: md5, genre_id: genre.id });
+    return db<BookGenre>('book_genre').insert({ book_md5: md5, genre_id: genre.id });
   }
 
   static async setReferencePages(id: number, referencePages: number | null) {
-    return db('book').where({ id }).update({ reference_pages: referencePages });
+    return db<Book>('book').where({ id }).update({ reference_pages: referencePages });
   }
 }
