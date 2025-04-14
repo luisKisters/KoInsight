@@ -28,25 +28,12 @@ export class BookRepository {
     return db<Book>('book').where({ id }).update({ soft_deleted: true });
   }
 
-  static async delete(id: number): Promise<number> {
-    return db<Book>('book').where({ id }).del();
-  }
-
   static async searchByTitle(title: string): Promise<Book[]> {
     return db<Book>('book').where('title', 'like', `%${title}%`);
   }
 
   static async getBookDeviceData(md5: Book['md5']): Promise<BookDevice[]> {
     return db<BookDevice>('book_device').where({ book_md5: md5 });
-  }
-
-  private static mapGenreStringToArray(genreString?: string): Genre[] {
-    return (
-      genreString?.split(',').map((g: string) => {
-        const [id, name] = g.split('::');
-        return { id: Number(id), name };
-      }) ?? []
-    );
   }
 
   static async getAllWithData(): Promise<GetAllBooksWithData[]> {
@@ -123,14 +110,14 @@ export class BookRepository {
     );
   }
 
-  static async addGenre(id: number, genreName: string) {
+  static async addGenre(md5: Book['md5'], genreName: string) {
     const genre = await GenreRepository.findOrCreate({ name: genreName });
 
     if (!genre) {
       throw new Error('Unable to find or create genre');
     }
 
-    return db('book_genre').insert({ book_id: id, genre_id: genre.id });
+    return db('book_genre').insert({ book_md5: md5, genre_id: genre.id });
   }
 
   static async setReferencePages(id: number, referencePages: number | null) {
