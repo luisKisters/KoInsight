@@ -1,9 +1,12 @@
 import { PageStat } from '@koinsight/common/types/page-stat';
 import useSWR from 'swr';
 import { fetchFromAPI } from './api';
+import { GetAllStatsResponse } from '@koinsight/common/types';
 
 export function usePageStats() {
-  return useSWR('stats', () => fetchFromAPI<PageStat[]>('stats'), { fallbackData: [] });
+  return useSWR('stats', () => fetchFromAPI<GetAllStatsResponse>('stats'), {
+    fallbackData: { stats: [], per_month: [] },
+  });
 }
 
 export function useBookStats(bookMd5: string) {

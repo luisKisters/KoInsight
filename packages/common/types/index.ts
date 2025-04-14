@@ -8,3 +8,4 @@ export * from './openai';
 export * from './page-stat';
 export * from './progress';
 export * from './user';
+export * from './stats-api';
