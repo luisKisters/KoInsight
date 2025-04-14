@@ -164,17 +164,17 @@ router.post(
   }
 );
 
-router.post('/books/:id/genres', async (req: Request, res: Response) => {
-  const { id } = req.params;
+router.post('/books/:id/genres', getBookById, async (req: Request, res: Response) => {
+  const book = req.book!;
   const { genreName } = req.body;
 
-  if (!id || !genreName) {
+  if (!genreName) {
     res.status(400).json({ error: 'Missing required fields' });
     return;
   }
 
   try {
-    await BookRepository.addGenre(Number(id), genreName);
+    await BookRepository.addGenre(book.md5, genreName);
     res.status(200).json({ message: 'Genre added' });
   } catch (error) {
     console.error(error);
