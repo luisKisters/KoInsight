@@ -1,16 +1,10 @@
-import { Book, BookDevice, DbPageStat, KoReaderBook, PageStat } from '@koinsight/common/types';
+import { Book, BookDevice, Device, KoReaderBook, PageStat } from '@koinsight/common/types';
 import { db } from '../knex';
 
-export function transformPageStats(pageStats: DbPageStat[]): PageStat[] {
-  return pageStats.map(({ id_book, ...pageStat }) => ({
-    ...pageStat,
-  }));
-}
-
-export function uploadStatisticData(booksTomport: KoReaderBook[], newPageStats: PageStat[]) {
+export function uploadStatisticData(booksToImport: KoReaderBook[], newPageStats: PageStat[]) {
   return db.transaction(async (trx) => {
     // Insert books
-    const newBooks: Partial<Book>[] = booksTomport.map((book) => ({
+    const newBooks: Partial<Book>[] = booksToImport.map((book) => ({
       id: book.id,
       md5: book.md5,
       title: book.title,
@@ -20,11 +14,23 @@ export function uploadStatisticData(booksTomport: KoReaderBook[], newPageStats: 
     }));
 
     await Promise.all(
-      newBooks.map(({ id, ...book }) => trx('book').insert(book).onConflict('md5').ignore())
+      newBooks.map(({ id, ...book }) => trx<Book>('book').insert(book).onConflict('md5').ignore())
     );
 
-    const newBookDevices: Omit<BookDevice, 'id'>[] = booksTomport.map((book) => ({
-      device_id: newPageStats[0].device_id || 'Unknown',
+    const UNKNOWN_DEVICE_ID = 'manual-upload';
+    const hasUnknownDevices = newPageStats[0].device_id === UNKNOWN_DEVICE_ID;
+
+    if (hasUnknownDevices) {
+      let unknownDevice = await trx<Device>('device').where({ id: UNKNOWN_DEVICE_ID }).first();
+
+      if (!unknownDevice) {
+        console.log('Creating unknown device');
+        await trx<Device>('device').insert({ id: UNKNOWN_DEVICE_ID, model: 'Manual Upload' });
+      }
+    }
+
+    const newBookDevices: Omit<BookDevice, 'id'>[] = booksToImport.map((book) => ({
+      device_id: newPageStats[0].device_id,
       book_md5: book.md5,
       last_open: book.last_open,
       pages: book.pages,
@@ -36,7 +42,7 @@ export function uploadStatisticData(booksTomport: KoReaderBook[], newPageStats: 
 
     await Promise.all(
       newBookDevices.map((bookDevice) =>
-        trx('book_device')
+        trx<BookDevice>('book_device')
           .insert(bookDevice)
           .onConflict(['book_md5', 'device_id'])
           .merge([
@@ -53,7 +59,7 @@ export function uploadStatisticData(booksTomport: KoReaderBook[], newPageStats: 
     // Insert page stats
     await Promise.all(
       newPageStats.map((pageStat) =>
-        trx('page_stat')
+        trx<PageStat>('page_stat')
           .insert(pageStat)
           .onConflict(['device_id', 'book_md5', 'page', 'start_time'])
           .merge(['duration', 'total_pages'])

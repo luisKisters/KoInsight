@@ -1,11 +1,11 @@
-import { Book, KoReaderBook } from '@koinsight/common/types/book';
-import { DbPageStat } from '@koinsight/common/types/page-stat';
+import { KoReaderBook } from '@koinsight/common/types/book';
+import { DbPageStat, PageStat } from '@koinsight/common/types/page-stat';
 import Database from 'better-sqlite3';
 import { Router } from 'express';
 import { unlinkSync } from 'fs';
 import multer from 'multer';
 import { DATA_PATH, UPLOAD_DB_FILENAME } from '../const';
-import { transformPageStats, uploadStatisticData } from '../db/upload-data';
+import { uploadStatisticData } from '../db/upload-data';
 
 const storage = multer.diskStorage({
   destination: (_req, _res, cb) => {
@@ -57,7 +57,12 @@ router.post('/upload', upload.single('file'), async (req, res, next) => {
   try {
     const newBooks = db.prepare('SELECT * FROM book').all() as KoReaderBook[];
     const dbPageStats = db.prepare('SELECT * FROM page_stat_data').all() as DbPageStat[];
-    const newPageStats = transformPageStats(dbPageStats);
+
+    const newPageStats: PageStat[] = dbPageStats.map(({ id_book, ...stat }) => ({
+      book_md5: newBooks.find((book) => book.id === id_book)!.md5,
+      device_id: 'manual-upload',
+      ...stat,
+    }));
 
     await uploadStatisticData(newBooks, newPageStats);
 

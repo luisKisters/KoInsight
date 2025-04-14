@@ -1,11 +1,11 @@
-import { Book, KoReaderBook } from '@koinsight/common/types/book';
+import { KoReaderBook } from '@koinsight/common/types/book';
+import { Device } from '@koinsight/common/types/device';
 import { PageStat } from '@koinsight/common/types/page-stat';
 import archiver from 'archiver';
 import { NextFunction, Request, Response, Router } from 'express';
 import path from 'path';
-import { transformPageStats, uploadStatisticData } from '../db/upload-data';
-import { Device } from '@koinsight/common/types/device';
 import { DeviceRepository } from '../db/device-repository';
+import { uploadStatisticData } from '../db/upload-data';
 
 // Router for KoInsight koreader plugin
 const router = Router();
@@ -50,7 +50,7 @@ router.post('/plugin/import', rejectOldPluginVersion, async (req, res) => {
   console.warn(`[${req.method}] ${req.url} — Content-Length: ${contentLength || 'unknown'} bytes`);
 
   const newBooks: KoReaderBook[] = req.body.books;
-  const newPageStats: PageStat[] = transformPageStats(req.body.stats);
+  const newPageStats: PageStat[] = req.body.stats;
 
   try {
     console.debug('Importing books:', newBooks);
