@@ -1,5 +1,6 @@
-import { PageStat, PerDayOfTheWeek, PerMonthReadingTime } from '@koinsight/common/types';
-import { format } from 'date-fns';
+import { Book, PageStat, PerDayOfTheWeek, PerMonthReadingTime } from '@koinsight/common/types';
+import { format, startOfDay, subDays } from 'date-fns';
+import { groupBy, sum } from 'ramda';
 
 export class StatsService {
   static getPerMonthReadingTime(stats: PageStat[]): PerMonthReadingTime[] {
@@ -41,5 +42,57 @@ export class StatsService {
         [] as Array<{ name: string; value: number; day: number; index: number }>
       )
       .sort((a, b) => a.day - b.day);
+  }
+
+  static mostPagesInADay(books: Book[], stats: PageStat[]) {
+    return Math.max(...this.getPagesPerDay(stats, books));
+  }
+
+  static totalReadingTime(stats: PageStat[]) {
+    return sum((stats ?? []).map((s) => s.duration));
+  }
+
+  static longestDay(stats: PageStat[]) {
+    const timePerDay = stats.reduce<Record<number, number>>((acc, stat) => {
+      const day = startOfDay(stat.start_time).getTime();
+      acc[day] = (acc[day] || 0) + stat.duration;
+      return acc;
+    }, {});
+
+    const maxTime = Math.max(...Object.values(timePerDay ?? []));
+    return maxTime;
+  }
+
+  static last7DaysReadTime(stats: PageStat[]) {
+    const sevenDaysAgo = subDays(new Date(), 7);
+    const lastSevenDays = stats.filter((stat) => stat.start_time > sevenDaysAgo.getTime());
+    return sum(lastSevenDays.map((s) => s.duration));
+  }
+
+  private static getPagesPerDay(stats: PageStat[], books: Book[]) {
+    const booksByMd5 = books?.reduce(
+      (acc, book) => {
+        acc[book.md5] = book;
+        return acc;
+      },
+      {} as Record<string, Book>
+    );
+
+    const statsPerDay = groupBy((stat: PageStat) =>
+      startOfDay(stat.start_time).getTime().toString()
+    )(stats);
+
+    const pagesPerDay = Object.values(statsPerDay).map(
+      (dayStats) =>
+        dayStats?.reduce((acc, stat) => {
+          if (stat.total_pages && booksByMd5[stat.book_md5]?.reference_pages) {
+            return acc + (1 / stat.total_pages) * booksByMd5[stat.book_md5].reference_pages!;
+          } else {
+            return acc + 1;
+          }
+        }, 0) ?? 0
+    );
+
+    return pagesPerDay;
   }
 }

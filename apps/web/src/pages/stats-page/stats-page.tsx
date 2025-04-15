@@ -1,5 +1,4 @@
 import { Book } from '@koinsight/common/types/book';
-import { PageStat } from '@koinsight/common/types/page-stat';
 import { BarChart } from '@mantine/charts';
 import {
   Box,
@@ -11,8 +10,6 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { IconClock, IconMaximize, IconPageBreak } from '@tabler/icons-react';
-import { startOfDay, subDays } from 'date-fns';
-import { groupBy, sum } from 'ramda';
 import { JSX, useMemo } from 'react';
 import { BarProps } from 'recharts';
 import { useBooks } from '../../api/books';
@@ -26,10 +23,18 @@ import { WeekStats } from './week-stats';
 export function StatsPage(): JSX.Element {
   const colorScheme = useComputedColorScheme();
   const { colors } = useMantineTheme();
-  const { data: books, isLoading } = useBooks();
+  const { data: books, isLoading: booksLoading } = useBooks();
 
   const {
-    data: { stats, perMonth, perDayOfTheWeek },
+    data: {
+      stats,
+      perMonth,
+      perDayOfTheWeek,
+      mostPagesInADay,
+      totalReadingTime,
+      longestDay,
+      last7DaysReadTime,
+    },
     isLoading: statsLoading,
   } = usePageStats();
 
@@ -43,50 +48,6 @@ export function StatsPage(): JSX.Element {
     );
   }, [books]);
 
-  const lastWeek = useMemo(() => {
-    const now = subDays(new Date(), 7);
-    return stats.filter((stat) => stat.start_time > now.getTime());
-  }, [stats]);
-
-  const weeklyReadTime = useMemo(
-    () => sum(lastWeek?.map((stat) => stat.duration) ?? []),
-    [lastWeek]
-  );
-
-  const longestDay = useMemo(() => {
-    const timePerDay = stats.reduce<Record<number, number>>((acc, stat) => {
-      const day = startOfDay(stat.start_time).getTime();
-      acc[day] = (acc[day] || 0) + stat.duration;
-      return acc;
-    }, {});
-
-    const maxTime = Math.max(...Object.values(timePerDay ?? []));
-    return maxTime;
-  }, [stats]);
-
-  const pagesPerDay = useMemo(() => {
-    const statsPerDay = groupBy((stat: PageStat) =>
-      startOfDay(stat.start_time).getTime().toString()
-    )(stats);
-
-    const pagesPerDay = Object.values(statsPerDay).map(
-      (dayStats) =>
-        dayStats?.reduce((acc, stat) => {
-          if (stat.total_pages && booksByMd5[stat.book_md5]?.reference_pages) {
-            return acc + (1 / stat.total_pages) * booksByMd5[stat.book_md5].reference_pages!;
-          } else {
-            return acc + 1;
-          }
-        }, 0) ?? 0
-    );
-
-    return pagesPerDay;
-  }, [stats, booksByMd5]);
-
-  const mostPagesInADay = useMemo(() => Math.max(...pagesPerDay), [pagesPerDay]);
-
-  const totalTime = useMemo(() => sum((stats ?? []).map((s) => s.duration)), [stats]);
-
   const totalPagesRead = useMemo(() => {
     return books.reduce(
       (acc, book) =>
@@ -97,7 +58,7 @@ export function StatsPage(): JSX.Element {
     );
   }, [books]);
 
-  if (isLoading || statsLoading || !books || !stats) {
+  if (booksLoading || statsLoading) {
     return (
       <Flex justify="center" align="center" h="100%">
         <Loader />
@@ -120,8 +81,8 @@ export function StatsPage(): JSX.Element {
         }}
         fw={900}
       >
-        {weeklyReadTime > 0 ? (
-          <>You read for {formatSecondsToHumanReadable(weeklyReadTime)} this week. Keep it up!</>
+        {last7DaysReadTime > 0 ? (
+          <>You read for {formatSecondsToHumanReadable(last7DaysReadTime)} this week. Keep it up!</>
         ) : (
           <>You haven't read this week yet. No better time to start!</>
         )}
@@ -131,7 +92,7 @@ export function StatsPage(): JSX.Element {
           data={[
             {
               label: 'Total read time',
-              value: formatSecondsToHumanReadable(totalTime),
+              value: formatSecondsToHumanReadable(totalReadingTime),
               icon: IconClock,
             },
             {
@@ -146,7 +107,7 @@ export function StatsPage(): JSX.Element {
             },
             {
               label: 'Most pages in a day',
-              value: mostPagesInADay,
+              value: mostPagesInADay ?? 'N/A',
               icon: IconMaximize,
             },
           ]}

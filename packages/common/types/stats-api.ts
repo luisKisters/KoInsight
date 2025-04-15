@@ -17,4 +17,8 @@ export type GetAllStatsResponse = {
   stats: PageStat[];
   perMonth: PerMonthReadingTime[];
   perDayOfTheWeek: PerDayOfTheWeek[];
+  mostPagesInADay: number;
+  totalReadingTime: number;
+  longestDay: number;
+  last7DaysReadTime: number;
 };

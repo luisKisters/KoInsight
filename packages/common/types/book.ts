@@ -1,5 +1,3 @@
-import { Genre } from './genre';
-
 export type KoReaderBook = {
   id: number;
   md5: string;
