@@ -1,10 +1,12 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { getBookById } from './get-book-by-id-middleware';
 import { BooksRepository } from './books-repository';
 import { BooksService } from './books-service';
 import { coversRouter } from './covers/covers-router';
+import { getBookById } from './get-book-by-id-middleware';
 
 const router = Router();
+
+router.use('/:bookId/cover', coversRouter);
 
 /**
  * Get all books with attached entity data
@@ -79,7 +81,5 @@ router.put('/:bookId/reference_pages', getBookById, async (req: Request, res: Re
     res.status(500).json({ error: 'Failed to update reference pages' });
   }
 });
-
-router.use('/:bookId/cover', coversRouter);
 
 export { router as booksRouter };
