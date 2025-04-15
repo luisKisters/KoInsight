@@ -11,22 +11,14 @@ type Stats = {
   max_device_pages: number;
   notes: number;
   highlights: number;
+  read_per_day: Record<string, number>;
+  started_reading: number;
 };
 
 type RelatedEntities = {
+  stats: PageStat[];
   device_data: BookDevice[];
   genres: Genre[];
 };
 
-export type BookWithData = Book &
-  Stats &
-  RelatedEntities & {
-    stats: PageStat[];
-
-    // Advanced metrics
-    // total_read_pages: number;
-    read_per_day: Record<string, number>;
-    started_reading: number;
-  };
-
-export type GetAllBooksWithData = Book & Stats & RelatedEntities & {};
+export type BookWithData = Book & Stats & RelatedEntities;

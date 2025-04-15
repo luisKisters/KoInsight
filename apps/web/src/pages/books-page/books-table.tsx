@@ -1,7 +1,6 @@
-import { GetAllBooksWithData } from '@koinsight/common/types';
-import { Anchor, Flex, Image, Progress, Stack, Table, Tooltip } from '@mantine/core';
+import { BookWithData } from '@koinsight/common/types';
+import { Anchor, Flex, Image, Progress, Stack, Table } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconHighlight, IconNote } from '@tabler/icons-react';
 import { JSX } from 'react';
 import { NavLink } from 'react-router';
 import { API_URL } from '../../api/api';
@@ -11,7 +10,7 @@ import { formatRelativeDate, getDuration, shortDuration } from '../../utils/date
 import style from './books-table.module.css';
 
 type BooksTableProps = {
-  books: GetAllBooksWithData[];
+  books: BookWithData[];
 };
 
 export function BooksTable({ books }: BooksTableProps): JSX.Element {

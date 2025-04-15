@@ -34,6 +34,7 @@ export function StatsPage(): JSX.Element {
       totalReadingTime,
       longestDay,
       last7DaysReadTime,
+      totalPagesRead,
     },
     isLoading: statsLoading,
   } = usePageStats();
@@ -45,16 +46,6 @@ export function StatsPage(): JSX.Element {
         return acc;
       },
       {} as Record<string, Book>
-    );
-  }, [books]);
-
-  const totalPagesRead = useMemo(() => {
-    return books.reduce(
-      (acc, book) =>
-        book.reference_pages && book.reference_pages > 0
-          ? acc + Math.round((book.total_read_pages / book.total_pages) * book.reference_pages)
-          : acc + book.total_read_pages,
-      0
     );
   }, [books]);
 

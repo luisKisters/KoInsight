@@ -13,6 +13,7 @@ export function usePageStats() {
       totalReadingTime: 0,
       longestDay: 0,
       last7DaysReadTime: 0,
+      totalPagesRead: 0,
     },
   });
 }

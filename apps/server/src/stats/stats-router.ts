@@ -1,8 +1,8 @@
 import { GetAllStatsResponse } from '@koinsight/common/types';
 import { Request, Response, Router } from 'express';
+import { BooksRepository } from '../books/books-repository';
 import { StatsRepository } from './stats-repository';
 import { StatsService } from './stats-service';
-import { BooksRepository } from '../books/books-repository';
 
 const router = Router();
 
@@ -10,7 +10,9 @@ const router = Router();
  * Get all stats
  */
 router.get('/', async (_: Request, res: Response) => {
-  const books = await BooksRepository.getAll();
+  const books = await BooksRepository.getAllWithData();
+  const totalPagesRead = StatsService.totalPagesRead(books);
+
   const stats = await StatsRepository.getAll();
   const perMonth = StatsService.getPerMonthReadingTime(stats);
   const perDayOfTheWeek = StatsService.perDayOfTheWeek(stats);
@@ -27,6 +29,7 @@ router.get('/', async (_: Request, res: Response) => {
     totalReadingTime,
     longestDay,
     last7DaysReadTime,
+    totalPagesRead,
   };
 
   res.json(response);

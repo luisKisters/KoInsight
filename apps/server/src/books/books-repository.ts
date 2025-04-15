@@ -1,11 +1,12 @@
-import { BookGenre, GetAllBooksWithData } from '@koinsight/common/types';
+import { BookGenre, BookWithData } from '@koinsight/common/types';
 import { Book } from '@koinsight/common/types/book';
 import { BookDevice } from '@koinsight/common/types/book-device';
 import { Genre } from '@koinsight/common/types/genre';
-import { db } from '../knex';
-import { GenreRepository } from '../genres/genre-repository';
-import { StatsRepository } from '../stats/stats-repository';
+import { startOfDay } from 'date-fns';
 import { sum } from 'ramda';
+import { GenreRepository } from '../genres/genre-repository';
+import { db } from '../knex';
+import { StatsRepository } from '../stats/stats-repository';
 
 export class BooksRepository {
   static async getAll(): Promise<Book[]> {
@@ -36,7 +37,7 @@ export class BooksRepository {
     return db<BookDevice>('book_device').where({ book_md5: md5 });
   }
 
-  static async getAllWithData(): Promise<GetAllBooksWithData[]> {
+  static async getAllWithData(): Promise<BookWithData[]> {
     const books = await db('book')
       .select(
         'book.*',
@@ -68,7 +69,8 @@ export class BooksRepository {
       .where({ 'book.soft_deleted': false });
 
     return Promise.all(
-      books.map(async (book) => {
+      // FIXME: book is any, this looses typesafety
+      books.map(async (book): Promise<BookWithData> => {
         const stats = await StatsRepository.getByBookMD5(book.md5);
 
         const genres = JSON.parse(book.genres) as Genre[];
@@ -92,6 +94,21 @@ export class BooksRepository {
           }, 0)
         );
 
+        const started_reading = stats.reduce(
+          (acc, stat) => Math.min(acc, stat.start_time),
+          Infinity
+        );
+
+        const read_per_day = stats.reduce(
+          (acc, stat) => {
+            const day = startOfDay(stat.start_time).getTime();
+            acc[day] = (acc[day] || 0) + stat.duration;
+
+            return acc;
+          },
+          {} as Record<string, number>
+        );
+
         const { genres: raw_genres, book_devices, ...book_props } = book;
 
         return {
@@ -105,6 +122,8 @@ export class BooksRepository {
           last_open: lastOpen,
           highlights: sum(bookDevices.map((device) => device.highlights)),
           notes: sum(bookDevices.map((device) => device.notes)),
+          read_per_day,
+          started_reading,
         };
       })
     );

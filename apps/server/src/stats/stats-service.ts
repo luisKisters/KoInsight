@@ -1,4 +1,10 @@
-import { Book, PageStat, PerDayOfTheWeek, PerMonthReadingTime } from '@koinsight/common/types';
+import {
+  Book,
+  BookWithData,
+  PageStat,
+  PerDayOfTheWeek,
+  PerMonthReadingTime,
+} from '@koinsight/common/types';
 import { format, startOfDay, subDays } from 'date-fns';
 import { groupBy, sum } from 'ramda';
 
@@ -63,6 +69,16 @@ export class StatsService {
     const sevenDaysAgo = subDays(new Date(), 7);
     const lastSevenDays = stats.filter((stat) => stat.start_time > sevenDaysAgo.getTime());
     return sum(lastSevenDays.map((s) => s.duration));
+  }
+
+  static totalPagesRead(books: BookWithData[]) {
+    return books.reduce(
+      (acc, book) =>
+        book.reference_pages && book.reference_pages > 0
+          ? acc + Math.round((book.total_read_pages / book.total_pages) * book.reference_pages)
+          : acc + book.total_read_pages,
+      0
+    );
   }
 
   private static getPagesPerDay(stats: PageStat[], books: Book[]) {

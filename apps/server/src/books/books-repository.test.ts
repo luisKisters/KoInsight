@@ -1,4 +1,4 @@
-import { Book, BookGenre, Device, GetAllBooksWithData } from '@koinsight/common/types';
+import { Book, BookGenre, BookWithData, Device } from '@koinsight/common/types';
 import { range } from 'ramda';
 import { createBookDevice } from '../db/factories/book-device-factory';
 import { createBook, fakeBook } from '../db/factories/book-factory';
@@ -171,7 +171,7 @@ describe(BooksRepository, () => {
   });
 
   describe('getAllWithData', () => {
-    let result: GetAllBooksWithData[];
+    let result: BookWithData[];
     let device1: Device;
     let device2: Device;
     let book1: Book;

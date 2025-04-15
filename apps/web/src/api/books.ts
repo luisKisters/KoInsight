@@ -1,9 +1,9 @@
-import { Book, GetAllBooksWithData } from '@koinsight/common/types';
+import { Book, BookWithData } from '@koinsight/common/types';
 import useSWR from 'swr';
 import { API_URL, fetchFromAPI } from './api';
 
 export function useBooks() {
-  return useSWR('books', () => fetchFromAPI<GetAllBooksWithData[]>('books'), { fallbackData: [] });
+  return useSWR('books', () => fetchFromAPI<BookWithData[]>('books'), { fallbackData: [] });
 }
 
 export async function deleteBook(id: Book['id']) {

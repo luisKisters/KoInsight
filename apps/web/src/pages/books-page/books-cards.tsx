@@ -1,4 +1,4 @@
-import { Book } from '@koinsight/common/types/book';
+import { BookWithData } from '@koinsight/common/types';
 import { Box, Group, Image, Progress, Text, Tooltip } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconBooks, IconProgress, IconUser } from '@tabler/icons-react';
@@ -7,12 +7,11 @@ import { JSX } from 'react';
 import { useNavigate } from 'react-router';
 import { API_URL } from '../../api/api';
 import { getBookPath } from '../../routes';
-import { GetAllBooksWithData } from '@koinsight/common/types';
 
 import style from './books-cards.module.css';
 
 type BooksCardsProps = {
-  books: GetAllBooksWithData[];
+  books: BookWithData[];
 };
 
 export function BooksCards({ books }: BooksCardsProps): JSX.Element {
