@@ -1,6 +1,4 @@
-import { uniq } from 'ramda';
-
-interface OpenLibrarySearchResult {
+export interface OpenLibrarySearchResult {
   numFound: number;
   start: number;
   numFoundExact: boolean;
@@ -10,7 +8,7 @@ interface OpenLibrarySearchResult {
   offset: null;
 }
 
-interface Doc {
+export interface Doc {
   author_alternative_name?: string[];
   author_key: string[];
   author_name: string[];
@@ -92,46 +90,4 @@ interface Doc {
   id_better_world_books?: string[];
   id_google?: string[];
   id_wikidata?: string[];
-}
-
-const OPEN_LIBRARY_API = 'https://openlibrary.org';
-const OPEN_LIBRARY_COVERS_API = 'https://covers.openlibrary.org';
-
-function searchBooks(
-  searchTerm: string,
-  limit = 3,
-  fields = 'key,cover_i',
-  lang = 'eng'
-): Promise<OpenLibrarySearchResult> {
-  const params = new URLSearchParams({
-    q: searchTerm,
-    limit: limit.toString(),
-    lang,
-    fields,
-  });
-
-  return fetch(`${OPEN_LIBRARY_API}/search.json?${params}`).then((response) => response.json());
-}
-
-export async function queryCovers(searchTerm: string, limit: number = 3) {
-  const response = await searchBooks(searchTerm, limit);
-  const docs = response.docs;
-
-  const coverIds = docs.flatMap((doc) => doc.cover_i);
-  const keys = docs.flatMap((doc) => doc.key);
-
-  const newCoverIds = (await Promise.all(keys.map((k) => queryCoverForKey(k)))).flat();
-
-  return uniq([...coverIds, ...newCoverIds].filter(Boolean));
-}
-
-export function queryCoverForKey(key: string) {
-  return fetch(`${OPEN_LIBRARY_API}${key}/editions.json`)
-    .then((r) => r.json())
-    .then((r) => r.entries.flatMap((entry: { covers: string[] }) => entry.covers));
-}
-
-export async function fetchCover(coverId: string, size: 'S' | 'M' | 'L' = 'M') {
-  const url = `${OPEN_LIBRARY_COVERS_API}/b/id/${coverId}-${size}.jpg`;
-  return fetch(url).then((response) => response.arrayBuffer());
 }

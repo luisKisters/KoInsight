@@ -28,11 +28,9 @@ export function StatsPage(): JSX.Element {
   const { colors } = useMantineTheme();
   const { data: books, isLoading } = useBooks();
   const {
-    data: { stats, per_month },
+    data: { stats, perMonth },
     isLoading: statsLoading,
   } = usePageStats();
-
-  console.log('stats', stats);
 
   const booksByMd5 = useMemo(() => {
     return books?.reduce(
@@ -53,24 +51,6 @@ export function StatsPage(): JSX.Element {
     () => sum(lastWeek?.map((stat) => stat.duration) ?? []),
     [lastWeek]
   );
-
-  // const perMonth = useMemo(
-  //   () =>
-  //     (stats ?? [])
-  //       .reduce<{ month: string; duration: number; date: number }[]>((acc, stat) => {
-  //         const month = format(stat.start_time * 1000, 'MMMM yyyy');
-  //         const monthData = acc.find((item) => item.month === month);
-  //         if (monthData) {
-  //           monthData.duration += stat.duration;
-  //         } else {
-  //           acc.push({ month, duration: stat.duration, date: stat.start_time });
-  //         }
-
-  //         return acc;
-  //       }, [])
-  //       .sort((a, b) => a.date - b.date),
-  //   [stats]
-  // );
 
   const longestDay = useMemo(() => {
     const timePerDay = stats.reduce<Record<number, number>>((acc, stat) => {
@@ -241,7 +221,7 @@ export function StatsPage(): JSX.Element {
       <BarChart
         h={300}
         mt="sm"
-        data={per_month}
+        data={perMonth}
         dataKey="month"
         gridAxis="none"
         withYAxis={false}

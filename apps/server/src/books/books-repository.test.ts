@@ -1,17 +1,17 @@
 import { Book, BookGenre, Device, GetAllBooksWithData } from '@koinsight/common/types';
 import { range } from 'ramda';
+import { createBookDevice } from '../db/factories/book-device-factory';
+import { createBook, fakeBook } from '../db/factories/book-factory';
+import { createDevice } from '../db/factories/device-factory';
+import { createGenre } from '../db/factories/genre-factory';
+import { createPageStat } from '../db/factories/page-stat-factory';
 import { db } from '../knex';
-import { BookRepository } from './book-repository';
-import { createBookDevice } from './factories/book-device-factory';
-import { createBook, fakeBook } from './factories/book-factory';
-import { createDevice } from './factories/device-factory';
-import { createGenre } from './factories/genre-factory';
-import { createPageStat } from './factories/page-stat-factory';
+import { BooksRepository } from './books-repository';
 
-describe(BookRepository, () => {
+describe(BooksRepository, () => {
   describe('getAll', () => {
     it('returns an empty array when no books exist', async () => {
-      const books = await BookRepository.getAll();
+      const books = await BooksRepository.getAll();
       expect(books).toHaveLength(0);
     });
 
@@ -19,7 +19,7 @@ describe(BookRepository, () => {
       await createBook(db, { title: 'Test Book' });
       await createBook(db, { title: 'Test Book 2' });
 
-      const books = await BookRepository.getAll();
+      const books = await BooksRepository.getAll();
 
       expect(books).toHaveLength(2);
       expect(books[0].title).toBe('Test Book');
@@ -30,7 +30,7 @@ describe(BookRepository, () => {
       await createBook(db, { title: 'Test Book' });
       await createBook(db, { title: 'Test Book 2', soft_deleted: true });
 
-      const books = await BookRepository.getAll();
+      const books = await BooksRepository.getAll();
       expect(books).toHaveLength(1);
       expect(books[0].title).toBe('Test Book');
     });
@@ -39,13 +39,13 @@ describe(BookRepository, () => {
   describe('getById', () => {
     it('gets a book by id', async () => {
       const book = await createBook(db, { title: 'Test Book' });
-      const foundBook = await BookRepository.getById(book.id);
+      const foundBook = await BooksRepository.getById(book.id);
 
       expect(foundBook?.title).toEqual(book.title);
     });
 
     it('returns undefined for non-existent book', async () => {
-      const foundBook = await BookRepository.getById(999);
+      const foundBook = await BooksRepository.getById(999);
       expect(foundBook).toBeUndefined();
     });
   });
@@ -54,7 +54,7 @@ describe(BookRepository, () => {
     it('inserts a book', async () => {
       const book = fakeBook({ title: 'Test Book', authors: 'Test Author' });
 
-      const [id] = await BookRepository.insert(book);
+      const [id] = await BooksRepository.insert(book);
 
       const insertedBook = await db<Book>('book').where({ id }).first();
 
@@ -69,7 +69,7 @@ describe(BookRepository, () => {
     it('updates a book', async () => {
       const book = await createBook(db, { title: 'Test Book' });
 
-      await BookRepository.update(book.id, { title: 'Updated Book' });
+      await BooksRepository.update(book.id, { title: 'Updated Book' });
 
       const foundBook = await db<Book>('book').where({ id: book.id }).first();
 
@@ -81,7 +81,7 @@ describe(BookRepository, () => {
     it('soft deletes a book', async () => {
       const book = await createBook(db, { title: 'Test Book' });
 
-      const result = await BookRepository.softDelete(book.id);
+      const result = await BooksRepository.softDelete(book.id);
 
       expect(result).toEqual(1);
 
@@ -92,7 +92,7 @@ describe(BookRepository, () => {
     });
 
     it('returns 0 when a book is not found', async () => {
-      const result = await BookRepository.softDelete(999);
+      const result = await BooksRepository.softDelete(999);
       expect(result).toBe(0);
     });
   });
@@ -104,7 +104,7 @@ describe(BookRepository, () => {
       await createBook(db, { title: 'Test Book 2' });
       await createBook(db, { title: 'Test Book 3' });
 
-      const books = await BookRepository.searchByTitle('Test Book');
+      const books = await BooksRepository.searchByTitle('Test Book');
       expect(books).toHaveLength(3);
       expect(books.map((book) => book.title)).toEqual(['Test Book', 'Test Book 2', 'Test Book 3']);
     });
@@ -115,12 +115,12 @@ describe(BookRepository, () => {
       await createBook(db, { title: 'Test Book 2' });
       await createBook(db, { title: 'Test Book 3' });
 
-      const books = await BookRepository.searchByTitle('Non-existent Book');
+      const books = await BooksRepository.searchByTitle('Non-existent Book');
       expect(books).toHaveLength(0);
     });
 
     it('returns an empty array when no books exist', async () => {
-      const books = await BookRepository.searchByTitle('Test Book');
+      const books = await BooksRepository.searchByTitle('Test Book');
       expect(books).toHaveLength(0);
     });
 
@@ -129,7 +129,7 @@ describe(BookRepository, () => {
       await createBook(db, { title: 'Another Book' });
       await createBook(db, { title: 'Test Book 2' });
       await createBook(db, { title: 'TEST BOOK 3' });
-      const books = await BookRepository.searchByTitle('test book');
+      const books = await BooksRepository.searchByTitle('test book');
 
       expect(books).toHaveLength(3);
       expect(books.map((book) => book.title)).toEqual(['Test Book', 'Test Book 2', 'TEST BOOK 3']);
@@ -143,7 +143,7 @@ describe(BookRepository, () => {
 
       await createBookDevice(db, book, device, { last_open: 3, notes: 10 });
 
-      const result = await BookRepository.getBookDeviceData(book.md5);
+      const result = await BooksRepository.getBookDeviceData(book.md5);
 
       expect(result).toHaveLength(1);
       expect(result[0].book_md5).toEqual(book.md5);
@@ -154,18 +154,18 @@ describe(BookRepository, () => {
 
     it('returns an empty array when no book device data exists', async () => {
       const book = await createBook(db, { title: 'Test Book' });
-      const result = await BookRepository.getBookDeviceData(book.md5);
+      const result = await BooksRepository.getBookDeviceData(book.md5);
       expect(result).toHaveLength(0);
     });
 
     it('returns an empty array when no book exists', async () => {
-      const result = await BookRepository.getBookDeviceData('non-existent-book-md5');
+      const result = await BooksRepository.getBookDeviceData('non-existent-book-md5');
       expect(result).toHaveLength(0);
     });
 
     it('returns an empty array when no device data exists', async () => {
       const book = await createBook(db, { title: 'Test Book' });
-      const result = await BookRepository.getBookDeviceData(book.md5);
+      const result = await BooksRepository.getBookDeviceData(book.md5);
       expect(result).toHaveLength(0);
     });
   });
@@ -195,12 +195,12 @@ describe(BookRepository, () => {
     });
 
     it('returns all books', async () => {
-      result = await BookRepository.getAllWithData();
+      result = await BooksRepository.getAllWithData();
       expect(result).toHaveLength(3);
     });
 
     it('returns correct genres', async () => {
-      result = await BookRepository.getAllWithData();
+      result = await BooksRepository.getAllWithData();
       expect(result[0].genres).toEqual([
         expect.objectContaining({ name: 'Test Genre 1' }),
         expect.objectContaining({ name: 'Test Genre 2' }),
@@ -228,7 +228,7 @@ describe(BookRepository, () => {
         total_read_pages: 40,
       });
 
-      result = await BookRepository.getAllWithData();
+      result = await BooksRepository.getAllWithData();
 
       expect(result[0].max_device_pages).toEqual(150);
       expect(result[0].last_open).toEqual(10);
@@ -257,7 +257,7 @@ describe(BookRepository, () => {
           )
         );
 
-        result = await BookRepository.getAllWithData();
+        result = await BooksRepository.getAllWithData();
 
         expect(result[0].total_read_pages).toEqual(20);
       });
@@ -276,7 +276,7 @@ describe(BookRepository, () => {
             createPageStat(db, book1, bookDevice2, device2, { page: i + 1, total_pages: 70 })
           )
         );
-        result = await BookRepository.getAllWithData();
+        result = await BooksRepository.getAllWithData();
         expect(result[0].total_read_pages).toEqual(34);
       });
 
@@ -294,7 +294,7 @@ describe(BookRepository, () => {
             )
           );
 
-          result = await BookRepository.getAllWithData();
+          result = await BooksRepository.getAllWithData();
 
           expect(result[0].total_read_pages).toEqual(10);
         });
@@ -315,7 +315,7 @@ describe(BookRepository, () => {
             )
           );
 
-          result = await BookRepository.getAllWithData();
+          result = await BooksRepository.getAllWithData();
 
           expect(result[0].total_read_pages).toEqual(20);
         });
@@ -328,7 +328,7 @@ describe(BookRepository, () => {
       const book = await createBook(db, { title: 'Test Book' });
       const genre = await createGenre(db, { name: 'Test Genre' });
 
-      await BookRepository.addGenre(book.md5, genre.name);
+      await BooksRepository.addGenre(book.md5, genre.name);
 
       const bookGenres = await db<BookGenre>('book_genre').where({ book_md5: book.md5 });
 
@@ -342,7 +342,7 @@ describe(BookRepository, () => {
       const book = await createBook(db, { title: 'Test Book' });
       const genreName = 'New Genre';
 
-      await BookRepository.addGenre(book.md5, genreName);
+      await BooksRepository.addGenre(book.md5, genreName);
 
       const genre = await db('genre').where({ name: genreName }).first();
 
@@ -359,7 +359,7 @@ describe(BookRepository, () => {
     it('updates the reference pages for a book', async () => {
       const book = await createBook(db, { title: 'Test Book' });
 
-      await BookRepository.setReferencePages(book.id, 101);
+      await BooksRepository.setReferencePages(book.id, 101);
 
       const updatedBook = await db<Book>('book').where({ id: book.id }).first();
 
@@ -367,7 +367,7 @@ describe(BookRepository, () => {
     });
 
     it('returns 0 when a book is not found', async () => {
-      expect(await BookRepository.setReferencePages(999, 101)).toEqual(0);
+      expect(await BooksRepository.setReferencePages(999, 101)).toEqual(0);
     });
   });
 });

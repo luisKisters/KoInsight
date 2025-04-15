@@ -1,13 +1,12 @@
-export type CommonPageStat = {
+export type KoReaderPageStat = {
   page: number;
   start_time: number;
   duration: number;
   total_pages: number;
+  id_book: number;
 };
 
-export type PageStat = CommonPageStat & {
+export type PageStat = Omit<KoReaderPageStat, 'id_book'> & {
   device_id: string;
   book_md5: string;
 };
-
-export type DbPageStat = CommonPageStat & { id_book: number };

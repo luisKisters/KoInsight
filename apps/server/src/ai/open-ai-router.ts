@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { getBookInsights } from '../lib/open-ai';
+import { getBookInsights } from './open-ai-service';
 
 const router = Router();
 

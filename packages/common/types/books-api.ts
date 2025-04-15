@@ -8,24 +8,25 @@ type Stats = {
   total_read_time: number;
   total_pages: number;
   total_read_pages: number;
+  max_device_pages: number;
+  notes: number;
+  highlights: number;
+};
+
+type RelatedEntities = {
+  device_data: BookDevice[];
+  genres: Genre[];
 };
 
 export type BookWithData = Book &
-  Stats & {
-    device_data: BookDevice[];
+  Stats &
+  RelatedEntities & {
     stats: PageStat[];
-    genres: Genre[];
 
-    // Advanced metrics total_read_pages: number;
+    // Advanced metrics
+    // total_read_pages: number;
     read_per_day: Record<string, number>;
     started_reading: number;
   };
 
-export type GetAllBooksWithData = Book &
-  Stats & {
-    max_device_pages: number;
-    genres: string[];
-    device_data: BookDevice[];
-    notes: number;
-    highlights: number;
-  };
+export type GetAllBooksWithData = Book & Stats & RelatedEntities & {};

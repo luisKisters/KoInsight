@@ -1,12 +1,13 @@
-import { Request, Response, Router } from 'express';
-import { UserExistsError, UserRepository } from '../db/user-repository';
-import { authenticate } from '../middleware/authenticate';
 import { Progress } from '@koinsight/common/types/progress';
-import { ProgressRepository } from '../db/progress-repository';
+import { Request, Response, Router } from 'express';
+import { authenticate } from './kosync-authenticate-middleware';
+import { KosyncRepository } from './kosync-repository';
+import { UserExistsError, UserRepository } from './user-repository';
 
 const router = Router();
 
 /**
+ *  KoSync API
  * "path" : "/users/create",
  * "method" : "POST",
  * "required_params" : [
@@ -63,6 +64,8 @@ router.get('/users/auth', async (req: Request, res: Response) => {
 });
 
 /**
+ * KoSync API
+ *
  * "path" : "/syncs/progress",
  * "method" : "PUT",
  * "required_params" : [
@@ -96,7 +99,7 @@ router.put('/syncs/progress', authenticate, async (req: Request, res: Response) 
 
   let insertedProgress: Partial<Progress> | undefined;
   try {
-    insertedProgress = await ProgressRepository.upsert(req.user.id, {
+    insertedProgress = await KosyncRepository.upsert(req.user.id, {
       document,
       progress,
       percentage,
@@ -112,6 +115,8 @@ router.put('/syncs/progress', authenticate, async (req: Request, res: Response) 
 });
 
 /**
+ * KoSync API
+ *
  * "path" : "/syncs/progress/:document",
  * "method" : "GET",
  * "required_params" : [
@@ -133,7 +138,7 @@ router.get('/syncs/progress/:document', authenticate, async (req: Request, res: 
     return;
   }
 
-  const progress = await ProgressRepository.getByUserIdAndDocument(user.id, document);
+  const progress = await KosyncRepository.getByUserIdAndDocument(user.id, document);
   if (!progress) {
     res.status(404).json({ error: 'Progress not found' });
     return;
@@ -143,7 +148,7 @@ router.get('/syncs/progress/:document', authenticate, async (req: Request, res: 
 });
 
 router.get('/syncs/progress', async (req: Request, res: Response) => {
-  const progresses = await ProgressRepository.getAll();
+  const progresses = await KosyncRepository.getAll();
   res.status(200).json(progresses);
 });
 

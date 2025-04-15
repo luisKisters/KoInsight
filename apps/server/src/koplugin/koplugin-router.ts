@@ -4,8 +4,8 @@ import { PageStat } from '@koinsight/common/types/page-stat';
 import archiver from 'archiver';
 import { NextFunction, Request, Response, Router } from 'express';
 import path from 'path';
-import { DeviceRepository } from '../db/device-repository';
-import { uploadStatisticData } from '../db/upload-data';
+import { DeviceRepository } from '../devices/device-repository';
+import { UploadService } from '../upload/upload-service';
 
 // Router for KoInsight koreader plugin
 const router = Router();
@@ -25,7 +25,7 @@ const rejectOldPluginVersion = (req: Request, res: Response, next: NextFunction)
   next();
 };
 
-router.post('/plugin/device', rejectOldPluginVersion, async (req, res) => {
+router.post('/device', rejectOldPluginVersion, async (req, res) => {
   const { id, model } = req.body;
 
   if (!id || !model) {
@@ -45,17 +45,17 @@ router.post('/plugin/device', rejectOldPluginVersion, async (req, res) => {
   }
 });
 
-router.post('/plugin/import', rejectOldPluginVersion, async (req, res) => {
+router.post('/import', rejectOldPluginVersion, async (req, res) => {
   const contentLength = req.headers['content-length'];
   console.warn(`[${req.method}] ${req.url} — Content-Length: ${contentLength || 'unknown'} bytes`);
 
-  const newBooks: KoReaderBook[] = req.body.books;
+  const koreaderBooks: KoReaderBook[] = req.body.books;
   const newPageStats: PageStat[] = req.body.stats;
 
   try {
-    console.debug('Importing books:', newBooks);
+    console.debug('Importing books:', koreaderBooks);
     console.debug('Importing page stats:', newPageStats);
-    await uploadStatisticData(newBooks, newPageStats);
+    await UploadService.uploadStatisticData(koreaderBooks, newPageStats);
     res.status(200).json({ message: 'Upload successfull' });
   } catch (err) {
     console.error(err);
@@ -64,11 +64,11 @@ router.post('/plugin/import', rejectOldPluginVersion, async (req, res) => {
 });
 
 // TODO: implement check in koreader plugin
-router.get('/plugin/health', rejectOldPluginVersion, async (_, res) => {
+router.get('/health', rejectOldPluginVersion, async (_, res) => {
   res.status(200).json({ message: 'Plugin is healthy' });
 });
 
-router.get('/plugin/download', (_, res) => {
+router.get('/download', (_, res) => {
   const folderPath = path.join(__dirname, '../../../../', 'plugins');
   const archive = archiver('zip', { zlib: { level: 9 } });
 
@@ -89,4 +89,4 @@ router.get('/plugin/download', (_, res) => {
   archive.finalize();
 });
 
-export { router as pluginRouter };
+export { router as kopluginRouter };

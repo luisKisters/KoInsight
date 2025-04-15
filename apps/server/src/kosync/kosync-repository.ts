@@ -5,7 +5,7 @@ import { db } from '../knex';
 export type ProgressCreate = Omit<Progress, 'id' | 'created_at' | 'updated_at'>;
 export type ProgressUpdate = Omit<Progress, 'id' | 'user_id' | 'created_at' | 'updated_at'>;
 
-export class ProgressRepository {
+export class KosyncRepository {
   static async hasDocument(user_id: User['id'], document: Progress['document']): Promise<boolean> {
     const result = await db<Progress>('progress').where({ user_id, document }).select('id').first();
     return !!result;

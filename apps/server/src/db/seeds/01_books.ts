@@ -1,6 +1,6 @@
 import { Book } from '@koinsight/common/types/book';
 import { Knex } from 'knex';
-import { generateMd5Hash } from '../../lib/strings';
+import { generateMd5Hash } from '../../utils/strings';
 
 export const SEED_BOOKS: Partial<Book>[] = [
   {

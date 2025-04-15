@@ -3,11 +3,11 @@ import { Book } from '@koinsight/common/types/book';
 import { BookDevice } from '@koinsight/common/types/book-device';
 import { Genre } from '@koinsight/common/types/genre';
 import { db } from '../knex';
-import { GenreRepository } from './genre-repository';
-import { PageStatRepository } from './page-stat-repository';
+import { GenreRepository } from '../genres/genre-repository';
+import { PageStatRepository } from '../stats/page-stat-repository';
 import { sum } from 'ramda';
 
-export class BookRepository {
+export class BooksRepository {
   static async getAll(): Promise<Book[]> {
     return db<Book>('book').select('*').where({ soft_deleted: false });
   }

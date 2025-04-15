@@ -1,16 +1,16 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { COVERS_PATH } from '../const';
-import { BookRepository } from '../db/book-repository';
-import { deleteExistingCover } from '../lib/covers';
-import { fetchCover, queryCovers } from '../lib/open-library';
+import { BooksRepository } from '../books/books-repository';
+import { CoversService } from '../books/covers/covers-service';
+import { appConfig } from '../config';
+import { OpenLibraryService } from './open-library-service';
 
 const router = Router();
 
 router.get('/list-covers', async (req: Request, res: Response, next: NextFunction) => {
   const { searchTerm, limit } = req.query;
 
-  queryCovers(searchTerm as string, Number(limit))
+  OpenLibraryService.queryCovers(searchTerm as string, Number(limit))
     .then((covers) => {
       res.send(covers);
     })
@@ -32,20 +32,20 @@ router.get('/cover', async (req: Request, res: Response, next: NextFunction) => 
     return next();
   }
 
-  const book = await BookRepository.getById(Number(bookId));
+  const book = await BooksRepository.getById(Number(bookId));
   if (!book) {
     res.status(404).send('Book not found');
     return next();
   }
 
-  if (!existsSync(COVERS_PATH)) {
-    mkdirSync(COVERS_PATH);
+  if (!existsSync(appConfig.coversPath)) {
+    mkdirSync(appConfig.coversPath);
   }
 
   try {
-    deleteExistingCover(book.md5);
-    const cover = await fetchCover(coverId as string, size as 'S' | 'M' | 'L');
-    writeFileSync(`${COVERS_PATH}/${book.md5}.jpg`, Buffer.from(cover));
+    CoversService.deleteExisting(book);
+    const cover = await OpenLibraryService.fetchCover(coverId as string, size as 'S' | 'M' | 'L');
+    writeFileSync(`${appConfig.coversPath}/${book.md5}.jpg`, Buffer.from(cover));
     res.send({ status: 'Cover updated' });
   } catch {
     res.status(404).send('Cover not found');

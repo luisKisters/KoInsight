@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { UserRepository } from '../db/user-repository';
+import { UserRepository } from './user-repository';
 import { User } from '@koinsight/common/types/user';
 
 declare global {

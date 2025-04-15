@@ -1,6 +1,6 @@
 import { Book } from '@koinsight/common/types/book';
 import { NextFunction, Request, Response } from 'express';
-import { BookRepository } from '../db/book-repository';
+import { BooksRepository } from './books-repository';
 
 declare global {
   namespace Express {
@@ -11,7 +11,7 @@ declare global {
 }
 
 export async function getBookById(req: Request, res: Response, next: NextFunction) {
-  const bookId = req.params.id;
+  const bookId = req.params.bookId;
 
   if (!bookId) {
     res.status(400).json({ error: 'Book ID is required' });
@@ -19,7 +19,7 @@ export async function getBookById(req: Request, res: Response, next: NextFunctio
   }
 
   try {
-    const book = await BookRepository.getById(Number(bookId));
+    const book = await BooksRepository.getById(Number(bookId));
 
     if (!book) {
       res.status(404).json({ error: 'Book not found' });
