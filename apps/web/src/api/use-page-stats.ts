@@ -5,7 +5,7 @@ import { GetAllStatsResponse } from '@koinsight/common/types';
 
 export function usePageStats() {
   return useSWR('stats', () => fetchFromAPI<GetAllStatsResponse>('stats'), {
-    fallbackData: { stats: [], perMonth: [] },
+    fallbackData: { stats: [], perMonth: [], perDayOfTheWeek: [] },
   });
 }
 

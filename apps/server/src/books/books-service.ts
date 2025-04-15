@@ -21,7 +21,7 @@ export class BooksService {
 
     const read_per_day = stats.reduce(
       (acc, stat) => {
-        const day = startOfDay(stat.start_time * 1000).getTime();
+        const day = startOfDay(stat.start_time).getTime();
         acc[day] = (acc[day] || 0) + stat.duration;
 
         return acc;

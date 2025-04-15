@@ -28,8 +28,8 @@ export function BookPageRaw({ book }: BookPageRawProps): JSX.Element {
 
   const dates = book.stats.map((stat) => stat.start_time);
   const pages = book.stats.map((stat) => stat.page);
-  const min = dates.length > 0 ? new Date(apply(Math.min, dates) * 1000) : new Date();
-  const max = dates.length > 0 ? new Date(apply(Math.max, dates) * 1000) : new Date();
+  const min = dates.length > 0 ? new Date(apply(Math.min, dates)) : new Date();
+  const max = dates.length > 0 ? new Date(apply(Math.max, dates)) : new Date();
   const maxPage = apply(Math.max, pages);
 
   const [page, setPage] = useState<number | null>(null);
@@ -82,7 +82,7 @@ export function BookPageRaw({ book }: BookPageRawProps): JSX.Element {
           {visibleEvents.map((stat) => (
             <Table.Tr key={stat.start_time}>
               <Table.Td>{stat.page}</Table.Td>
-              <Table.Td>{formatDate(stat.start_time * 1000, 'dd LLL yyyy, HH:mm:ss')}</Table.Td>
+              <Table.Td>{formatDate(stat.start_time, 'dd LLL yyyy, HH:mm:ss')}</Table.Td>
               <Table.Td>{formatSecondsToHumanReadable(stat.duration, false)}</Table.Td>
               <Table.Td>{stat.total_pages}</Table.Td>
               <Table.Td>{devicesById[stat.device_id]?.model ?? stat.device_id}</Table.Td>

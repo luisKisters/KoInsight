@@ -11,7 +11,7 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { IconClock, IconMaximize, IconPageBreak } from '@tabler/icons-react';
-import { format, startOfDay, subDays } from 'date-fns';
+import { startOfDay, subDays } from 'date-fns';
 import { groupBy, sum } from 'ramda';
 import { JSX, useMemo } from 'react';
 import { BarProps } from 'recharts';
@@ -27,8 +27,9 @@ export function StatsPage(): JSX.Element {
   const colorScheme = useComputedColorScheme();
   const { colors } = useMantineTheme();
   const { data: books, isLoading } = useBooks();
+
   const {
-    data: { stats, perMonth },
+    data: { stats, perMonth, perDayOfTheWeek },
     isLoading: statsLoading,
   } = usePageStats();
 
@@ -44,7 +45,7 @@ export function StatsPage(): JSX.Element {
 
   const lastWeek = useMemo(() => {
     const now = subDays(new Date(), 7);
-    return stats.filter((stat) => stat.start_time * 1000 > now.getTime());
+    return stats.filter((stat) => stat.start_time > now.getTime());
   }, [stats]);
 
   const weeklyReadTime = useMemo(
@@ -54,7 +55,7 @@ export function StatsPage(): JSX.Element {
 
   const longestDay = useMemo(() => {
     const timePerDay = stats.reduce<Record<number, number>>((acc, stat) => {
-      const day = startOfDay(stat.start_time * 1000).getTime();
+      const day = startOfDay(stat.start_time).getTime();
       acc[day] = (acc[day] || 0) + stat.duration;
       return acc;
     }, {});
@@ -65,9 +66,7 @@ export function StatsPage(): JSX.Element {
 
   const pagesPerDay = useMemo(() => {
     const statsPerDay = groupBy((stat: PageStat) =>
-      startOfDay(stat.start_time * 1000)
-        .getTime()
-        .toString()
+      startOfDay(stat.start_time).getTime().toString()
     )(stats);
 
     const pagesPerDay = Object.values(statsPerDay).map(
@@ -87,31 +86,6 @@ export function StatsPage(): JSX.Element {
   const mostPagesInADay = useMemo(() => Math.max(...pagesPerDay), [pagesPerDay]);
 
   const totalTime = useMemo(() => sum((stats ?? []).map((s) => s.duration)), [stats]);
-
-  const perWeekDay = useMemo(
-    () =>
-      stats
-        .reduce(
-          (acc, stat) => {
-            const day = format(stat.start_time * 1000, 'EEEE');
-            const existingDay = acc.find((d) => d.name === day);
-            if (existingDay) {
-              existingDay.value += stat.duration;
-            } else {
-              acc.push({
-                name: day,
-                value: stat.duration,
-                day: new Date(stat.start_time * 1000).getUTCDay(),
-                index: 1,
-              });
-            }
-            return acc;
-          },
-          [] as Array<{ name: string; value: number; day: number; index: number }>
-        )
-        .sort((a, b) => a.day - b.day),
-    [stats]
-  );
 
   const totalPagesRead = useMemo(() => {
     return books.reduce(
@@ -193,7 +167,7 @@ export function StatsPage(): JSX.Element {
       </Title>
       <BarChart
         h={300}
-        data={perWeekDay}
+        data={perDayOfTheWeek}
         dataKey="name"
         series={[
           {

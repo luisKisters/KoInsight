@@ -29,7 +29,7 @@ export function CalendarPage(): JSX.Element {
     }
 
     const eventsList = events.reduce<Record<string, CalendarEvent<DayData>>>((acc, event) => {
-      const date = startOfDay(event.start_time * 1000);
+      const date = startOfDay(event.start_time);
       const key = date.toISOString();
 
       acc[key] = {

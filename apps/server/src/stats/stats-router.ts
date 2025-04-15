@@ -11,8 +11,9 @@ const router = Router();
 router.get('/', async (_: Request, res: Response) => {
   const stats = await StatsRepository.getAll();
   const perMonth = StatsService.getPerMonthReadingTime(stats);
+  const perDayOfTheWeek = StatsService.perDayOfTheWeek(stats);
 
-  const response: GetAllStatsResponse = { stats, perMonth };
+  const response: GetAllStatsResponse = { stats, perMonth, perDayOfTheWeek };
 
   res.json(response);
 });

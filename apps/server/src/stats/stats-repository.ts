@@ -2,12 +2,18 @@ import { PageStat } from '@koinsight/common/types/page-stat';
 import { db } from '../knex';
 
 export class StatsRepository {
+  private static updateStartTime(stat: PageStat): PageStat {
+    return { ...stat, start_time: stat.start_time * 1000 };
+  }
+
   static async getAll(): Promise<PageStat[]> {
-    return db<PageStat>('page_stat').select('*');
+    const stats = await db<PageStat>('page_stat').select('*');
+    return stats.map(this.updateStartTime);
   }
 
   static async getByBookMD5(book_md5: string): Promise<PageStat[]> {
-    return db<PageStat>('page_stat').where({ book_md5 });
+    const bookStats = await db<PageStat>('page_stat').where({ book_md5 });
+    return bookStats.map(this.updateStartTime);
   }
 
   static async insert(data: PageStat): Promise<number[]> {

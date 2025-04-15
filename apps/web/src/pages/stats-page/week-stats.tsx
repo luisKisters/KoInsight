@@ -31,19 +31,18 @@ export function WeekStats({
   stats: PageStat[];
   booksByMd5: Record<string, Book>;
 }) {
+  const colorScheme = useComputedColorScheme();
+  const { colors } = useMantineTheme();
+
   const [weekStart, setWeekStart] = useState<number>(
     startOfWeek(new Date(), { weekStartsOn: 1 }).getTime()
   );
   const weekEnd = endOfWeek(weekStart, { weekStartsOn: 1 });
 
-  const colorScheme = useComputedColorScheme();
-  const { colors } = useMantineTheme();
-
   const weekData = useMemo(() => {
     const start = startOfWeek(weekStart, { weekStartsOn: 1 });
     return stats?.filter(
-      ({ start_time }) =>
-        start_time * 1000 < weekEnd.getTime() && start_time * 1000 > start.getTime()
+      ({ start_time }) => start_time < weekEnd.getTime() && start_time > start.getTime()
     );
   }, [stats, weekStart, weekEnd]);
 
@@ -63,9 +62,7 @@ export function WeekStats({
 
   const avgPagesPerDay = useMemo(() => {
     const statsPerDay = groupBy((stat: PageStat) =>
-      startOfDay(stat.start_time * 1000)
-        .getTime()
-        .toString()
+      startOfDay(stat.start_time).getTime().toString()
     )(weekData ?? []);
 
     const pagesPerDay = Object.values(statsPerDay).map(
@@ -87,7 +84,7 @@ export function WeekStats({
 
     let day = weekStart;
     while (isBefore(day, weekEnd)) {
-      const dayStats = stats?.filter((stat) => isSameDay(stat.start_time * 1000, day)) ?? [];
+      const dayStats = stats?.filter((stat) => isSameDay(stat.start_time, day)) ?? [];
 
       perDayResult.push({
         day: format(day, 'dd MMM yyyy'),
