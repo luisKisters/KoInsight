@@ -23,24 +23,20 @@ export class StatsService {
 
   static perDayOfTheWeek(stats: PageStat[]): PerDayOfTheWeek[] {
     return stats
-      .reduce(
-        (acc, stat) => {
-          const day = format(stat.start_time, 'EEEE');
-          const existingDay = acc.find((d) => d.name === day);
-          if (existingDay) {
-            existingDay.value += stat.duration;
-          } else {
-            acc.push({
-              name: day,
-              value: stat.duration,
-              day: new Date(stat.start_time).getUTCDay(),
-              index: 1,
-            });
-          }
-          return acc;
-        },
-        [] as Array<{ name: string; value: number; day: number; index: number }>
-      )
+      .reduce((acc, stat) => {
+        const day = format(stat.start_time, 'EEEE');
+        const existingDay = acc.find((d) => d.name === day);
+        if (existingDay) {
+          existingDay.value += stat.duration;
+        } else {
+          acc.push({
+            name: day,
+            value: stat.duration,
+            day: new Date(stat.start_time).getUTCDay(),
+          });
+        }
+        return acc;
+      }, [] as PerDayOfTheWeek[])
       .sort((a, b) => a.day - b.day);
   }
 

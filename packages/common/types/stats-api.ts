@@ -10,7 +10,6 @@ export type PerDayOfTheWeek = {
   name: string;
   value: number;
   day: number;
-  index: number;
 };
 
 export type GetAllStatsResponse = {
