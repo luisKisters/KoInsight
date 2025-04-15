@@ -1,7 +1,7 @@
 import { PageStat } from '@koinsight/common/types/page-stat';
 import { db } from '../knex';
 
-export class PageStatRepository {
+export class StatsRepository {
   static async getAll(): Promise<PageStat[]> {
     return db<PageStat>('page_stat').select('*');
   }

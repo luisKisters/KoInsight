@@ -1,12 +1,12 @@
 import { Book, BookWithData } from '@koinsight/common/types';
 import { startOfDay } from 'date-fns';
 import { GenreRepository } from '../genres/genre-repository';
-import { PageStatRepository } from '../stats/page-stat-repository';
+import { StatsRepository } from '../stats/stats-repository';
 import { BooksRepository } from './books-repository';
 
 export class BooksService {
   static async withData(book: Book): Promise<BookWithData> {
-    const stats = await PageStatRepository.getByBookMD5(book.md5);
+    const stats = await StatsRepository.getByBookMD5(book.md5);
     const device_data = await BooksRepository.getBookDeviceData(book.md5);
     const genres = await GenreRepository.getByBookMd5(book.md5);
 

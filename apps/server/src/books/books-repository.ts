@@ -4,7 +4,7 @@ import { BookDevice } from '@koinsight/common/types/book-device';
 import { Genre } from '@koinsight/common/types/genre';
 import { db } from '../knex';
 import { GenreRepository } from '../genres/genre-repository';
-import { PageStatRepository } from '../stats/page-stat-repository';
+import { StatsRepository } from '../stats/stats-repository';
 import { sum } from 'ramda';
 
 export class BooksRepository {
@@ -69,7 +69,7 @@ export class BooksRepository {
 
     return Promise.all(
       books.map(async (book) => {
-        const stats = await PageStatRepository.getByBookMD5(book.md5);
+        const stats = await StatsRepository.getByBookMD5(book.md5);
 
         const genres = JSON.parse(book.genres) as Genre[];
         const bookDevices = JSON.parse(book.book_devices) as BookDevice[];
