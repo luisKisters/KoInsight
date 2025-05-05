@@ -54,18 +54,18 @@ export function BookPageCoverSelector({ book }: BookPageCoverSelectorProps): JSX
   return (
     <>
       <Flex mt="lg" gap={16} direction="row">
-      <TextInput
-          placeholder="Search query..."
-          w={300}
-          value={state.query || ""}
-          onKeyUp={(e) => e.code === "Enter" ? onSearch() : null}
-          onChange={(e) => setState((prev) => ({...prev, query: e.target.value}))}
-          rightSection={
-            <ActionIcon size={32} radius="xl" color="violet" variant="filled" onClick={onSearch} loading={state.isLoading}>
-              <IconSearch size={16} stroke={1.5} />
-            </ActionIcon>
-          }
-        />
+        <TextInput
+            placeholder="Search query..."
+            w={300}
+            value={state.query || ""}
+            onKeyUp={(e) => e.code === "Enter" ? onSearch() : null}
+            onChange={(e) => setState((prev) => ({...prev, query: e.target.value}))}
+            rightSection={
+              <ActionIcon size={32} radius="xl" color="violet" variant="filled" onClick={onSearch} loading={state.isLoading}>
+                <IconSearch size={16} stroke={1.5} />
+              </ActionIcon>
+            }
+          />
       </Flex>
       <Flex mt="lg" gap={16} direction="row" wrap="wrap">
         {state.data?.map((coverId) => (
