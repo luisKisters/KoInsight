@@ -52,7 +52,8 @@ export class UploadService {
         newBooks.map(({ id, ...book }) => trx<Book>('book').insert(book).onConflict('md5').ignore())
       );
 
-      const hasUnknownDevices = newPageStats[0].device_id === this.UNKNOWN_DEVICE_ID;
+      const hasUnknownDevices =
+        newPageStats.length > 0 && newPageStats[0].device_id === this.UNKNOWN_DEVICE_ID;
 
       if (hasUnknownDevices) {
         let unknownDevice = await trx<Device>('device')
