@@ -3,6 +3,7 @@ import { PageStat } from './page-stat';
 export type PerMonthReadingTime = {
   month: string;
   duration: number;
+  // FIXME: Date is used for sorting. Can just pass startOfMonth timestamp and format date in UI.
   date: number;
 };
 

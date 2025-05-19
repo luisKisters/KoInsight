@@ -11,7 +11,7 @@ import { groupBy, sum } from 'ramda';
 export class StatsService {
   static getPerMonthReadingTime(stats: PageStat[]): PerMonthReadingTime[] {
     const perMonth = (stats ?? [])
-      .reduce<{ month: string; duration: number; date: number }[]>((acc, stat) => {
+      .reduce<PerMonthReadingTime[]>((acc, stat) => {
         const month = format(stat.start_time, 'MMMM yyyy');
         const monthData = acc.find((item) => item.month === month);
         if (monthData) {
@@ -47,7 +47,8 @@ export class StatsService {
   }
 
   static mostPagesInADay(books: Book[], stats: PageStat[]) {
-    return Math.max(...this.getPagesPerDay(stats, books));
+    const max = Math.max(...this.getPagesPerDay(stats, books));
+    return Math.max(0, max);
   }
 
   static totalReadingTime(stats: PageStat[]) {
@@ -62,7 +63,7 @@ export class StatsService {
     }, {});
 
     const maxTime = Math.max(...Object.values(timePerDay ?? []));
-    return maxTime;
+    return Math.max(0, maxTime);
   }
 
   static last7DaysReadTime(stats: PageStat[]) {

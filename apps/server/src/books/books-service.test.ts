@@ -1,11 +1,11 @@
-import { BookDevice, Device, PageStat } from '@koinsight/common/types';
-import { createBook } from '../db/factories/book-factory';
-import { db } from '../knex';
-import { BooksService } from './books-service';
+import { BookDevice, Device } from '@koinsight/common/types';
+import { addDays, startOfDay } from 'date-fns';
 import { createBookDevice } from '../db/factories/book-device-factory';
+import { createBook } from '../db/factories/book-factory';
 import { createDevice } from '../db/factories/device-factory';
 import { createPageStat } from '../db/factories/page-stat-factory';
-import { addDays, startOfDay, startOfWeek } from 'date-fns';
+import { db } from '../knex';
+import { BooksService } from './books-service';
 
 describe(BooksService.withData, () => {
   let device: Device;
