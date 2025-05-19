@@ -7,6 +7,7 @@ import { sum } from 'ramda';
 import { GenreRepository } from '../genres/genre-repository';
 import { db } from '../knex';
 import { StatsRepository } from '../stats/stats-repository';
+import { BooksService } from './books-service';
 
 export class BooksRepository {
   static async getAll(): Promise<Book[]> {
@@ -33,7 +34,7 @@ export class BooksRepository {
     return db<Book>('book').where('title', 'like', `%${title}%`);
   }
 
-  static async getBookDeviceData(md5: Book['md5']): Promise<BookDevice[]> {
+  static async getBookDevices(md5: Book['md5']): Promise<BookDevice[]> {
     return db<BookDevice>('book_device').where({ book_md5: md5 });
   }
 
@@ -76,38 +77,12 @@ export class BooksRepository {
         const genres = JSON.parse(book.genres) as Genre[];
         const bookDevices = JSON.parse(book.book_devices) as BookDevice[];
 
-        const maxDevicePages = Math.max(...bookDevices.map((device) => device.pages));
-
-        const totalPages = Math.max(book.reference_pages, maxDevicePages);
-
-        const lastOpen = Math.max(...bookDevices.map((device) => device.last_open));
-
-        const totalReadTime = sum(bookDevices.map((device) => device.total_read_time));
-
-        const totalReadPages = Math.round(
-          stats.reduce((acc, stat) => {
-            if (book.reference_pages) {
-              return acc + (1 / stat.total_pages) * book.reference_pages;
-            } else {
-              return acc + 1;
-            }
-          }, 0)
-        );
-
-        const started_reading = stats.reduce(
-          (acc, stat) => Math.min(acc, stat.start_time),
-          Infinity
-        );
-
-        const read_per_day = stats.reduce(
-          (acc, stat) => {
-            const day = startOfDay(stat.start_time).getTime();
-            acc[day] = (acc[day] || 0) + stat.duration;
-
-            return acc;
-          },
-          {} as Record<string, number>
-        );
+        const totalPages = BooksService.getTotalPages(book, bookDevices);
+        const lastOpen = BooksService.getLastOpen(bookDevices);
+        const totalReadTime = BooksService.getTotalReadTime(bookDevices);
+        const totalReadPages = BooksService.getTotalReadPages(book, stats);
+        const started_reading = BooksService.getStartedReading(stats);
+        const read_per_day = BooksService.getReadPerDay(stats);
 
         const { genres: raw_genres, book_devices, ...book_props } = book;
 
@@ -115,7 +90,6 @@ export class BooksRepository {
           ...book_props,
           genres: genres,
           device_data: bookDevices,
-          max_device_pages: maxDevicePages,
           total_pages: totalPages,
           total_read_pages: totalReadPages,
           total_read_time: totalReadTime,

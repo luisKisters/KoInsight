@@ -143,7 +143,7 @@ describe(BooksRepository, () => {
 
       await createBookDevice(db, book, device, { last_open: 3, notes: 10 });
 
-      const result = await BooksRepository.getBookDeviceData(book.md5);
+      const result = await BooksRepository.getBookDevices(book.md5);
 
       expect(result).toHaveLength(1);
       expect(result[0].book_md5).toEqual(book.md5);
@@ -154,18 +154,18 @@ describe(BooksRepository, () => {
 
     it('returns an empty array when no book device data exists', async () => {
       const book = await createBook(db, { title: 'Test Book' });
-      const result = await BooksRepository.getBookDeviceData(book.md5);
+      const result = await BooksRepository.getBookDevices(book.md5);
       expect(result).toHaveLength(0);
     });
 
     it('returns an empty array when no book exists', async () => {
-      const result = await BooksRepository.getBookDeviceData('non-existent-book-md5');
+      const result = await BooksRepository.getBookDevices('non-existent-book-md5');
       expect(result).toHaveLength(0);
     });
 
     it('returns an empty array when no device data exists', async () => {
       const book = await createBook(db, { title: 'Test Book' });
-      const result = await BooksRepository.getBookDeviceData(book.md5);
+      const result = await BooksRepository.getBookDevices(book.md5);
       expect(result).toHaveLength(0);
     });
   });
@@ -230,7 +230,6 @@ describe(BooksRepository, () => {
 
       result = await BooksRepository.getAllWithData();
 
-      expect(result[0].max_device_pages).toEqual(150);
       expect(result[0].last_open).toEqual(10);
 
       expect(result[0].device_data).toHaveLength(2);

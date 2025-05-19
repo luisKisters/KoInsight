@@ -1,25 +1,28 @@
-import { Book, BookWithData } from '@koinsight/common/types';
+import { Book, BookDevice, BookWithData, PageStat } from '@koinsight/common/types';
 import { startOfDay } from 'date-fns';
 import { GenreRepository } from '../genres/genre-repository';
 import { StatsRepository } from '../stats/stats-repository';
 import { BooksRepository } from './books-repository';
 
 export class BooksService {
-  static async withData(book: Book): Promise<BookWithData> {
-    const stats = await StatsRepository.getByBookMD5(book.md5);
-    const device_data = await BooksRepository.getBookDeviceData(book.md5);
-    const genres = await GenreRepository.getByBookMd5(book.md5);
+  static getTotalPages(book: Book, bookDevices: BookDevice[]): number {
+    return book.reference_pages || Math.max(...bookDevices.map((device) => device.pages || 0));
+  }
 
-    const total_pages =
-      book.reference_pages || Math.max(...device_data.map((device) => device.pages || 0));
+  static getTotalReadTime(bookDevices: BookDevice[]): number {
+    return bookDevices.reduce((acc, device) => acc + device.total_read_time, 0);
+  }
 
-    const total_read_time = device_data.reduce((acc, device) => acc + device.total_read_time, 0);
+  static getStartedReading(stats: PageStat[]): number {
+    return stats.reduce((acc, stat) => Math.min(acc, stat.start_time), Infinity);
+  }
 
-    const started_reading = stats.reduce((acc, stat) => Math.min(acc, stat.start_time), Infinity);
+  static getLastOpen(bookDevices: BookDevice[]): number {
+    return bookDevices.reduce((acc, device) => Math.max(acc, device.last_open), 0);
+  }
 
-    const last_open = device_data.reduce((acc, device) => Math.max(acc, device.last_open), 0);
-
-    const read_per_day = stats.reduce(
+  static getReadPerDay(stats: PageStat[]): Record<string, number> {
+    return stats.reduce(
       (acc, stat) => {
         const day = startOfDay(stat.start_time).getTime();
         acc[day] = (acc[day] || 0) + stat.duration;
@@ -28,8 +31,10 @@ export class BooksService {
       },
       {} as Record<string, number>
     );
+  }
 
-    const total_read_pages = Math.round(
+  static getTotalReadPages(book: Book, stats: PageStat[]): number {
+    return Math.round(
       stats.reduce((acc, stat) => {
         if (book.reference_pages) {
           return acc + (1 / stat.total_pages) * book.reference_pages;
@@ -38,11 +43,24 @@ export class BooksService {
         }
       }, 0)
     );
+  }
+
+  static async withData(book: Book): Promise<BookWithData> {
+    const stats = await StatsRepository.getByBookMD5(book.md5);
+    const bookDevices = await BooksRepository.getBookDevices(book.md5);
+    const genres = await GenreRepository.getByBookMd5(book.md5);
+
+    const total_pages = this.getTotalPages(book, bookDevices);
+    const total_read_time = this.getTotalReadTime(bookDevices);
+    const started_reading = this.getStartedReading(stats);
+    const last_open = this.getLastOpen(bookDevices);
+    const read_per_day = this.getReadPerDay(stats);
+    const total_read_pages = this.getTotalReadPages(book, stats);
 
     const response: BookWithData = {
       ...book,
       stats,
-      device_data,
+      device_data: bookDevices,
       started_reading,
       read_per_day,
       total_read_time,
@@ -50,9 +68,8 @@ export class BooksService {
       total_pages,
       last_open,
       genres,
-      notes: device_data.reduce((acc, device) => acc + device.notes, 0),
-      highlights: device_data.reduce((acc, device) => acc + device.highlights, 0),
-      max_device_pages: Math.max(...device_data.map((device) => device.pages || 0)),
+      notes: bookDevices.reduce((acc, device) => acc + device.notes, 0),
+      highlights: bookDevices.reduce((acc, device) => acc + device.highlights, 0),
     };
 
     return response;
