@@ -1,6 +1,5 @@
-import request from 'supertest';
 import express from 'express';
-import { DeviceRepository } from '../devices/device-repository';
+import request from 'supertest';
 import { createDevice } from '../db/factories/device-factory';
 import { db } from '../knex';
 import { devicesRouter } from './devices-router';
