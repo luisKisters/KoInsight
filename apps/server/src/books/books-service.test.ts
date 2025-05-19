@@ -77,22 +77,61 @@ describe(BooksService.withData, () => {
 
   describe('read_per_day', () => {
     it('returns the read time per day', async () => {
-      const book1 = await createBook(db, { title: 'Test Book 1' });
-      const bookDevice = await createBookDevice(db, book1, device, { book_md5: book1.md5 });
+      const book1 = await createBook(db, { title: 'Test Book 1', reference_pages: 100 });
+      const bookDevice = await createBookDevice(db, book1, device, {
+        book_md5: book1.md5,
+        pages: 100,
+      });
 
-      const day1 = 1720898518; // database datase are stored in seconds :/
+      const day1 = 1720898518; // database dates are stored in seconds :/
       const day2 = addDays(day1, 1).getTime();
       const day3 = addDays(day1, 2).getTime();
 
-      await createPageStat(db, book1, bookDevice, device, { start_time: day1, duration: 1 });
-      await createPageStat(db, book1, bookDevice, device, { start_time: day1, duration: 10 });
-      await createPageStat(db, book1, bookDevice, device, { start_time: day1, duration: 100 });
-      await createPageStat(db, book1, bookDevice, device, { start_time: day2, duration: 2 });
-      await createPageStat(db, book1, bookDevice, device, { start_time: day2, duration: 20 });
-      await createPageStat(db, book1, bookDevice, device, { start_time: day2, duration: 200 });
-      await createPageStat(db, book1, bookDevice, device, { start_time: day3, duration: 3 });
-      await createPageStat(db, book1, bookDevice, device, { start_time: day3, duration: 30 });
-      await createPageStat(db, book1, bookDevice, device, { start_time: day3, duration: 300 });
+      await createPageStat(db, book1, bookDevice, device, {
+        start_time: day1,
+        duration: 1,
+        page: 1,
+      });
+      await createPageStat(db, book1, bookDevice, device, {
+        start_time: day1,
+        duration: 10,
+        page: 2,
+      });
+      await createPageStat(db, book1, bookDevice, device, {
+        start_time: day1,
+        duration: 100,
+        page: 3,
+      });
+      await createPageStat(db, book1, bookDevice, device, {
+        start_time: day2,
+        duration: 2,
+        page: 4,
+      });
+      await createPageStat(db, book1, bookDevice, device, {
+        start_time: day2,
+        duration: 20,
+        page: 5,
+      });
+      await createPageStat(db, book1, bookDevice, device, {
+        start_time: day2,
+        duration: 200,
+        page: 6,
+      });
+      await createPageStat(db, book1, bookDevice, device, {
+        start_time: day3,
+        duration: 3,
+        page: 7,
+      });
+      await createPageStat(db, book1, bookDevice, device, {
+        start_time: day3,
+        duration: 30,
+        page: 8,
+      });
+      await createPageStat(db, book1, bookDevice, device, {
+        start_time: day3,
+        duration: 300,
+        page: 9,
+      });
 
       const result = await BooksService.withData(book1);
 

@@ -15,7 +15,7 @@ export function fakeBookDevice(
     last_open: faker.date.past().getTime(),
     notes: faker.number.int({ min: 0, max: 100 }),
     highlights: faker.number.int({ min: 0, max: 100 }),
-    pages: faker.number.int({ min: 0, max: 100 }),
+    pages: faker.number.int({ min: 0, max: 1000 }),
     total_read_time: faker.number.int({ min: 0, max: 100 }),
     total_read_pages: faker.number.int({ min: 0, max: 100 }),
     ...overrides,
@@ -31,7 +31,7 @@ export async function createBookDevice(
   overrides: Partial<FakeBookDevice> = {}
 ): Promise<BookDevice> {
   const bookDeviceData = fakeBookDevice(book, device, overrides);
-  const [bookDevice] = await  db<BookDevice>('book_device').insert(bookDeviceData).returning('*');
+  const [bookDevice] = await db<BookDevice>('book_device').insert(bookDeviceData).returning('*');
 
   return bookDevice;
 }
