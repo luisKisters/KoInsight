@@ -68,7 +68,7 @@ router.put('/:bookId/reference_pages', getBookById, async (req: Request, res: Re
   const book = req.book!;
   const { reference_pages } = req.body;
 
-  if (!reference_pages) {
+  if (reference_pages === undefined || reference_pages === null) {
     res.status(400).json({ error: 'Missing required fields' });
     return;
   }
