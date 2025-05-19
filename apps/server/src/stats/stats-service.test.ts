@@ -142,7 +142,7 @@ describe(StatsService, () => {
       );
 
       const result = await StatsService.mostPagesInADay([book], stats);
-      expect(result).toEqual(1.5);
+      expect(result).toEqual(2); // result is rounded
     });
 
     it('returns 0 with no stats', async () => {
