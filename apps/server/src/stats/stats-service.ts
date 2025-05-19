@@ -47,7 +47,7 @@ export class StatsService {
   }
 
   static mostPagesInADay(books: Book[], stats: PageStat[]) {
-    const max = Math.max(...this.getPagesPerDay(stats, books));
+    const max = Math.round(Math.max(...this.getPagesPerDay(stats, books)));
     return Math.max(0, max);
   }
 
@@ -73,13 +73,7 @@ export class StatsService {
   }
 
   static totalPagesRead(books: BookWithData[]) {
-    return books.reduce(
-      (acc, book) =>
-        book.reference_pages && book.reference_pages > 0
-          ? acc + Math.round((book.total_read_pages / book.total_pages) * book.reference_pages)
-          : acc + book.total_read_pages,
-      0
-    );
+    return books.reduce((acc, book) => acc + book.total_read_pages, 0);
   }
 
   private static getPagesPerDay(stats: PageStat[], books: Book[]) {
