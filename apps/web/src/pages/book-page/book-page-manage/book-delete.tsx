@@ -1,4 +1,4 @@
-import { Book } from '@koinsight/common/types/book';
+import { Book } from '@koinsight/common/types';
 import { Button, Text, Title } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
