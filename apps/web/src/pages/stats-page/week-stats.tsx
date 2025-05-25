@@ -11,9 +11,12 @@ import {
 } from '@tabler/icons-react';
 import {
   addDays,
+  differenceInCalendarDays,
+  endOfDay,
   endOfWeek,
   format,
   formatDate,
+  getDay,
   isBefore,
   isSameDay,
   startOfDay,
@@ -37,14 +40,22 @@ export function WeekStats({
   const [weekStart, setWeekStart] = useState<number>(
     startOfWeek(new Date(), { weekStartsOn: 1 }).getTime()
   );
-  const weekEnd = endOfWeek(weekStart, { weekStartsOn: 1 });
+
+  const weekEnd = useMemo(() => {
+    const rawWeekEnd = endOfWeek(weekStart, { weekStartsOn: 1 }).getTime();
+    const today = endOfDay(new Date()).getTime();
+    return rawWeekEnd <= today ? rawWeekEnd : today;
+  }, [weekStart]);
 
   const weekData = useMemo(() => {
-    const start = startOfWeek(weekStart, { weekStartsOn: 1 });
-    return stats?.filter(
-      ({ start_time }) => start_time < weekEnd.getTime() && start_time > start.getTime()
-    );
+    const start = startOfWeek(weekStart, { weekStartsOn: 1 }).getTime();
+    return stats?.filter(({ start_time }) => start_time < weekEnd && start_time > start);
   }, [stats, weekStart, weekEnd]);
+
+  const weekDaysPassed = useMemo(
+    () => differenceInCalendarDays(weekEnd, weekStart) + 1,
+    [weekStart, weekEnd]
+  );
 
   const pagesRead = useMemo(
     () =>
@@ -111,7 +122,7 @@ export function WeekStats({
         <Popover.Dropdown>
           <DatePicker
             value={new Date(weekStart)}
-            maxDate={endOfWeek(new Date())}
+            maxDate={endOfWeek(new Date(), { weekStartsOn: 1 })}
             onChange={(date) =>
               date && setWeekStart(startOfWeek(date, { weekStartsOn: 1 }).getTime())
             }
@@ -138,7 +149,7 @@ export function WeekStats({
           {
             label: 'Average time per day',
             value: formatSecondsToHumanReadable(
-              Math.round(sum(weekData?.map((stat) => stat.duration) ?? []) / 7)
+              Math.round(sum(weekData?.map((stat) => stat.duration) ?? []) / weekDaysPassed)
             ),
             icon: IconClock,
           },
