@@ -6,7 +6,11 @@
 </p>
 
 <p align="center">
-<strong>KoInsight</strong> brings your <a href="https://koreader.rocks" target="_blank">KOReader</a> reading stats to life with a clean, web-based dashboard.
+  <strong>KoInsight</strong> brings your <a href="https://koreader.rocks" target="_blank">KOReader</a> reading stats to life with a clean, web-based dashboard.
+</p>
+
+<p align="center">
+  <a href='https://coveralls.io/github/GeorgeSG/KoInsight'><img src='https://coveralls.io/repos/github/GeorgeSG/KoInsight/badge.svg' alt='Coverage Status' /></a>
 </p>
 
 <p align="center">

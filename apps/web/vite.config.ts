@@ -4,8 +4,8 @@ import { defineConfig, loadEnv } from 'vite';
 export default ({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_');
 
-  const PORT = Number(process.env.VITE_WEB_PORT ?? 3000);
-  const HOST = process.env.VITE_WEB_HOSTNAME || 'localhost';
+  const PORT = Number(env.VITE_WEB_PORT ?? 3000);
+  const HOST = env.VITE_WEB_HOSTNAME || 'localhost';
 
   return defineConfig({
     plugins: [react()],
