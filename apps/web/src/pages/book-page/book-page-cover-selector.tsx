@@ -1,7 +1,5 @@
 import { Book } from '@koinsight/common/types/book';
 import { ActionIcon, Box, Button, Flex, Image, Skeleton, TextInput, Tooltip } from '@mantine/core';
-import { Book } from '@koinsight/common/types';
-import { Box, Button, Flex, Image, Skeleton, Tooltip } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { JSX, useEffect, useState } from 'react';
 import { listCovers, saveCover } from '../../api/open-library';
@@ -20,14 +18,20 @@ export function BookPageCoverSelector({ book }: BookPageCoverSelectorProps): JSX
     isLoading: boolean;
     loadedCovers: string[];
     isSavingCovers: boolean;
-  }>({ data: null, query: null, isLoading: false, loadedCovers: [], isSavingCovers: false });
+  }>({ data: null, query: book.title, isLoading: false, loadedCovers: [], isSavingCovers: false });
 
   useEffect(() => {
-    setState((prev) => ({...prev, query: book.title}));
+    setState((prev) => ({ ...prev, query: book.title }));
   }, [book]);
-  
+
   const onSearch = async () => {
-    setState((prev) => ({ isLoading: true, query: prev.query || book.title, data: null, loadedCovers: [], isSavingCovers: false }));
+    setState((prev) => ({
+      isLoading: true,
+      query: prev.query || book.title,
+      data: null,
+      loadedCovers: [],
+      isSavingCovers: false,
+    }));
     const coverIds = await listCovers(state.query || book.title);
     setState((prev) => ({ ...prev, isLoading: false, data: coverIds }));
   };
@@ -55,19 +59,24 @@ export function BookPageCoverSelector({ book }: BookPageCoverSelectorProps): JSX
 
   return (
     <>
-      <Flex mt="lg" gap={16} direction="row">
+      <Flex mt="lg" gap="sm" direction="row">
         <TextInput
-            placeholder="Search query..."
-            w={300}
-            value={state.query || ""}
-            onKeyUp={(e) => e.code === "Enter" ? onSearch() : null}
-            onChange={(e) => setState((prev) => ({...prev, query: e.target.value}))}
-            rightSection={
-              <ActionIcon size={32} radius="xl" color="violet" variant="filled" onClick={onSearch} loading={state.isLoading}>
-                <IconSearch size={16} stroke={1.5} />
-              </ActionIcon>
-            }
-          />
+          placeholder="Search query..."
+          w={300}
+          color="violet"
+          value={state.query || ''}
+          onKeyUp={(e) => (e.code === 'Enter' ? onSearch() : null)}
+          onChange={(e) => setState((prev) => ({ ...prev, query: e.target.value }))}
+        />
+        <Button
+          color="violet"
+          variant="filled"
+          onClick={onSearch}
+          leftSection={<IconSearch size={16} />}
+          loading={state.isLoading}
+        >
+          Search
+        </Button>
       </Flex>
       <Flex mt="lg" gap={16} direction="row" wrap="wrap">
         {state.data?.map((coverId) => (
