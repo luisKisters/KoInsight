@@ -2,7 +2,6 @@ import { BookGenre, BookWithData } from '@koinsight/common/types';
 import { Book } from '@koinsight/common/types/book';
 import { BookDevice } from '@koinsight/common/types/book-device';
 import { Genre } from '@koinsight/common/types/genre';
-import { startOfDay } from 'date-fns';
 import { sum } from 'ramda';
 import { GenreRepository } from '../genres/genre-repository';
 import { db } from '../knex';
@@ -26,8 +25,18 @@ export class BooksRepository {
     return db<Book>('book').where({ id }).update(book);
   }
 
-  static async softDelete(id: number): Promise<number> {
-    return db<Book>('book').where({ id }).update({ soft_deleted: true });
+  static async softDelete(id: number, soft_deleted = true): Promise<number> {
+    return db<Book>('book').where({ id }).update({ soft_deleted });
+  }
+
+  static async delete(book: Book) {
+    await db.transaction(async (trx) => {
+      await trx<BookDevice>('book_device').where({ book_md5: book.md5 }).delete();
+
+      await trx<BookGenre>('book_genre').where({ book_md5: book.md5 }).delete();
+
+      await trx<Book>('book').where({ id: book.id }).delete();
+    });
   }
 
   static async searchByTitle(title: string): Promise<Book[]> {
@@ -38,7 +47,7 @@ export class BooksRepository {
     return db<BookDevice>('book_device').where({ book_md5: md5 });
   }
 
-  static async getAllWithData(): Promise<BookWithData[]> {
+  static async getAllWithData(returnDeleted: boolean = false): Promise<BookWithData[]> {
     const books = await db('book')
       .select(
         'book.*',
@@ -67,7 +76,7 @@ export class BooksRepository {
           WHERE bd.book_md5 = book.md5
         ) as book_devices`)
       )
-      .where({ 'book.soft_deleted': false });
+      .where(returnDeleted ? {} : { 'book.soft_deleted': false });
 
     return Promise.all(
       // FIXME: book is any, this looses typesafety

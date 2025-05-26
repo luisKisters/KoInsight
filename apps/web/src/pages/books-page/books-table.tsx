@@ -1,12 +1,12 @@
 import { BookWithData } from '@koinsight/common/types';
-import { Anchor, Flex, Image, Progress, Stack, Table } from '@mantine/core';
+import { Anchor, Flex, Image, Progress, Stack, Table, Tooltip } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
+import { IconEyeClosed } from '@tabler/icons-react';
 import { JSX } from 'react';
 import { NavLink } from 'react-router';
 import { API_URL } from '../../api/api';
 import { getBookPath } from '../../routes';
 import { formatRelativeDate, getDuration, shortDuration } from '../../utils/dates';
-
 import style from './books-table.module.css';
 
 type BooksTableProps = {
@@ -34,7 +34,16 @@ export function BooksTable({ books }: BooksTableProps): JSX.Element {
           <Table.Tr key={book.id}>
             <Table.Td>
               <Flex align="center" gap="sm">
-                <Anchor to={getBookPath(book.id)} component={NavLink}>
+                <Anchor
+                  to={getBookPath(book.id)}
+                  component={NavLink}
+                  className={style.BookCoverLink}
+                >
+                  {book.soft_deleted ? (
+                    <Tooltip label="This book is hidden" withArrow>
+                      <IconEyeClosed size={13} className={style.BookHiddenIndicator} />
+                    </Tooltip>
+                  ) : null}
                   <Image
                     src={`${API_URL}/books/${book.id}/cover`}
                     style={{ aspectRatio: '1/1.5' }}
@@ -43,6 +52,7 @@ export function BooksTable({ books }: BooksTableProps): JSX.Element {
                     alt={book.title}
                     fallbackSrc="/book-placeholder-small.png"
                     radius="sm"
+                    className={book.soft_deleted ? style.BookHidden : undefined}
                   />
                 </Anchor>
                 <Stack gap={2} justify="center">

@@ -1,7 +1,7 @@
 import { BookWithData } from '@koinsight/common/types';
 import { Box, Group, Image, Progress, Text, Tooltip } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconBooks, IconProgress, IconUser } from '@tabler/icons-react';
+import { IconBooks, IconEyeClosed, IconProgress, IconUser } from '@tabler/icons-react';
 import C from 'clsx';
 import { JSX } from 'react';
 import { useNavigate } from 'react-router';
@@ -32,12 +32,18 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
           role="button"
           onClick={() => navigate(getBookPath(book.id))}
         >
+          {book.soft_deleted ? (
+            <Tooltip label="This book is hidden" withArrow>
+              <IconEyeClosed size={16} className={style.BookHiddenIndicator} />
+            </Tooltip>
+          ) : null}
           <Image
             src={`${API_URL}/books/${book.id}/cover`}
             style={{ aspectRatio: '1/1.5' }}
             w={cardWidth}
             alt={book.title}
             fallbackSrc="/book-placeholder-small.png"
+            className={book.soft_deleted ? style.BookHidden : undefined}
           />
           <Progress
             radius={0}

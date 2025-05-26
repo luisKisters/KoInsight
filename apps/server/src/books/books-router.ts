@@ -11,8 +11,9 @@ router.use('/:bookId/cover', coversRouter);
 /**
  * Get all books with attached entity data
  */
-router.get('/', async (_: Request, res: Response) => {
-  const books = await BooksRepository.getAllWithData();
+router.get('/', async (req: Request, res: Response) => {
+  const returnDeleted = Boolean(req.query.showHidden && req.query.showHidden === 'true');
+  const books = await BooksRepository.getAllWithData(returnDeleted);
   res.json(books);
 });
 
@@ -28,15 +29,33 @@ router.get('/:bookId', getBookById, async (req: Request, res: Response, next: Ne
 /**
  * Delete a book by ID
  */
-router.delete('/:bookId', async (req: Request, res: Response) => {
-  const id = req.params.id;
+router.delete('/:bookId', getBookById, async (req: Request, res: Response) => {
+  const book = req.book!;
 
   try {
-    await BooksRepository.softDelete(Number(id));
+    await BooksRepository.delete(book);
     res.status(200).json({ message: 'Book deleted' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to delete book' });
+  }
+});
+
+router.post('/:bookId/hide', getBookById, async (req: Request, res: Response) => {
+  const book = req.book!;
+  const hidden = req.body.hidden;
+
+  if (hidden === undefined || hidden === null) {
+    res.status(400).json({ error: 'Missing required fields' });
+    return;
+  }
+
+  try {
+    await BooksRepository.softDelete(book.id, hidden);
+    res.status(200).json({ message: `Book ${hidden ? 'hidden' : 'shown'}` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to update book visibility' });
   }
 });
 
