@@ -139,7 +139,7 @@ The progress sync data should appear in the **"Progress syncs"** page in KoInsig
 1.  **Authors**
     1. Author view - show books per author.
 1. **Statistics**
-    1. Map KOReader page count to actual page count for better per-page statistics.
+    1. ~~Map KOReader page count to actual page count for better per-page statistics.~~
 1. **More KOReader data**
     1. Import covers from KOReader
     1. Try to import highlights and bookmarks from KOReader
