@@ -17,11 +17,11 @@ export async function deleteBook(id: Book['id']) {
 }
 
 export async function hideBook(id: Book['id']) {
-  return fetchFromAPI<{ message: string }>(`books/${id}/hide`, 'POST', { hidden: true });
+  return fetchFromAPI<{ message: string }>(`books/${id}/hide`, 'PUT', { hidden: true });
 }
 
 export async function showBook(id: Book['id']) {
-  return fetchFromAPI<{ message: string }>(`books/${id}/hide`, 'POST', { hidden: false });
+  return fetchFromAPI<{ message: string }>(`books/${id}/hide`, 'PUT', { hidden: false });
 }
 
 export async function updateBookReferencePages(id: Book['id'], referencePages: number | null) {

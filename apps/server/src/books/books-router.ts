@@ -41,7 +41,7 @@ router.delete('/:bookId', getBookById, async (req: Request, res: Response) => {
   }
 });
 
-router.post('/:bookId/hide', getBookById, async (req: Request, res: Response) => {
+router.put('/:bookId/hide', getBookById, async (req: Request, res: Response) => {
   const book = req.book!;
   const hidden = req.body.hidden;
 
