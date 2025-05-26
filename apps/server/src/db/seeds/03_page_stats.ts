@@ -11,13 +11,13 @@ function generateBookStats(book: Book): PageStat[] {
 
   const startDate = subDays(today, Math.floor(Math.random() * 100));
 
-  const maxPages = Math.min(book.pages ?? 0, 300);
+  const maxPages = Math.min(0, 300);
   for (let i = 0; i < maxPages; i++) {
     pageStats.push({
       page: i,
       start_time: subMinutes(startDate, (maxPages - i) * 30).valueOf() / 1000,
       duration: Math.floor(Math.random() * 100),
-      total_pages: book.pages,
+      total_pages: Math.floor(Math.random() * maxPages),
       device_id: SEED_DEVICES[Math.floor(Math.random() * SEED_DEVICES.length)].id,
       book_md5: book.md5,
     });
