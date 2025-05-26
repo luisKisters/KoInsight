@@ -1,11 +1,11 @@
 meta {
-  name: book cover
+  name: get book
   type: http
-  seq: 4
+  seq: 2
 }
 
 get {
-  url: http://{{host}}:{{port}}/api/books/4/cover
+  url: http://{{host}}:{{port}}/api/books/{{book_id}}/
   body: json
   auth: inherit
 }

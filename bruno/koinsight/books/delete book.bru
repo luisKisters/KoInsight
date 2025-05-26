@@ -1,11 +1,11 @@
 meta {
-  name: soft delete book
+  name: delete book
   type: http
-  seq: 5
+  seq: 4
 }
 
 delete {
-  url: http://{{host}}:{{port}}/api/books/1/
+  url: http://{{host}}:{{port}}/api/books/{{book_id}}/
   body: json
   auth: inherit
 }
