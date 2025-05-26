@@ -7,7 +7,11 @@ export class StatsRepository {
   }
 
   static async getAll(): Promise<PageStat[]> {
-    const stats = await db<PageStat>('page_stat').select('*');
+    const stats = await db<PageStat>('page_stat')
+      .join('book', 'page_stat.book_md5', 'book.md5')
+      .where({ 'book.soft_deleted': false })
+      .select('page_stat.*');
+
     return stats.map(this.updateStartTime);
   }
 
