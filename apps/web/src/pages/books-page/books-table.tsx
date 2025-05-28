@@ -60,7 +60,8 @@ export function BooksTable({ books }: BooksTableProps): JSX.Element {
                     {book.title}
                   </Anchor>
                   <span className={style.SubTitle}>
-                    {book.authors ?? 'N/A'} · {book.series} ·&nbsp;
+                    {book.authors ?? 'Unknown author'}
+                    {book.series !== 'N/A' ? ` · ${book.series}` : ''}
                     {/* <Tooltip label="Highlights" withArrow>
                       <Flex align="center">
                         <IconHighlight size={13} />
