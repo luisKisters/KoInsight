@@ -46,7 +46,7 @@ export class BooksService {
 
         readPages.push(range);
       } else {
-        readPages.push([stat.page, stat.page]);
+        readPages.push([Math.max(stat.page - 1, 0), stat.page]);
       }
     });
 
