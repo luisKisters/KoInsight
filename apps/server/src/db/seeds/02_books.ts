@@ -1,8 +1,10 @@
 import { Book } from '@koinsight/common/types/book';
 import { Knex } from 'knex';
+import { db } from '../../knex';
 import { generateMd5Hash } from '../../utils/strings';
+import { createBook } from '../factories/book-factory';
 
-export const SEED_BOOKS: Partial<Book>[] = [
+const SEED_BOOKS: Partial<Book>[] = [
   {
     id: 1,
     title: 'Mistborn: The Final Empire',
@@ -85,7 +87,11 @@ export const SEED_BOOKS: Partial<Book>[] = [
   },
 ];
 
+export let SEEDED_BOOKS: Book[] = [];
+
 export async function seed(knex: Knex): Promise<void> {
   await knex('book').del();
-  await knex('book').insert(SEED_BOOKS);
+
+  const books = await Promise.all(SEED_BOOKS.map((book) => createBook(db, book)));
+  SEEDED_BOOKS = books as Book[];
 }

@@ -12,7 +12,7 @@ export function fakeBookDevice(
   const bookDevice: FakeBookDevice = {
     book_md5: book.md5,
     device_id: device.id,
-    last_open: faker.date.past().getTime(),
+    last_open: faker.date.past().getTime() / 1000,
     notes: faker.number.int({ min: 0, max: 100 }),
     highlights: faker.number.int({ min: 0, max: 100 }),
     pages: faker.number.int({ min: 0, max: 1000 }),
