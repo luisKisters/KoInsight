@@ -1,4 +1,4 @@
-import { BookDevice, Device } from '@koinsight/common/types';
+import { Book, BookDevice, Device } from '@koinsight/common/types';
 import { addDays, startOfDay } from 'date-fns';
 import { createBookDevice } from '../db/factories/book-device-factory';
 import { createBook } from '../db/factories/book-factory';
@@ -13,7 +13,6 @@ describe(BooksService.withData, () => {
   beforeEach(async () => {
     device = await createDevice(db);
   });
-
   describe('total_pages', () => {
     it('returns reference pages if available', async () => {
       const book = await createBook(db, { title: 'Test Book 1', reference_pages: 121 });
@@ -224,5 +223,99 @@ describe(BooksService.withData, () => {
         expect(result.total_read_pages).toEqual(0);
       });
     });
+  });
+});
+
+describe(BooksService.getUniqueReadPages, () => {
+  let device1: Device;
+  let device2: Device;
+  let book1: Book;
+
+  beforeEach(async () => {
+    device1 = await createDevice(db);
+    device2 = await createDevice(db);
+    book1 = await createBook(db, { title: 'Test Book 1', reference_pages: 100 });
+  });
+
+  it('returns unique read pages for a book with reference pages', async () => {
+    const bookDevice1 = await createBookDevice(db, book1, device1, {
+      book_md5: book1.md5,
+      pages: 50,
+    });
+    const bookDevice2 = await createBookDevice(db, book1, device2, {
+      book_md5: book1.md5,
+      pages: 200,
+    });
+
+    const statPromises = [
+      createPageStat(db, book1, bookDevice1, device1, { page: 1, total_pages: 50 }),
+      createPageStat(db, book1, bookDevice1, device1, { page: 2, total_pages: 50 }),
+
+      createPageStat(db, book1, bookDevice2, device2, { page: 10, total_pages: 200 }),
+      createPageStat(db, book1, bookDevice2, device2, { page: 11, total_pages: 200 }),
+      createPageStat(db, book1, bookDevice2, device2, { page: 12, total_pages: 200 }),
+      createPageStat(db, book1, bookDevice2, device2, { page: 13, total_pages: 200 }),
+    ];
+
+    const stats = await Promise.all(statPromises);
+
+    const result = await BooksService.getUniqueReadPages(book1, stats);
+
+    expect(result).toEqual(6);
+  });
+
+  it('returns unique read pages with overlapping page stats', async () => {
+    const bookDevice1 = await createBookDevice(db, book1, device1, {
+      book_md5: book1.md5,
+      pages: 100,
+    });
+    const bookDevice2 = await createBookDevice(db, book1, device2, {
+      book_md5: book1.md5,
+      pages: 100,
+    });
+
+    const statPromises = [
+      createPageStat(db, book1, bookDevice1, device1, { page: 2, total_pages: 100 }),
+      createPageStat(db, book1, bookDevice1, device1, { page: 3, total_pages: 100 }),
+      createPageStat(db, book1, bookDevice1, device1, { page: 4, total_pages: 100 }),
+
+      createPageStat(db, book1, bookDevice2, device2, { page: 3, total_pages: 100 }),
+      createPageStat(db, book1, bookDevice2, device2, { page: 4, total_pages: 100 }),
+      createPageStat(db, book1, bookDevice2, device2, { page: 5, total_pages: 100 }),
+    ];
+
+    const stats = await Promise.all(statPromises);
+
+    const result = await BooksService.getUniqueReadPages(book1, stats);
+
+    expect(result).toEqual(4);
+  });
+
+  it('returns unique read pages with partially read pages', async () => {
+    const bookDevice1 = await createBookDevice(db, book1, device1, {
+      book_md5: book1.md5,
+      pages: 50,
+    });
+    const bookDevice2 = await createBookDevice(db, book1, device2, {
+      book_md5: book1.md5,
+      pages: 200,
+    });
+
+    const statPromises = [
+      // these count for 2
+      createPageStat(db, book1, bookDevice1, device1, { page: 1, total_pages: 50 }),
+      createPageStat(db, book1, bookDevice1, device1, { page: 2, total_pages: 50 }),
+
+      // these count for .5
+      createPageStat(db, book1, bookDevice2, device2, { page: 10, total_pages: 200 }),
+      createPageStat(db, book1, bookDevice2, device2, { page: 11, total_pages: 200 }),
+      createPageStat(db, book1, bookDevice2, device2, { page: 12, total_pages: 200 }),
+    ];
+
+    const stats = await Promise.all(statPromises);
+
+    const result = await BooksService.getUniqueReadPages(book1, stats);
+
+    expect(result).toEqual(6); // result is rounded
   });
 });

@@ -54,12 +54,12 @@ export function BookPage(): JSX.Element {
               <RingProgress
                 label={
                   <Text size="xs" ta="center">
-                    {book.total_read_pages} / {bookPages}
+                    {book.unique_read_pages} / {bookPages}
                   </Text>
                 }
                 sections={[
                   {
-                    value: (book.total_read_pages / bookPages) * 100,
+                    value: (book.unique_read_pages / bookPages) * 100,
                     color: 'koinsight',
                   },
                 ]}

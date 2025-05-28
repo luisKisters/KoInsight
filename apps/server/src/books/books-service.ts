@@ -2,6 +2,7 @@ import { Book, BookDevice, BookWithData, PageStat } from '@koinsight/common/type
 import { startOfDay } from 'date-fns';
 import { GenreRepository } from '../genres/genre-repository';
 import { StatsRepository } from '../stats/stats-repository';
+import { normalizeRanges, Range, totalRangeLength } from '../utils/ranges';
 import { BooksRepository } from './books-repository';
 
 export class BooksService {
@@ -33,6 +34,25 @@ export class BooksService {
     );
   }
 
+  static getUniqueReadPages(book: Book, stats: PageStat[]): number {
+    const readPages: Range[] = [];
+
+    stats.forEach((stat) => {
+      if (book.reference_pages) {
+        const startRefPage = (Math.max(stat.page - 1, 0) * book.reference_pages) / stat.total_pages;
+        const endRefPage = (stat.page * book.reference_pages) / stat.total_pages;
+
+        const range = [startRefPage, endRefPage] as Range;
+
+        readPages.push(range);
+      } else {
+        readPages.push([stat.page, stat.page]);
+      }
+    });
+
+    return Math.round(totalRangeLength(normalizeRanges(readPages)));
+  }
+
   static getTotalReadPages(book: Book, stats: PageStat[]): number {
     return Math.round(
       stats.reduce((acc, stat) => {
@@ -56,6 +76,7 @@ export class BooksService {
     const last_open = this.getLastOpen(bookDevices);
     const read_per_day = this.getReadPerDay(stats);
     const total_read_pages = this.getTotalReadPages(book, stats);
+    const unique_read_pages = this.getUniqueReadPages(book, stats);
 
     const response: BookWithData = {
       ...book,
@@ -65,6 +86,7 @@ export class BooksService {
       read_per_day,
       total_read_time,
       total_read_pages,
+      unique_read_pages,
       total_pages,
       last_open,
       genres,

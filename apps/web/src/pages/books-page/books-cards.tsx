@@ -48,7 +48,7 @@ export function BooksCards({ books }: BooksCardsProps): JSX.Element {
           <Progress
             radius={0}
             h={5}
-            value={(book.total_read_pages / book.total_pages) * 100}
+            value={(book.unique_read_pages / book.total_pages) * 100}
             color="koinsight"
           />
           <Box px="lg" className={C(style.CardDetails, { [style.Small]: isSmallScreen })}>

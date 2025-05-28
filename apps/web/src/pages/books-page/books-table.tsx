@@ -79,11 +79,11 @@ export function BooksTable({ books }: BooksTableProps): JSX.Element {
               </Flex>
             </Table.Td>
             <Table.Td visibleFrom="md">
-              {book.total_read_pages}
+              {book.unique_read_pages}
               <Progress
-                value={(book.total_read_pages / book.total_pages) * 100}
+                value={(book.unique_read_pages / book.total_pages) * 100}
                 aria-label="Percentage read"
-                aria-valuetext={String((book.total_read_pages / book.total_pages) * 100)}
+                aria-valuetext={String((book.unique_read_pages / book.total_pages) * 100)}
               />
             </Table.Td>
             <Table.Td visibleFrom="md">{book.total_pages}</Table.Td>
