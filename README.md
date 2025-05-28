@@ -130,26 +130,4 @@ The progress sync data should appear in the **"Progress syncs"** page in KoInsig
 # Roadmap
 (a.k.a things I want to do)
 
-1. **Books**
-    1. Mark as read
-    1. Mark as unread
-    1. Edit / add details manually
-    1. ~~Manual cover upload~~
-    1. Automatically fetch book cover on new book upload
-1.  **Authors**
-    1. Author view - show books per author.
-1. **Statistics**
-    1. ~~Map KOReader page count to actual page count for better per-page statistics.~~
-1. **More KOReader data**
-    1. Import covers from KOReader
-    1. Try to import highlights and bookmarks from KOReader
-1. **AI Enhancements**
-    1. Get book information - description, similar books
-    1. Tag / Categorize books based on genres
-    1. Book recommendations?
-1. **Administration**
-    1. Multi-user support (besides progress syncs)
-1. **Progress sync**
-    1. Delete progress syncs
-    1. Edit progress syncs
-    1. Device management
+See [Project board](https://github.com/users/GeorgeSG/projects/2)
