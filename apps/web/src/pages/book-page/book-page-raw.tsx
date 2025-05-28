@@ -39,8 +39,8 @@ export function BookPageRaw({ book }: BookPageRawProps): JSX.Element {
   const visibleEvents = book.stats.filter(
     (stat) =>
       (!page || stat.page === page) &&
-      stat.start_time >= startDate.getTime() / 1000 &&
-      stat.start_time <= endDate.getTime() / 1000
+      stat.start_time >= startDate.getTime() &&
+      stat.start_time <= endDate.getTime()
   );
 
   return (
