@@ -15,6 +15,7 @@ local koinsight = WidgetContainer:extend{
 }
 
 function koinsight:init()
+    self:onDispatcherRegisterActions()
     self.ui.menu:registerToMainMenu(self)
     self.koinsight_settings = KoInsightSettings:new{}
     self:initMenuOrder()
@@ -49,6 +50,23 @@ function koinsight:addToMainMenu(menu_items)
             end
         }}
     }
+end
+
+-- Register sync action to make it available in gestures
+function koinsight:onDispatcherRegisterActions()
+    Dispatcher:registerAction(
+        "koinsight_sync",
+        {
+            category = "none",
+            event    = "KoInsightSync",
+            title    = _("KoInsight: Sync stats"),
+            general  = true
+        }
+    )
+end
+
+function koinsight:onKoInsightSync()
+    onUpload(self.koinsight_settings.server_url)
 end
 
 function koinsight:initMenuOrder()
