@@ -1,6 +1,6 @@
 {
   "buildCommand": "turbo run build",
-  "installCommand": "npm install",
+  "installCommand": "pnpm install --shamefully-hoist",
   "framework": "vite",
   "outputDirectory": "apps/web/dist"
 }
