@@ -1,6 +1,6 @@
 {
-  "buildCommand": "turbo run build",
-  "installCommand": "npm install",
+  "buildCommand": "./vercel-build.sh",
+  "installCommand": "npm install --legacy-peer-deps",
   "framework": "vite",
   "outputDirectory": "apps/web/dist"
 }
