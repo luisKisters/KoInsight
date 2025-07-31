@@ -93,6 +93,7 @@ export function BooksPage(): JSX.Element {
   });
 
   if (error) {
+    console.error(error);
     return <Flex justify="center">Failed to load books. Error: {JSON.stringify(error)}</Flex>;
   }
 
