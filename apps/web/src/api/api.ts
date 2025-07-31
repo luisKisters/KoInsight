@@ -1,5 +1,21 @@
-export const API_URL = `${import.meta.env.VITE_WEB_API_URL ?? ''}/api`;
-export const SERVER_URL = `${import.meta.env.VITE_WEB_API_URL ?? ''}`;
+// API configuration with proper fallbacks for different environments
+const getApiBaseUrl = () => {
+  // If VITE_WEB_API_URL is set, use it
+  if (import.meta.env.VITE_WEB_API_URL) {
+    return import.meta.env.VITE_WEB_API_URL;
+  }
+
+  // In development, default to localhost:3000 (server port)
+  if (import.meta.env.DEV) {
+    return 'http://localhost:3000';
+  }
+
+  // In production, use relative URL (same domain)
+  return '';
+};
+
+export const API_URL = `${getApiBaseUrl()}/api`;
+export const SERVER_URL = getApiBaseUrl();
 
 export async function fetchFromAPI<T>(
   endpoint: string,
